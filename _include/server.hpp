@@ -23,6 +23,7 @@
 #include <csignal>       // signal
 
 // Everything in C++98
+#include <fstream>
 #include <string>
 #include <cstdlib>
 #include <iostream>

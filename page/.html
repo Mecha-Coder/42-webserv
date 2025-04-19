@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Webserver</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .button-container {
+            margin: 30px 0;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #datetime {
+            margin-top: 30px;
+            font-size: 18px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <h1>My Webserver</h1>
+    
+    <div class="button-container">
+        <button onclick="window.location.href='/page-1'">Page 1</button>
+        <button onclick="window.location.href='/page-2'">Page 2</button>
+    </div>
+    
+    <div id="datetime">Current time: <script>document.write(new Date().toLocaleString());</script></div>
+    
+    <script>
+        // Function to navigate to different pages
+        function navigateTo(page) {
+            window.location.href = '/' + page;
+        }
+    </script>
+</body>
+</html>

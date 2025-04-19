@@ -12,6 +12,19 @@
 
 #include "../_include/server.hpp"
 
+str getContent(str const &filename)
+{
+    str acc, line;
+
+    File INPUT(filename.c_str());
+    if (INPUT.is_open())
+    {
+        while(std::getline(INPUT, line))
+            acc += line;
+    }
+    return acc;
+}
+
 void process_request(int sock, char *request, int end)
 {
     t_request req; request[end] = '\0';
@@ -21,8 +34,15 @@ void process_request(int sock, char *request, int end)
 
     if (req.path != "/favicon.ico") 
     {
-        str respond = resp_template(_200, PLAIN, 
-            "Nice. Request received\n" + current_time());
+        str body = getContent("./page/" + req.path.substr(1) + ".html");
+        str respond;
+
+        if (body.empty()) {
+            body = getContent("./page/404.html");
+            respond = resp_template(_400, HTML, body); 
+        }
+        else
+            respond = resp_template(_200, HTML, body); 
         
         send(sock, respond.c_str(), respond.size(), 0);
         show_request(req);

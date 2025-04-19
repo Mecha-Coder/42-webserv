@@ -25,7 +25,7 @@ int waiting()
 bool listen_request()
 {   
     int new_sock, read_bytes;
-    char request[BUFFER_SIZE];
+    char request[BUFFER_SIZE + 1];
    
     new_sock = waiting();
     if (new_sock == -1) 

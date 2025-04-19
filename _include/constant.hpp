@@ -23,6 +23,7 @@
 extern int server_sock;  // Make it global, so it can be closed using signal 
 typedef std::string str;
 typedef std::map<str, str>::iterator map_It;
+typedef std::ifstream File;
 
 typedef enum response_status
 {
