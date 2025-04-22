@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #ifndef SERVER_HPP
-#define SERVER
+#define SERVER_HPP
 
 // Allowed functions 
 #include <sys/socket.h>  // socket, accept, listen, send, recv, bind, setsockopt

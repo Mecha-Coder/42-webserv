@@ -88,9 +88,12 @@ int main() {
 
     printf("Server listening on port %d\n", PORT);
 
-    while (!stop_flag) {
+    while (!stop_flag) 
+    {
         int ready = poll(fds, nfds, 1000);
-        if (ready == -1) {
+
+        if (ready == -1) 
+        {
             if (errno == EINTR) continue;
             perror("poll");
             break;
@@ -98,11 +101,13 @@ int main() {
 
         if (ready == 0) continue;
 
-        for (int i = 0; i < nfds; ++i) {
+        for (int i = 0; i < nfds; ++i) 
+        {
             if (fds[i].revents == 0) continue;
 
             // Handle errors and hangups
-            if (fds[i].revents & (POLLERR | POLLHUP | POLLNVAL)) {
+            if (fds[i].revents & (POLLERR | POLLHUP | POLLNVAL)) 
+            {
                 printf("Closing bad fd %d\n", fds[i].fd);
                 close(fds[i].fd);
                 fds[i] = fds[--nfds];
@@ -110,18 +115,23 @@ int main() {
                 continue;
             }
 
-            if (fds[i].revents & POLLIN) {
-                if (fds[i].fd == listen_fd) {
+            if (fds[i].revents & POLLIN) 
+            {
+                if (fds[i].fd == listen_fd) 
+                {
                     // Accept new connections
-                    while (nfds < MAX_CLIENTS) {
+                    while (nfds < MAX_CLIENTS) 
+                    {
                         int client_fd = accept(listen_fd, nullptr, nullptr);
-                        if (client_fd == -1) {
+                        if (client_fd == -1) 
+                        {
                             if (errno == EAGAIN || errno == EWOULDBLOCK) break;
                             perror("accept");
                             break;
                         }
 
-                        if (set_nonblocking(client_fd) == -1) {
+                        if (set_nonblocking(client_fd) == -1)
+                        {
                             perror("set_nonblocking (client)");
                             close(client_fd);
                             continue;
@@ -134,21 +144,27 @@ int main() {
                         nfds++;
                         printf("Accepted new connection (fd: %d)\n", client_fd);
                     }
-                } else {
+                } 
+                
+                else 
+                {
                     // Handle client data with partial reads
                     char buf[BUFFER_SIZE];
                     ssize_t bytes_read;
                     Client* client = nullptr;
 
                     // Find client in vector
-                    for (auto& c : clients) {
-                        if (c.fd == fds[i].fd) {
+                    for (auto& c : clients) 
+                    {
+                        if (c.fd == fds[i].fd) 
+                        {
                             client = &c;
                             break;
                         }
                     }
 
-                    if (!client) {
+                    if (!client) 
+                    {
                         close(fds[i].fd);
                         fds[i] = fds[--nfds];
                         i--;
@@ -156,7 +172,8 @@ int main() {
                     }
 
                     // Read loop for partial data
-                    while ((bytes_read = read(fds[i].fd, buf, sizeof(buf))) {
+                    while ((bytes_read = read(fds[i].fd, buf, sizeof(buf))))
+                    {
                         if (bytes_read == -1) {
                             if (errno == EAGAIN) break;  // No more data
                             perror("read");
