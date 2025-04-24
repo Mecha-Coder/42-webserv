@@ -18,56 +18,42 @@
 
 main (int argc, char *argv[])
 {
-  int    len, rc, on = 1;
-  int    listen_sd = -1, new_sd = -1;
-  int    desc_ready, end_server = FALSE, compress_array = FALSE;
-  int    close_conn;
-  char   buffer[80];
-  struct sockaddr_in6   addr;
-  int    timeout;
-  struct pollfd fds[200];
-  int    nfds = 1, current_size = 0, i, j;
+    int    len, rc, on = 1;
+    int    listen_sd = -1, new_sd = -1;
+    int    desc_ready, end_server = FALSE, compress_array = FALSE;
+    int    close_conn;
+    char   buffer[80];
+    struct sockaddr_in6   addr;
+    int    timeout;
+    struct pollfd fds[200];
+    int    nfds = 1, current_size = 0, i, j;
 
-  /*************************************************************/
-  /* Create an AF_INET6 stream socket to receive incoming      */
-  /* connections on                                            */
-  /*************************************************************/
-  listen_sd = socket(AF_INET6, SOCK_STREAM, 0);
-  if (listen_sd < 0)
-  {
-    perror("socket() failed");
-    exit(-1);
-  }
 
-  /*************************************************************/
-  /* Allow socket descriptor to be reuseable                   */
-  /*************************************************************/
-  rc = setsockopt(listen_sd, SOL_SOCKET,  SO_REUSEADDR,
-                  (char *)&on, sizeof(on));
-  if (rc < 0)
-  {
-    perror("setsockopt() failed");
-    close(listen_sd);
-    exit(-1);
-  }
+    listen_sd = socket(AF_INET6, SOCK_STREAM, 0);
+    if (listen_sd < 0)
+    {
+        perror("socket() failed");
+        exit(-1);
+    }
 
-  // Wrong
-  /*************************************************************/
-  /* Set socket to be nonblocking. All of the sockets for      */
-  /* the incoming connections will also be nonblocking since   */
-  /* they will inherit that state from the listening socket.   */
-  /*************************************************************/
-  rc = ioctl(listen_sd, FIONBIO, (char *)&on);
-  if (rc < 0)
-  {
-    perror("ioctl() failed");
-    close(listen_sd);
-    exit(-1);
-  }
+    rc = setsockopt(listen_sd, SOL_SOCKET,  SO_REUSEADDR,
+                    (char *)&on, sizeof(on));
+    if (rc < 0)
+    {
+        perror("setsockopt() failed");
+        close(listen_sd);
+        exit(-1);
+    }
 
-  /*************************************************************/
-  /* Bind the socket                                           */
-  /*************************************************************/
+    rc = ioctl(listen_sd, FIONBIO, (char *)&on);
+    if (rc < 0)
+    {
+        perror("ioctl() failed");
+        close(listen_sd);
+        exit(-1);
+    }
+
+
   memset(&addr, 0, sizeof(addr));
   addr.sin6_family      = AF_INET6;
   memcpy(&addr.sin6_addr, &in6addr_any, sizeof(in6addr_any));
@@ -81,9 +67,6 @@ main (int argc, char *argv[])
     exit(-1);
   }
 
-  /*************************************************************/
-  /* Set the listen back log                                   */
-  /*************************************************************/
   rc = listen(listen_sd, 32);
   if (rc < 0)
   {
@@ -92,58 +75,29 @@ main (int argc, char *argv[])
     exit(-1);
   }
 
-  /*************************************************************/
-  /* Initialize the pollfd structure                           */
-  /*************************************************************/
   memset(fds, 0 , sizeof(fds));
-
-  /*************************************************************/
-  /* Set up the initial listening socket                        */
-  /*************************************************************/
   fds[0].fd = listen_sd;
   fds[0].events = POLLIN;
-  /*************************************************************/
-  /* Initialize the timeout to 3 minutes. If no                */
-  /* activity after 3 minutes this program will end.           */
-  /* timeout value is based on milliseconds.                   */
-  /*************************************************************/
   timeout = (3 * 60 * 1000);
 
-  /*************************************************************/
-  /* Loop waiting for incoming connects or for incoming data   */
-  /* on any of the connected sockets.                          */
-  /*************************************************************/
+
   do
   {
-    /***********************************************************/
-    /* Call poll() and wait 3 minutes for it to complete.      */
-    /***********************************************************/
     printf("Waiting on poll()...\n");
     rc = poll(fds, nfds, timeout);
 
-    /***********************************************************/
-    /* Check to see if the poll call failed.                   */
-    /***********************************************************/
     if (rc < 0)
     {
       perror("  poll() failed");
       break;
     }
 
-    /***********************************************************/
-    /* Check to see if the 3 minute time out expired.          */
-    /***********************************************************/
     if (rc == 0)
     {
       printf("  poll() timed out.  End program.\n");
       break;
     }
 
-
-    /***********************************************************/
-    /* One or more descriptors are readable.  Need to          */
-    /* determine which ones they are.                          */
-    /***********************************************************/
     current_size = nfds;
     for (i = 0; i < current_size; i++)
     {
@@ -294,13 +248,6 @@ main (int argc, char *argv[])
       }  /* End of existing connection is readable             */
     } /* End of loop through pollable descriptors              */
 
-    /***********************************************************/
-    /* If the compress_array flag was turned on, we need       */
-    /* to squeeze together the array and decrement the number  */
-    /* of file descriptors. We do not need to move back the    */
-    /* events and revents fields because the events will always*/
-    /* be POLLIN in this case, and revents is output.          */
-    /***********************************************************/
     if (compress_array)
     {
       compress_array = FALSE;
@@ -318,16 +265,12 @@ main (int argc, char *argv[])
       }
     }
 
-  } while (end_server == FALSE); /* End of serving running.    */
+  } while (end_server == FALSE); 
 
-  /*************************************************************/
-  /* Clean up all of the sockets that are open                 */
-  /*************************************************************/
+
   for (i = 0; i < nfds; i++)
   {
     if(fds[i].fd >= 0)
       close(fds[i].fd);
   }
 }
-
-

@@ -28,23 +28,49 @@ str getContent(str const &filename)
 void process_request(int sock, char *request, int end)
 {
     t_request req; request[end] = '\0';
-    
+    str respond, body;
+
     if (!parse_request(req, request))
         return fail_reading(sock, 0);
 
     if (req.path != "/favicon.ico") 
     {
-        str body = getContent("./page/" + req.path.substr(1) + ".html");
-        str respond;
+        if (req.path == "/upload" && req.method == "POST")
+        {
+            char append[BUFFER_SIZE + 1];
+            int bytes;
 
-        if (body.empty()) {
-            body = getContent("./page/404.html");
-            respond = resp_template(_400, HTML, body); 
+            size_t len = atoi(req.header["Content-Length"].c_str());
+            while (len > req.body.size())
+            {
+                bytes = recv(sock, append, BUFFER_SIZE, 0);
+                append[bytes] = '\0';
+                req.body += append;
+            }
+                
+            
+            body = "{"
+            "\"message\": \"2 file(s) uploaded successfully\","
+            "\"files\": [\"file1.txt\",\"image.jpg\"]"
+            "}";
+
+            respond = resp_template(_200, JSON, body);
+            send(sock, respond.c_str(), respond.size(), 0);
         }
         else
-            respond = resp_template(_200, HTML, body); 
-        
-        send(sock, respond.c_str(), respond.size(), 0);
+        {
+            body = getContent("./page/" + req.path.substr(1) + ".html");
+    
+            if (body.empty()) {
+                body = getContent("./page/404.html");
+                respond = resp_template(_404, HTML, body); 
+            }
+            else
+                respond = resp_template(_200, HTML, body); 
+            
+            send(sock, respond.c_str(), respond.size(), 0);
+        }
+       
         show_request(req);
     }
 }

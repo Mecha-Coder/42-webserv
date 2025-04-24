@@ -21,6 +21,7 @@
 #include <cerrno>        // errno
 #include <unistd.h>      // close
 #include <csignal>       // signal
+#include <cstdlib>
 
 // Everything in C++98
 #include <fstream>
