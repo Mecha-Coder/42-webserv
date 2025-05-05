@@ -23,7 +23,7 @@ public:
 	explicit Table(EToml type);
 	Table(TomlMap& map);
 	explicit Table(const std::string& str);
-    explicit Table(bool b);
+	explicit Table(bool b);
 	Table(const Table& other);
 	~Table();
 
@@ -36,15 +36,15 @@ public:
 	void Push(const Table& t);
 	void Insert(const std::string& key, Table* value);
 	void Create(const std::string& key);
-	void SetType(EToml type);
-	void SetString(const std::string& value);
+	void setType(EToml type);
+	void setString(const std::string& value);
 
 	Table& Get(const std::string& key);
 	const Table& Get(const std::string& key) const;
 	Table& Get(std::size_t index);
 	const Table& Get(std::size_t index) const;
-	const std::vector<Table>& GetVector() const;
-	const TomlMap& GetMap() const;
+	const std::vector<Table>& getVector() const;
+	const TomlMap& getMap() const;
 	Table& Last();
 
 	bool isType(EToml type) const;
@@ -53,13 +53,13 @@ public:
 	bool asBool(bool fallback = false) const;
 
 	void Print(int indent = 0) const;
-    bool IsValid() const;
-    std::string GetTypeName() const;
-    std::vector<std::string> GetKeys() const;
-    std::size_t Size() const;
+	bool isValid() const;
+	std::string getTypeName() const;
+	std::vector<std::string> getKeys() const;
+	std::size_t Size() const;
 
-    void Remove(const std::string& key);
-    static Table& Empty();
+	void Remove(const std::string& key);
+	static Table& Empty();
 
 private:
 	EToml type;

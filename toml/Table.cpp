@@ -73,11 +73,11 @@ bool Table::isType(EToml t) const {
 	return type == t;
 }
 
-void Table::SetType(EToml t) {
+void Table::setType(EToml t) {
 	type = t;
 }
 
-void Table::SetString(const std::string& s) {
+void Table::setString(const std::string& s) {
 	str = s;
 }
 
@@ -199,15 +199,15 @@ const Table& Table::Get(std::size_t index) const {
 	return vec[index];
 }
 
-const std::vector<Table>& Table::GetVector() const {
+const std::vector<Table>& Table::getVector() const {
 	return vec;
 }
 
-const Table::TomlMap& Table::GetMap() const {
+const Table::TomlMap& Table::getMap() const {
 	return map;
 }
 
-std::string Table::GetTypeName() const {
+std::string Table::getTypeName() const {
 	switch (type) {
 		case TABLE: return "TABLE";
 		case ARRAY: return "ARRAY";
@@ -217,7 +217,7 @@ std::string Table::GetTypeName() const {
 	}
 }
 
-std::vector<std::string> Table::GetKeys() const {
+std::vector<std::string> Table::getKeys() const {
 	std::vector<std::string> keys;
 	if (!isType(TABLE)) return keys;
 	for (TomlMap::const_iterator it = map.begin(); it != map.end(); ++it) {
@@ -226,7 +226,7 @@ std::vector<std::string> Table::GetKeys() const {
 	return keys;
 }
 
-bool Table::IsValid() const {
+bool Table::isValid() const {
 	if (type == TABLE)
 		return !map.empty();
 	if (type == ARRAY)
