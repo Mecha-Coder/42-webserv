@@ -69,7 +69,7 @@ int main() {
 	servers.Push(s3);
 
 	// Access array using GetVector()
-	const std::vector<Table>& entries = servers.GetVector();
+	const std::vector<Table>& entries = servers.getVector();
 
 	// Iterate and display entries using operator[]
 	std::cout << "== Server Configurations ==\n";
@@ -82,15 +82,15 @@ int main() {
 		std::cout << "  port  : " << entry["port"].asStr("0") << "\n";
 
 		// Optional key
-		std::string sslStr = entry["ssl"].IsValid() ? (entry["ssl"].asBool() ? "enabled" : "disabled") : "not set";
+		std::string sslStr = entry["ssl"].isValid() ? (entry["ssl"].asBool() ? "enabled" : "disabled") : "not set";
 		std::cout << "  ssl   : " << sslStr << "\n";
 
 		// Iterate all key-value pairs using GetMap()
-		const Table::TomlMap& m = entry.GetMap();
+		const Table::TomlMap& m = entry.getMap();
 		std::cout << "  All fields:\n";
 		for (Table::TomlMap::const_iterator it = m.begin(); it != m.end(); ++it) {
 			std::cout << "    " << it->first << " = " << it->second->asStr() << " (type: "
-			          << it->second->GetTypeName() << ")\n";
+			          << it->second->getTypeName() << ")\n";
 		}
 		std::cout << "\n";
 	}
@@ -106,7 +106,7 @@ int main() {
 
 	// Demonstrate GetKeys() on a server entry
 	std::cout << "== Demonstrating GetKeys() ==\n";
-	std::vector<std::string> keys = s2.GetKeys();
+	std::vector<std::string> keys = s2.getKeys();
 	std::cout << "Keys in entry 1:\n";
 	for (std::size_t i = 0; i < keys.size(); ++i) {
 		std::cout << "  - " << keys[i] << "\n";
@@ -115,10 +115,10 @@ int main() {
 
 	// Demonstrate utility functions
 	std::cout << "== Type and Utility Checks ==\n";
-	std::cout << "servers type   : " << servers.GetTypeName() << "\n";
+	std::cout << "servers type   : " << servers.getTypeName() << "\n";
 	std::cout << "entries size   : " << servers.Size() << "\n";
 	std::cout << "first entry is table: " << (entries[0].isType(Table::TABLE) ? "yes" : "no") << "\n";
-	std::cout << "ssl in entry 0 valid? " << (entries[0]["ssl"].IsValid() ? "yes" : "no") << "\n";
+	std::cout << "ssl in entry 0 valid? " << (entries[0]["ssl"].isValid() ? "yes" : "no") << "\n";
 
 	return 0;
 }

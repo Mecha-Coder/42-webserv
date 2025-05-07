@@ -33,9 +33,9 @@ Table::Table(const Table& other) {
  */
 Table::~Table() {
 	FOR_EACH(TomlMap, map, it) {
-		if (it->second != nullptr) {
+		if (it->second != NULL) {
 			delete it->second;
-			it->second = nullptr;
+			it->second = NULL;
 		}
 	}
 }
