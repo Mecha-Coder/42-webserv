@@ -8,7 +8,7 @@ int main() {
 	env["REQUEST_METHOD"] = "POST";
 	env["CONTENT_LENGTH"] = "13";
 	env["CONTENT_TYPE"] = "application/x-www-form-urlencoded";
-	env["PATH_INFO"] = "/www/cgi-bin/hello.py";  // matched by your logic
+	env["PATH_INFO"] = "/cgi-bin/hello.py";  // matched by your logic
 
 	std::string requestBody = "\nname=Ryan\nage=26\nprofession=sarcasm"; // example request body
 	std::vector<std::string> cgiPaths;
