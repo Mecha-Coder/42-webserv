@@ -1,4 +1,4 @@
 #include "../../include/Client.hpp"
 
-bool Client::headderReady()
+bool Client::headerReady()
 {return (header.size() && !method.empty());}
