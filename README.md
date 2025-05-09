@@ -6,7 +6,7 @@
 [CGI Script](http://www.wijata.com/cgi/cgispec.html#4.0)
 
 ### Process Request Logic
-[Flowchar](https://github.com/kirwako/webserv-request-flow/blob/main/webserv-request-flow.pdf)
+[Flowchart](https://github.com/kirwako/webserv-request-flow/blob/main/webserv-request-flow.pdf)
 
 ### Our WhiteBoard
 [Miro WhiteBoard](https://miro.com/welcomeonboard/dTJHWE9IeTZDTzNacHJFbjRuMDZLZ2FyZ0pNYVBybElna0lkQVdyZHFlNjNheUJUMkY5NkFhTlpldEI0WWtKQzErckUxY3ZMK2xuOVlVL1ZzQmw2Z0dSLzFXdTY5bDE4K2VLK3V2Z09QZlJ0M0Q2TW1wdHRZUHRaQkZqZGtJWHFnbHpza3F6REdEcmNpNEFOMmJXWXBBPT0hdjE=?share_link_id=527232404402)
