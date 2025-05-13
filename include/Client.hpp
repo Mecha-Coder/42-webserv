@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <sstream>
 #include "Server.hpp"
 
 typedef std::string Str;
@@ -12,17 +13,20 @@ typedef std::map<Str, Str> Header;
 class Client
 {
     private:
-        const Server    server;
+        Server    server;
         
-        Str             data;
-        Header          header;
-        Route           *route;
+        Str        data;
+        Header     header;
+        Route      *route;
         
-        Str             reply;
-        int             byteSend; 
+        Str        reply;
+        int        byteSend; 
 
     public:
         Client(const Server &_server_);
+
+        bool appendReq(char &request);
+        bool isHeadReady() const;
 
         //////////////////////////////////////////////////////////
         ///            ALL INFO YOU NEED IS IN HERE           ////
@@ -33,8 +37,8 @@ class Client
         Str     _version;
         Str     _contentType;
         int     _contentLen;
-        Str     _redirect;
         Str     _file;
+        Str     _redirect;
 
         // Absolute path root + subdir
         Str         _filePath;
@@ -43,19 +47,22 @@ class Client
         const Str   _myErrorPg(const int &code) const;
 
         ///////////////////////////////////////////////////////////
-        ///                GETTER FUNCTION                      ///
+        ///     GETTER FUNCTION : USE AFTER PARSE REQUEST       /// 
         ///////////////////////////////////////////////////////////
         
-        const int   getMaxBodySize() const;
+        int   getMaxBodySize() const;
 
-        const bool  iskeepAlive() const;   
-        const bool  isAutoIndex() const;
-        const bool  isMethodAllow(const Str &method) const;
+        bool  iskeepAlive() const;   
+        bool  isAutoIndex() const;
+        bool  isMethodAllow(const Str &method) const;
 
         const Str   getHost() const;
-        const Str   getURI() const;
         const Str   getDefaultFile() const;
         const Str   runWithCGI(const Str &file) const;
+        {
+            std::cout << "\nTry route /archive/ " << std::endl; 
+            this->route = this->server.findRoute("/archive/"); 
+        }
 };
 
 #endif

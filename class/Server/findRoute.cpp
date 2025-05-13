@@ -12,9 +12,9 @@ Return:
 - Route object ➡️ Matching path/URI found in the configuration
 - NULL         ➡️ No matching path/URI
 */
-const Route *Server::findRoute(const Str uri) const
+Route *Server::findRoute(const Str uri)
 {
-    Routes::const_iterator i = _routes.begin();
+    Routes::iterator i = _routes.begin();
     for( ; i != _routes.end(); i++)
     {
         if (i->_uri == uri) return &(*i);

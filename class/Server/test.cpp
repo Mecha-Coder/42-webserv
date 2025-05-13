@@ -1,3 +1,4 @@
+/*
 #include "../../include/Server.hpp"
 
 void test_find_route(Server &server, const Str &uri)
@@ -127,3 +128,4 @@ int main()
         std::cout << "\t" << i->first << ":" << i->second << std::endl;
     std::cout << std::endl;
 }
+*/
