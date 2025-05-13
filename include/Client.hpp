@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include "Server.hpp"
 
 typedef std::string Str;
 typedef std::map<Str, Str> Header;
@@ -11,30 +12,50 @@ typedef std::map<Str, Str> Header;
 class Client
 {
     private:
-        Str     data;
-        Header  header; 
-    
+        const Server    server;
+        
+        Str             data;
+        Header          header;
+        Route           *route;
+        
+        Str             reply;
+        int             byteSend; 
+
     public:
-        Str     method;
-        Str     path;
-        Str     version;
-        Str     host;
-        Str     file;
-        Str     contentType;
-        int     contentLen;
-        bool    keepAlive;
+        Client(const Server &_server_);
 
-    Client();
+        //////////////////////////////////////////////////////////
+        ///            ALL INFO YOU NEED IS IN HERE           ////
+        //////////////////////////////////////////////////////////
     
-    void resError();
+        Str     _method;
+        Str     _path;
+        Str     _version;
+        Str     _contentType;
+        int     _contentLen;
+        Str     _redirect;
+        Str     _file;
 
-    bool    headderReady();
-    bool    appendReq(Str request);
+        // Absolute path root + subdir
+        Str         _filePath;
+        Str         _uploadDir;
+        Str         _cgiPath;
+        const Str   _myErrorPg(const int &code) const;
 
-    Str     *body();
-    int     bodySize();
+        ///////////////////////////////////////////////////////////
+        ///                GETTER FUNCTION                      ///
+        ///////////////////////////////////////////////////////////
+        
+        const int   getMaxBodySize() const;
 
-    void    showDetails();
+        const bool  iskeepAlive() const;   
+        const bool  isAutoIndex() const;
+        const bool  isMethodAllow(const Str &method) const;
+
+        const Str   getHost() const;
+        const Str   getURI() const;
+        const Str   getDefaultFile() const;
+        const Str   runWithCGI(const Str &file) const;
 };
 
 #endif
