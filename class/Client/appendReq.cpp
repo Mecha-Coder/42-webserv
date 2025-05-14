@@ -6,14 +6,14 @@
 /*   By: jpaul <jpaul@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 16:27:03 by jpaul             #+#    #+#             */
-/*   Updated: 2025/05/09 21:49:14 by jpaul            ###   ########.fr       */
+/*   Updated: 2025/05/14 14:23:22 by jpaul            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/Client.hpp"
 
-void parseLine(Client &client, Str s);
-void parseHead(Client &client, Header &header, Str s);
+void parseLine(Client &client, Str line);
+void parseHead(Client &client, Header &header, Str head);
 void getRouteInfo(Client &client, Route *route);
 /* 
 Purpose:
@@ -45,13 +45,14 @@ Return:
     TRUE  ➡️ Full request received and ready to process.
     FALSE ➡️ Request is incomplete; continue accumulating.
 */
-bool Client::appendReq(char &request)
+bool Client::appendReq(Str request)
 {
     Str     info;
     size_t  pos;
     
     this->data += request;
-    if (this->isHeadReady() == false);
+    
+    if (this->isHeadReady() == false)
     {
         pos = data.find("\r\n\r\n");
         if (pos == std::string::npos)
@@ -59,12 +60,12 @@ bool Client::appendReq(char &request)
        
         info = data.substr(0, pos + 2);
         data.erase(0, pos + 4);
-        
+    
         pos = info.find("\r\n");
         for (int i = 0; pos != info.npos; i++)
         {
-            if (i == 0)  parseLine(*this, info.substr(0, pos));
-            else         parseHead(*this, this->header, info.substr(0, pos));
+            if (i == 0) parseLine(*this, info.substr(0, pos));
+            else        parseHead(*this, this->header, info.substr(0, pos));
 
             info.erase(0, pos + 2);
             pos = info.find("\r\n");
@@ -73,53 +74,58 @@ bool Client::appendReq(char &request)
         this->route = this->server.findRoute(this->_path);
         if (this->route) getRouteInfo(*this, this->route);
 
-        std::cout << "HTTP header successfully parse" << std::endl;
+        std::cout << "HTTP header successfully parsed" << std::endl;
     }
     return (data.size() >= this->_contentLen);
 }
+
 
 void getRouteInfo(Client &client, Route *route)
 {
     client._redirect = route->_redirect;
     client._filePath = route->_root + route->_uri;
-    client._uploadDir = route->_uploadDir;
+    client._uploadDir = route->_root + route->_uploadDir;
 }
 
-void splitPathFile(Client &client, Str s)
-{
-    size_t dot = s.rfind(s);
-    size_t slash = s.rfind(s);
 
-    if (dot != s.npos && dot > slash)
+void splitPathFile(Client &client, Str path)
+{
+    size_t dot = path.rfind(".");
+    size_t slash = path.rfind("/");
+
+    if (dot != path.npos && dot > slash)
     {
-        client._file = s.substr(slash + 1);
-        s.erase(slash + 1);
+        client._file = path.substr(slash + 1);
+        path.erase(slash + 1);
     } 
-    client._path = s;
+    client._path = path;
 }
 
-void parseLine(Client &client, Str s)
+
+void parseLine(Client &client, Str line)
 {
-    size_t pos = s.find(" ");
-    for (int i = 0; pos != s.npos; i++)
+    size_t pos = line.find(" ");
+
+    for (int i = 0; pos != line.npos; i++)
     {
-        if      (i == 0)   client._method = s.substr(0, pos);
-        else if (i == 1)   splitPathFile(client, s.substr(0, pos));
+        if      (i == 0)  client._method = line.substr(0, pos);
+        else if (i == 1)  splitPathFile(client, line.substr(0, pos));
         
-        s.erase(pos + 1);
-        pos = s.find(" ");
+        line.erase(0, pos + 1);
+        pos = line.find(" ");
     }
-    client._version = s;
+    client._version = line;
 }
 
-void parseHead(Client &client, Header &header, Str s)
-{
-    size_t pos = s.find(': ');
 
-    if (pos != s.npos)
+void parseHead(Client &client, Header &header, Str head)
+{
+    size_t pos = head.find(": ");
+
+    if (pos != head.npos)
     {
-        Str key = s.substr(0, pos);
-        Str value = s.substr(pos + 2);
+        Str key = head.substr(0, pos);
+        Str value = head.substr(pos + 2);
         header[key] = value;
 
         if (!client._contentLen && key == "Content-Length")

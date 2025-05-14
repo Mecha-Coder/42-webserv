@@ -40,7 +40,7 @@ Return:
 - true  ➡️ HTTP Connection header is explicitly set to 'keep-alive'.
 - false ➡️ HTTP Connection header is set to 'close' or is missing.
 */
-bool  Client::iskeepAlive() const
+bool  Client::isKeepAlive() const
 {   
     Header::const_iterator i = this->header.find("Connection");
     
