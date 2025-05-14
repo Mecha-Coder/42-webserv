@@ -25,8 +25,13 @@ class Client
     public:
         Client(const Server &_server_);
 
-        bool appendReq(char &request);
+        bool appendReq(Str request);
         bool isHeadReady() const;
+        
+        const char *respond() {return reply.c_str();}
+
+        void reuseFd();
+        void showData();
 
         //////////////////////////////////////////////////////////
         ///            ALL INFO YOU NEED IS IN HERE           ////
@@ -36,11 +41,11 @@ class Client
         Str     _path;
         Str     _version;
         Str     _contentType;
-        int     _contentLen;
+        size_t  _contentLen;
         Str     _file;
         Str     _redirect;
 
-        // Absolute path root + subdir
+        // Path root + subdir
         Str         _filePath;
         Str         _uploadDir;
         Str         _cgiPath;
@@ -52,17 +57,13 @@ class Client
         
         int   getMaxBodySize() const;
 
-        bool  iskeepAlive() const;   
+        bool  isKeepAlive() const;   
         bool  isAutoIndex() const;
         bool  isMethodAllow(const Str &method) const;
 
         const Str   getHost() const;
         const Str   getDefaultFile() const;
         const Str   runWithCGI(const Str &file) const;
-        {
-            std::cout << "\nTry route /archive/ " << std::endl; 
-            this->route = this->server.findRoute("/archive/"); 
-        }
 };
 
 #endif
