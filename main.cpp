@@ -202,6 +202,174 @@ Str req =   "GET /redirect/ HTTP/1.1\r\n"
 return req;
 }
 
+Str Forbidden_Method()
+{
+std::cout << YELLOW "Forbidden_Method\n"
+          << "========================" RESET << std::endl;
+
+Str req =   "PATCH / HTTP/1.1\r\n"
+            "Host: 127.0.0.1:8080\r\n"
+            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:138.0) Gecko/20100101 Firefox/138.0\r\n"
+            "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n"
+            "Accept-Language: en-US,en;q=0.5\r\n"
+            "Accept-Encoding: gzip, deflate, br, zstd\r\n"
+            "DNT: 1\r\n"
+            "Sec-GPC: 1\r\n"
+            "Connection: close\r\n"
+            "Upgrade-Insecure-Requests: 1\r\n"
+            "Sec-Fetch-Dest: document\r\n"
+            "Sec-Fetch-Mode: navigate\r\n"
+            "Sec-Fetch-Site: none\r\n"
+            "Sec-Fetch-User: ?1\r\n"
+            "Priority: u=0, i\r\n"
+            "\r\n";
+return req;
+}
+
+Str Method_Not_Listed_Route()
+{
+std::cout << YELLOW "Method_Not_Listed_Route()\n"
+          << "========================" RESET << std::endl;
+
+Str req =   "GET /upload/ HTTP/1.1\r\n"
+            "Host: 127.0.0.1:8080\r\n"
+            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:138.0) Gecko/20100101 Firefox/138.0\r\n"
+            "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n"
+            "Accept-Language: en-US,en;q=0.5\r\n"
+            "Accept-Encoding: gzip, deflate, br, zstd\r\n"
+            "DNT: 1\r\n"
+            "Sec-GPC: 1\r\n"
+            "Connection: close\r\n"
+            "Upgrade-Insecure-Requests: 1\r\n"
+            "Sec-Fetch-Dest: document\r\n"
+            "Sec-Fetch-Mode: navigate\r\n"
+            "Sec-Fetch-Site: none\r\n"
+            "Sec-Fetch-User: ?1\r\n"
+            "Priority: u=0, i\r\n"
+            "\r\n";
+return req;
+}
+
+Str No_Such_File()
+{
+std::cout << YELLOW "No_Such_file\n"
+          << "======================" RESET << std::endl;
+
+Str req =   "GET /unknown.txt \r\n"
+            "Host: 127.0.0.1:8080\r\n"
+            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:138.0) Gecko/20100101 Firefox/138.0\r\n"
+            "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n"
+            "Accept-Language: en-US,en;q=0.5\r\n"
+            "Accept-Encoding: gzip, deflate, br, zstd\r\n"
+            "DNT: 1\r\n"
+            "Sec-GPC: 1\r\n"
+            "Connection: close\r\n"
+            "Upgrade-Insecure-Requests: 1\r\n"
+            "Sec-Fetch-Dest: document\r\n"
+            "Sec-Fetch-Mode: navigate\r\n"
+            "Sec-Fetch-Site: none\r\n"
+            "Sec-Fetch-User: ?1\r\n"
+            "Priority: u=0, i\r\n"
+            "\r\n";
+return req;
+}
+
+Str No_Default_no_autoindex()
+{
+std::cout << YELLOW "No_Default_no_autoindex\n"
+          << "======================" RESET << std::endl;
+
+Str req =   "GET /cgi-bin/ \r\n"
+            "Host: 127.0.0.1:8080\r\n"
+            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:138.0) Gecko/20100101 Firefox/138.0\r\n"
+            "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n"
+            "Accept-Language: en-US,en;q=0.5\r\n"
+            "Accept-Encoding: gzip, deflate, br, zstd\r\n"
+            "DNT: 1\r\n"
+            "Sec-GPC: 1\r\n"
+            "Connection: close\r\n"
+            "Upgrade-Insecure-Requests: 1\r\n"
+            "Sec-Fetch-Dest: document\r\n"
+            "Sec-Fetch-Mode: navigate\r\n"
+            "Sec-Fetch-Site: none\r\n"
+            "Sec-Fetch-User: ?1\r\n"
+            "Priority: u=0, i\r\n"
+            "\r\n";
+return req;
+}
+
+Str No_Default_autoindex_ON()
+{
+std::cout << YELLOW "No_Default_autoindex_ON\n"
+          << "======================" RESET << std::endl;
+
+Str req =   "GET /archive/ \r\n"
+            "Host: 127.0.0.1:8080\r\n"
+            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:138.0) Gecko/20100101 Firefox/138.0\r\n"
+            "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n"
+            "Accept-Language: en-US,en;q=0.5\r\n"
+            "Accept-Encoding: gzip, deflate, br, zstd\r\n"
+            "DNT: 1\r\n"
+            "Sec-GPC: 1\r\n"
+            "Connection: close\r\n"
+            "Upgrade-Insecure-Requests: 1\r\n"
+            "Sec-Fetch-Dest: document\r\n"
+            "Sec-Fetch-Mode: navigate\r\n"
+            "Sec-Fetch-Site: none\r\n"
+            "Sec-Fetch-User: ?1\r\n"
+            "Priority: u=0, i\r\n"
+            "\r\n";
+return req;
+}
+
+Str Fetch_default_file()
+{
+std::cout << YELLOW "Fetch_default_file\n"
+          << "======================" RESET << std::endl;
+
+Str req =   "GET / \r\n"
+            "Host: 127.0.0.1:8080\r\n"
+            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:138.0) Gecko/20100101 Firefox/138.0\r\n"
+            "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n"
+            "Accept-Language: en-US,en;q=0.5\r\n"
+            "Accept-Encoding: gzip, deflate, br, zstd\r\n"
+            "DNT: 1\r\n"
+            "Sec-GPC: 1\r\n"
+            "Connection: close\r\n"
+            "Upgrade-Insecure-Requests: 1\r\n"
+            "Sec-Fetch-Dest: document\r\n"
+            "Sec-Fetch-Mode: navigate\r\n"
+            "Sec-Fetch-Site: none\r\n"
+            "Sec-Fetch-User: ?1\r\n"
+            "Priority: u=0, i\r\n"
+            "\r\n";
+return req;
+}
+
+Str Fetch_large_image()
+{
+    std::cout << YELLOW "Fetch_large_image\n"
+          << "======================" RESET << std::endl;
+
+Str req =   "GET /archive/cpp_02.jpg \r\n"
+            "Host: 127.0.0.1:8080\r\n"
+            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:138.0) Gecko/20100101 Firefox/138.0\r\n"
+            "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n"
+            "Accept-Language: en-US,en;q=0.5\r\n"
+            "Accept-Encoding: gzip, deflate, br, zstd\r\n"
+            "DNT: 1\r\n"
+            "Sec-GPC: 1\r\n"
+            "Connection: close\r\n"
+            "Upgrade-Insecure-Requests: 1\r\n"
+            "Sec-Fetch-Dest: document\r\n"
+            "Sec-Fetch-Mode: navigate\r\n"
+            "Sec-Fetch-Site: none\r\n"
+            "Sec-Fetch-User: ?1\r\n"
+            "Priority: u=0, i\r\n"
+            "\r\n";
+return req;
+}
+
 void test(const Str &request)
 {
     Client client(serverA());
@@ -238,4 +406,22 @@ int main()
     
         // 2.c) Route is a redirect (301 Moved Permanently)
             test(Redirect());
-}
+        
+        // 2.d) (405 Method Not Allowed)
+            test(Forbidden_Method());
+            test(Method_Not_Listed_Route());
+
+    // 3) GET Request
+        // 3.a) URI specify file but not exist (404 Not Found)
+            test(No_Such_File());
+        
+        // 3.b) No default file, autoindex off (403 Forbidden)
+            test(No_Default_no_autoindex());
+
+        // 3.c) Show me your autoindex (200 OK)
+            test(No_Default_autoindex_ON());
+        
+        // 3.d) Show me your file Fetching (200 OK)
+            test(Fetch_default_file());
+            test(Fetch_large_image());
+}       
