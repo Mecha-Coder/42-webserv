@@ -255,7 +255,7 @@ Str No_Such_File()
 std::cout << YELLOW "No_Such_file\n"
           << "======================" RESET << std::endl;
 
-Str req =   "GET /unknown.txt \r\n"
+Str req =   "GET /unknown.txt HTTP/1.1\r\n"
             "Host: 127.0.0.1:8080\r\n"
             "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:138.0) Gecko/20100101 Firefox/138.0\r\n"
             "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n"
@@ -303,7 +303,7 @@ Str No_Default_autoindex_ON()
 std::cout << YELLOW "No_Default_autoindex_ON\n"
           << "======================" RESET << std::endl;
 
-Str req =   "GET /archive/ \r\n"
+Str req =   "GET /archive/ HTTP/1.1\r\n"
             "Host: 127.0.0.1:8080\r\n"
             "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:138.0) Gecko/20100101 Firefox/138.0\r\n"
             "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n"
@@ -327,7 +327,7 @@ Str Fetch_default_file()
 std::cout << YELLOW "Fetch_default_file\n"
           << "======================" RESET << std::endl;
 
-Str req =   "GET / \r\n"
+Str req =   "GET / HTTP/1.1\r\n"
             "Host: 127.0.0.1:8080\r\n"
             "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:138.0) Gecko/20100101 Firefox/138.0\r\n"
             "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n"
@@ -351,7 +351,7 @@ Str Fetch_large_image()
     std::cout << YELLOW "Fetch_large_image\n"
           << "======================" RESET << std::endl;
 
-Str req =   "GET /archive/cpp_02.jpg \r\n"
+Str req =   "GET /archive/cpp_02.jpg HTTP/1.1\r\n"
             "Host: 127.0.0.1:8080\r\n"
             "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:138.0) Gecko/20100101 Firefox/138.0\r\n"
             "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n"
@@ -366,6 +366,204 @@ Str req =   "GET /archive/cpp_02.jpg \r\n"
             "Sec-Fetch-Site: none\r\n"
             "Sec-Fetch-User: ?1\r\n"
             "Priority: u=0, i\r\n"
+            "\r\n";
+return req;
+}
+
+Str Simple_get_CGI()
+{
+std::cout << YELLOW "Simple_get_CGI\n"
+          << "======================" RESET << std::endl;
+
+Str req =   "GET /bin/printenv.py HTTP/1.1\r\n"
+            "Host: 127.0.0.1:8080\r\n"
+            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:138.0) Gecko/20100101 Firefox/138.0\r\n"
+            "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n"
+            "Accept-Language: en-US,en;q=0.5\r\n"
+            "Accept-Encoding: gzip, deflate, br, zstd\r\n"
+            "DNT: 1\r\n"
+            "Sec-GPC: 1\r\n"
+            "Connection: close\r\n"
+            "Upgrade-Insecure-Requests: 1\r\n"
+            "Sec-Fetch-Dest: document\r\n"
+            "Sec-Fetch-Mode: navigate\r\n"
+            "Sec-Fetch-Site: none\r\n"
+            "Sec-Fetch-User: ?1\r\n"
+            "Priority: u=0, i\r\n"
+            "\r\n";
+return req;
+}
+
+Str Upload_txt_file() 
+{
+std::cout << YELLOW "Upload_txt_file\n"
+          << "========================" RESET << std::endl;
+
+Str req  =  "POST /upload/ HTTP/1.1\r\n"
+            "Host: 127.0.0.1:8080 \r\n"
+            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)\r\n"
+            "Content-Type: application/x-www-form-urlencoded\r\n"
+            "Content-Length: 573\r\n"
+            "Accept: */*\r\n"
+            "Connection: keep-alive\r\n"
+            "\r\n"
+            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum";
+return req;
+}
+
+Str Post_Ghost_File() 
+{
+std::cout << YELLOW "Post_Ghost_File\n"
+          << "========================" RESET << std::endl;
+
+Str req  =  "POST /bin/ghost.php HTTP/1.1\r\n"
+            "Host: 127.0.0.1:8080 \r\n"
+            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)\r\n"
+            "Content-Type: application/x-www-form-urlencoded\r\n"
+            "Content-Length: 573\r\n"
+            "Accept: */*\r\n"
+            "Connection: keep-alive\r\n"
+            "\r\n"
+            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum";
+return req;
+}
+
+Str Post_No_Default() 
+{
+std::cout << YELLOW "Post_No_Default\n"
+          << "========================" RESET << std::endl;
+
+Str req  =  "POST /test/ HTTP/1.1\r\n"
+            "Host: 127.0.0.1:8080 \r\n"
+            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)\r\n"
+            "Content-Type: application/x-www-form-urlencoded\r\n"
+            "Content-Length: 573\r\n"
+            "Accept: */*\r\n"
+            "Connection: keep-alive\r\n"
+            "\r\n"
+            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum";
+return req;
+}
+
+Str Post_Not_CGI() 
+{
+std::cout << YELLOW "Post_Not_CGI\n"
+          << "========================" RESET << std::endl;
+
+Str req  =  "POST /bin/test.php HTTP/1.1\r\n"
+            "Host: 127.0.0.1:8080 \r\n"
+            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)\r\n"
+            "Content-Type: application/x-www-form-urlencoded\r\n"
+            "Content-Length: 573\r\n"
+            "Accept: */*\r\n"
+            "Connection: keep-alive\r\n"
+            "\r\n"
+            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum";
+return req;
+}
+
+Str CGI_Post_show_body_default_file() 
+{
+std::cout << YELLOW "CGI_Post_show_body_default_file\n"
+          << "========================" RESET << std::endl;
+
+Str req  =  "POST /bin/ HTTP/1.1\r\n"
+            "Host: 127.0.0.1:8080 \r\n"
+            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)\r\n"
+            "Content-Type: application/x-www-form-urlencoded\r\n"
+            "Content-Length: 573\r\n"
+            "Accept: */*\r\n"
+            "Connection: keep-alive\r\n"
+            "\r\n"
+            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum";
+return req;
+}
+
+Str Delete_File_Not_there()
+{
+    std::cout << YELLOW "Delete_File_Not_there\n"
+          << "======================" RESET << std::endl;
+
+Str req =   "DELETE /archive/cat.png HTTP/1.1\r\n"
+            "Host: 127.0.0.1:8080\r\n"
+            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:138.0) Gecko/20100101 Firefox/138.0\r\n"
+            "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n"
+            "Accept-Language: en-US,en;q=0.5\r\n"
+            "Accept-Encoding: gzip, deflate, br, zstd\r\n"
+            "DNT: 1\r\n"
+            "Sec-GPC: 1\r\n"
+            "Connection: close\r\n"
+            "Upgrade-Insecure-Requests: 1\r\n"
+            "Sec-Fetch-Dest: document\r\n"
+            "Sec-Fetch-Mode: navigate\r\n"
+            "Sec-Fetch-Site: none\r\n"
+            "Sec-Fetch-User: ?1\r\n"
+            "Priority: u=0, i\r\n"
+            "\r\n";
+return req;
+}
+
+Str Delete_with_CGI() 
+{
+std::cout << YELLOW "Delete_with_CGI\n"
+          << "========================" RESET << std::endl;
+
+Str req  =  "DELETE /bin/removeMe.py HTTP/1.1\r\n"
+            "Host: 127.0.0.1:8080 \r\n"
+            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)\r\n"
+            "Content-Type: application/x-www-form-urlencoded\r\n"
+            "Content-Length: 573\r\n"
+            "Accept: */*\r\n"
+            "Connection: keep-alive\r\n"
+            "\r\n";
+return req;
+}
+
+Str Delete_actual_file() 
+{
+std::cout << YELLOW "Delete_actual_file\n"
+          << "========================" RESET << std::endl;
+
+Str req  =  "DELETE /archive/flowchar.png " 
+            "HTTP/1.1\r\n"
+            "Host: 127.0.0.1:8080 \r\n"
+            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)\r\n"
+            "Content-Type: application/x-www-form-urlencoded\r\n"
+            "Content-Length: 573\r\n"
+            "Accept: */*\r\n"
+            "Connection: keep-alive\r\n"
+            "\r\n";
+return req;
+}
+
+Str Delete_actual_directory() 
+{
+std::cout << YELLOW "Delete_actual_directory\n"
+          << "========================" RESET << std::endl;
+
+Str req  =  "DELETE /test/ HTTP/1.1\r\n"
+            "Host: 127.0.0.1:8080 \r\n"
+            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)\r\n"
+            "Content-Type: application/x-www-form-urlencoded\r\n"
+            "Content-Length: 573\r\n"
+            "Accept: */*\r\n"
+            "Connection: keep-alive\r\n"
+            "\r\n";
+return req;
+}
+
+Str Delete_default_cgi() 
+{
+std::cout << YELLOW "Delete_default_cgi(\n"
+          << "========================" RESET << std::endl;
+
+Str req  =  "DELETE /delete/ HTTP/1.1\r\n"
+            "Host: 127.0.0.1:8080 \r\n"
+            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)\r\n"
+            "Content-Type: application/x-www-form-urlencoded\r\n"
+            "Content-Length: 573\r\n"
+            "Accept: */*\r\n"
+            "Connection: keep-alive\r\n"
             "\r\n";
 return req;
 }
@@ -424,4 +622,39 @@ int main()
         // 3.d) Show me your file Fetching (200 OK)
             test(Fetch_default_file());
             test(Fetch_large_image());
-}       
+        
+        // 3.e) Run simple cgi
+            test(Simple_get_CGI());
+    
+    // 4) POST Request
+        // 4.a) Path support upload
+            test(Upload_txt_file());
+        
+        // 4.b) No upload support: file doesn't exist
+            test(Post_Ghost_File());
+
+        // 4.c) No upload support: no default file
+            test(Post_No_Default());
+
+        // 4.d) No upload support: not a cgi
+            test(Post_Not_CGI());
+
+        // 4.e) No upload support: is a cgi
+            test(CGI_Post_show_body_default_file());
+        
+    // 5) DELETE Request
+        // 5.a) Delete file is not there
+            test(Delete_File_Not_there());
+        
+        // 5.b) Delete run as CGI
+            test(Delete_with_CGI());
+
+        // 5.c) Delete actual file
+            test(Delete_actual_file());
+        
+        // 5.d) Delete actual directory
+            test(Delete_actual_directory());
+            
+        // 5.e) Delete URI default file & run cgi
+            test(Delete_default_cgi());
+}
