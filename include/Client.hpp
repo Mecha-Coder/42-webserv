@@ -64,6 +64,45 @@ class Client
         const Str   getHost() const;
         const Str   getDefaultFile() const;
         const Str   runWithCGI(const Str &file) const;
+
+        ///////////////////////////////////////////////////////////
+        ///               PUT YOUR RESPONSE HERE                /// 
+        ///////////////////////////////////////////////////////////
+
+        void resError(int code)
+        {
+            if (this->_myErrorPg(code).empty())
+                resDefaultError();
+            else
+                std::cout << "Respond custom error page" << std::endl;   
+        }
+        
+        void resDefaultError()
+        {std::cout << "No custom page. Use default error page" << std::endl;}
+
+        void resDirList()
+        {std::cout << "List of files / folder in dir" << std::endl; }
+
+        void resFectchFile()
+        {std::cout << "Fetch file. filePath + file" << std::endl; }
+
+        void resSaveFile()
+        {std::cout << "Post request, save file to specified dir" << std::endl;}
+
+        void resRedirect_1()
+        {std::cout << "308 preserve method and the request body during redirection" << std::endl;}
+
+        void resRedirect_2()
+        {std::cout << "301 permanent redirect" << std::endl;}
+        
+        void resDeleteFile()
+        {std::cout << "Delete file" << std::endl;}
+
+        void resDeleteDir()
+        {std::cout << "Delete Directory" << std::endl;}
+
+        void handleCGI()
+        {std::cout << "Run CGI" << std::endl;}
 };
 
 #endif

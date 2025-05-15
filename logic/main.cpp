@@ -1,10 +1,13 @@
-#include "include/Client.hpp"
+#include "../include/webserv.hpp"
 
-#define YELLOW "\033[33m"
-#define RESET  "\033[0m"
+void test(const Str &request)
+{
+    Client client(serverA());
 
-Server serverA(){}
-void processReq(Client &client){}
+    client.appendReq(request);
+    processReq(client);
+    std::cout << client.respond() << std::endl;
+}
 
 Str Missing_Path_and_Version() 
 {
@@ -566,15 +569,6 @@ Str req  =  "DELETE /delete/ HTTP/1.1\r\n"
             "Connection: keep-alive\r\n"
             "\r\n";
 return req;
-}
-
-void test(const Str &request)
-{
-    Client client(serverA());
-
-    client.appendReq(request);
-    processReq(client);
-    std::cout << client.respond() << std::endl;
 }
 
 int main()
