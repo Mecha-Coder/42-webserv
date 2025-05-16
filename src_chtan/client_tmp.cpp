@@ -10,7 +10,7 @@ Client::~Client()
     std::cout << "Client destructor called" << std::endl;
 }
 
-Client::Client(const client& other)
+Client::Client(const Client& other)
 {
     std::cout << "Client copy constructor called" << std::endl;
     *this = other;
