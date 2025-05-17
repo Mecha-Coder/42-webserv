@@ -1,57 +1,89 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   CgiHandler.cpp                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rcheong <rcheong@student.42kl.edu.my>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/08 21:09:56 by rcheong           #+#    #+#             */
+/*   Updated: 2025/05/17 21:24:23 by rcheong          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "CGIHandler.hpp"
 #include <algorithm>
 
-CGIHandler::CGIHandler(const std::map<std::string, std::string>& env, const std::string& body, const std::vector<std::string>& cgiPaths)
-	: _envMap(env), _cgiPaths(cgiPaths), _requestBody(body), _env(0), _argv(0) {
+CGIHandler* CGIHandler::Create(Client& client,
+	const std::map<std::string, std::string>& env,
+	const std::string& body,
+	const std::vector<std::string>& cgiPaths) {
+	CGIHandler* handler = NULL;
+	try {
+		handler = new CGIHandler(env, body, cgiPaths);
+		return (handler);
+	} catch (...) {
+		client.resError(500);
+		std::cerr << "CGIHandler Factory failed before construction.\n";
+		delete handler;
+		return NULL;
+	}
+}
 
-	_cgiPath = cgiPaths[0]; // use first CGI path as default
-	_envSize = env.size();
-	_env = new char*[_envSize + 1];
-	_env[_envSize] = NULL;
-
-	setEnv(env);
+CGIHandler::CGIHandler(const std::map<std::string, std::string>& env,
+	const std::string& body,
+	const std::vector<std::string>& cgiPaths)
+	: _envMap(env), _cgiPaths(cgiPaths), _requestBody(body), _argv(0) {
+	if (cgiPaths.empty()) {
+		throw std::runtime_error("cgiPaths is empty");
+	}
+	_cgiPath = cgiPaths[0];
+	_env.Set(_envMap);
 }
 
 CGIHandler::~CGIHandler() {
-	cleanEnv();
+	resetArgs();
+	// resetEnv();
+}
+
+void CGIHandler::resetArgs() {
 	if (_argv) {
 		if (_argv[0])
 			free(_argv[0]);
 		delete[] _argv;
+		_argv = 0;
 	}
 }
 
-void CGIHandler::setEnv(const std::map<std::string, std::string>& env) {
-	size_t i = 0;
-	try {
-		for (std::map<std::string, std::string>::const_iterator it = env.begin(); it != env.end(); ++it, ++i) {
-			std::string entry = it->first + "=" + it->second;
-			_env[i] = strdup(entry.c_str());
-			if (!_env[i])
-				throw std::bad_alloc();
-		}
-	} catch (...) {
-		cleanEnv();
-		throw;
-	}
-}
+// void CGIHandler::resetEnv() {
+// 	if (_env) {
+// 		for (size_t i = 0; i < _envSize; ++i)
+// 			free(_env[i]);
+// 		delete[] _env;
+// 		_env = 0;
+// 	}
+// }
 
-void CGIHandler::cleanEnv() {
-	for (size_t i = 0; i < _envSize; ++i) {
-		if (_env[i])
-			free(_env[i]);
-	}
-	delete[] _env;
-	_env = 0;
-}
+// void CGIHandler::setEnv(Client& client, const std::map<std::string, std::string>& env) {
+// 	resetEnv();
+// 	_envSize = env.size();
+// 	_env = new char*[_envSize + 1];
+// 	for (size_t i = 0; i <= _envSize; ++i)
+// 		_env[i] = 0;
 
-std::string CGIHandler::getFileExtension(const std::string& filename) {
-	size_t dotPos = filename.find_last_of('.');
-	if (dotPos != std::string::npos) {
-		return filename.substr(dotPos + 1);
-	}
-	return "";
-}
+// 	size_t i = 0;
+// 	try {
+// 		for (std::map<std::string, std::string>::const_iterator it = env.begin(); it != env.end(); ++it, ++i) {
+// 			std::string entry = it->first + "=" + it->second;
+// 			_env[i] = strdup(entry.c_str());
+// 			if (!_env[i])
+// 				throw std::bad_alloc();
+// 		}
+// 	} catch (...) {
+// 		resetEnv();
+// 		client.resError(500);
+// 		throw;
+// 	}
+// }
 
 std::string CGIHandler::getCmd() {
 	std::map<std::string, std::string>::const_iterator it = _envMap.find("PATH_INFO");
@@ -88,21 +120,19 @@ void CGIHandler::setArgs(const std::string& cmd) {
 	_argv[1] = NULL;
 }
 
-char** CGIHandler::getEnvCStrArr() const {
-	char** env = new char*[_envSize + 1];
-	int j = 0;
-	for (std::map<std::string, std::string>::const_iterator i = _envMap.begin(); i != _envMap.end(); i++) {
-		std::string element = i->first + "=" + i->second;
-		env[j] = new char[element.size() + 1];
-		env[j] = strcpy(env[j], (const char*)element.c_str());
-		j++;
-	}
-	env[j] = NULL;
-	return env;
-}
+// char** CGIHandler::buildEnvCStrArray() const {
+// 	char** envArr = new char*[_envSize + 1];
+// 	for (size_t i = 0; i < _envSize; ++i) {
+// 		envArr[i] = _env[i];
+// 	}
+// 	envArr[_envSize] = nullptr;
+// 	return envArr;
+// }
 
 std::string CGIHandler::addContentLength(const std::string& httpResponse) {
 	size_t headerEndPos = httpResponse.find("\r\n\r\n");
+	if (headerEndPos == std::string::npos)
+		return httpResponse;
 	std::string headers = httpResponse.substr(0, headerEndPos);
 	std::string body = httpResponse.substr(headerEndPos + 4);
 
@@ -133,67 +163,95 @@ std::string CGIHandler::addContentLength(const std::string& httpResponse) {
 	return modifiedHeaders.str() + "\r\n\r\n" + body;
 }
 
-std::string CGIHandler::Execute() {
-	std::string cmd_ = getCmd();
-	setArgs(cmd_);
+std::string CGIHandler::Execute(Client& client) {
+	try {
+		std::string cmd_ = getCmd();
+		setArgs(cmd_);
 
-	int fdResponse[2];
-	int fdRequest[2];
-	if (pipe(fdResponse) == -1 || pipe(fdRequest) == -1)
-		throw std::runtime_error("pipe() failed");
+		int fdResponse[2];
+		int fdRequest[2];
+		if (pipe(fdResponse) == -1 || pipe(fdRequest) == -1)
+			throw std::runtime_error("pipe() failed");
 
-	pid_t pid = fork();
-	if (pid == -1) {
-		throw std::runtime_error("fork() failed");
-	} else if (pid == 0) {
-		if (dup2(fdResponse[1], STDOUT_FILENO) == -1 ||
-			dup2(fdRequest[0], STDIN_FILENO) == -1) {
-			perror("dup2");
+		pid_t pid = fork();
+		if (pid == -1) {
+			throw std::runtime_error("fork() failed");
+		} else if (pid == 0) {
+			// child
+			if (dup2(fdResponse[1], STDOUT_FILENO) == -1 ||
+				dup2(fdRequest[0], STDIN_FILENO) == -1) {
+				perror("dup2");
+				exit(1);
+			}
+
+			close(fdResponse[0]);
+			close(fdResponse[1]);
+			close(fdRequest[0]);
+			close(fdRequest[1]);
+
+			execve(_argv[0], _argv, _env.Data());
+			perror("execve");
 			exit(1);
-		}
+		} else {
+			// parent
+			close(fdRequest[0]);
+			write(fdRequest[1], _requestBody.c_str(), _requestBody.size());
+			close(fdRequest[1]);
+			close(fdResponse[1]);
 
-		close(fdResponse[0]);
-		close(fdResponse[1]);
-		close(fdRequest[0]);
-		close(fdRequest[1]);
+			struct pollfd pfd;
+			pfd.fd = fdResponse[0];
+			pfd.events = POLLIN;
+		
+			std::string responseBody;
+			char buffer_[1024];
+			int totalElapsed = 0;
+			const int pollInterval = 25; // 25ms
+			const int maxTimeout = 5000; // 5s max
 
-		execve(_argv[0], _argv, _env);
-		perror("execve");
-		exit(1);
-	} else {
-		close(fdRequest[0]);
-		write(fdRequest[1], _requestBody.c_str(), _requestBody.size());
-		close(fdRequest[1]);
-		close(fdResponse[1]);
+			while (totalElapsed < maxTimeout) {
+				int poll_ret = poll(&pfd, 1, pollInterval); // run poll every 25ms
+				totalElapsed += pollInterval;
 
-		struct pollfd pfd;
-		pfd.fd = fdResponse[0];
-		pfd.events = POLLIN;
+				if (poll_ret < 0) {
+					kill(pid, SIGKILL);
+					close(fdResponse[0]);
+					waitpid(pid, 0, 0);
+					throw std::runtime_error("poll() failed");
+				} else if (poll_ret == 0) {
+					continue; // keep polling
+				}
 
-		int poll_ret = poll(&pfd, 1, 5000);
-		if (poll_ret == 0) {
-			kill(pid, SIGKILL);
+				int bytes = read(fdResponse[0], buffer_, sizeof(buffer_));
+				if (bytes < 0) {
+					kill(pid, SIGKILL);
+					close(fdResponse[0]);
+					waitpid(pid, 0, 0);
+					throw std::runtime_error("read() failed");
+				} else if (bytes == 0) {
+					break;
+				} else {
+					responseBody.append(buffer_, bytes);
+				}
+			}
+
+			// timeout exceeded
+			if (totalElapsed >= maxTimeout) {
+				kill(pid, SIGKILL);
+				close(fdResponse[0]);
+				waitpid(pid, 0, 0);
+				throw std::runtime_error("CGI script timeout after 5s");
+			}
+
 			close(fdResponse[0]);
-			waitpid(pid, 0, 0);
-			throw std::runtime_error("CGI script timeout");
-		} else if (poll_ret < 0) {
-			kill(pid, SIGKILL);
-			close(fdResponse[0]);
-			waitpid(pid, 0, 0);
-			throw std::runtime_error("poll() failed");
+			int status;
+			waitpid(pid, &status, 0);
+
+			return addContentLength(responseBody);
 		}
-
-		int status;
-		waitpid(pid, &status, 0);
-
-		char buffer_[1024];
-		int ret = 0;
-		std::string responseBody;
-		while ((ret = read(fdResponse[0], buffer_, sizeof(buffer_))) > 0) {
-			responseBody.append(buffer_, ret);
-		}
-
-		close(fdResponse[0]);
-		return addContentLength(responseBody);
+	} catch (const std::exception& e) {
+		std::cerr << "CGIHandler error: " << e.what() << std::endl;
+		client.resError(500);
+		return "";
 	}
 }
