@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   respone.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chtan <chtan@student.42kl.edu.my>          +#+  +:+       +#+        */
+/*   By: chtan <chtan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 10:26:35 by chtan             #+#    #+#             */
-/*   Updated: 2025/05/18 10:29:03 by chtan            ###   ########.fr       */
+/*   Updated: 2025/05/18 10:59:38 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,4 +35,25 @@ response& response::operator=(const response& other)
 void response::set_status(const std::string& status)
 {
     this->_status = status;
+}
+
+void response::set_content(const int content)
+{
+    this->_content_length = content;
+}
+
+void response::set_content_length(const std::string& len) {
+    this->_content_length = len;
+}
+
+std::string response::get_status() const {
+    return _status;
+}
+
+int response::get_content_type() const {
+    return _content_type;
+}
+
+std::string response::get_content_length() const {
+    return _content_length;
 }

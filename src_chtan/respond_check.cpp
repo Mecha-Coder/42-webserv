@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   respond_check.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chtan <chtan@student.42kl.edu.my>          +#+  +:+       +#+        */
+/*   By: chtan <chtan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 12:46:36 by chtan             #+#    #+#             */
-/*   Updated: 2025/05/18 10:28:30 by chtan            ###   ########.fr       */
+/*   Updated: 2025/05/18 11:02:36 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,23 +15,19 @@
 
 header::header()
 {
-    std::cout << "Header constructor called" << std::endl;
 }
 
 header::~header()
 {
-    std::cout << "Header destructor called" << std::endl;
 }
 
 header::header(const header& other)
 {
-    std::cout << "Header copy constructor called" << std::endl;
     *this = other;
 }
 
 header& header::operator=(const header& other)
 {
-    std::cout << "Header assignment operator called" << std::endl;
     if (this == &other)
         return *this;
     return *this;
@@ -94,9 +90,9 @@ int main(void)
     Client c;//construct
     response r;//construct
 
-    listDirectoryPOSIX(c.get_path(1), r);//get main path and check
-    std::cout << h.get_map(404) << std::endl;// getter
-    
+    listDirectoryPOSIX(c.get_path(1));//get main path and check
+    checkPathAndSetResponse(c.get_path(1), r);
+    std::cout << r.get_status() << std::endl;
     
     return 0;
 }

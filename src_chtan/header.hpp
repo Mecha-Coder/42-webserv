@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   header.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chtan <chtan@student.42kl.edu.my>          +#+  +:+       +#+        */
+/*   By: chtan <chtan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 12:46:44 by chtan             #+#    #+#             */
-/*   Updated: 2025/05/18 10:29:09 by chtan            ###   ########.fr       */
+/*   Updated: 2025/05/18 11:03:09 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 #include <sys/stat.h> // For stat()
 #include <cerrno>    // For errno
 #include <cstring>   // For strerror()
+#include <cstdlib>
+
 
 // enum nb {
 //     ERROR_505 = 505,
@@ -95,7 +97,8 @@ class response
 {
     private:
         std::string _status;
-        std::string _content_type;
+        int _content_type;// 1 for file and 0 for dir
+        std::string _path;
         std::string _content_length;
         // std::string _body;
         // std::string _type;
@@ -107,6 +110,12 @@ class response
         ~response(void);
 
         void set_status(const std::string& status);
+        void set_content(const int content_type);
+        void set_content_length(const std::string& len);
+
+        std::string get_status() const;
+        int         get_content_type() const;
+        std::string get_content_length() const;
 };
 
 // class client
@@ -121,4 +130,6 @@ class response
 
 // };
 // get path
-std::string    listDirectoryPOSIX(const std::string& path, response& r);
+std::string     listDirectoryPOSIX(const std::string& path);
+void            checkPathAndSetResponse(const std::string& path, response& res);
+
