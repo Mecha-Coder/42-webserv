@@ -6,7 +6,7 @@
 /*   By: chtan <chtan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 12:46:44 by chtan             #+#    #+#             */
-/*   Updated: 2025/05/18 13:35:53 by chtan            ###   ########.fr       */
+/*   Updated: 2025/05/18 14:33:23 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 #include <cstring>   // For strerror()
 #include <cstdlib>
 
+typedef std::string str;
 
 // enum nb {
 //     ERROR_505 = 505,
@@ -133,4 +134,9 @@ class response
 // get path
 std::string     listDirectoryPOSIX(const std::string& path);
 void            checkPathAndSetResponse(const std::string& path, response& res);
+void            respond_error(int error);
+void            respond_default(response &res);
+// void            resDirlist(void);
+void             resDirlist(response &res);
+
 
