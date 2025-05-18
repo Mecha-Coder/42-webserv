@@ -6,7 +6,7 @@
 /*   By: chtan <chtan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 10:26:35 by chtan             #+#    #+#             */
-/*   Updated: 2025/05/18 10:59:38 by chtan            ###   ########.fr       */
+/*   Updated: 2025/05/18 13:35:57 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void response::set_status(const std::string& status)
 
 void response::set_content(const int content)
 {
-    this->_content_length = content;
+    this->_content = content;
 }
 
 void response::set_content_length(const std::string& len) {

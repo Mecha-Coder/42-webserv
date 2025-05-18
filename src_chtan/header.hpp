@@ -6,7 +6,7 @@
 /*   By: chtan <chtan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 12:46:44 by chtan             #+#    #+#             */
-/*   Updated: 2025/05/18 11:03:09 by chtan            ###   ########.fr       */
+/*   Updated: 2025/05/18 13:35:53 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ class response
         int _content_type;// 1 for file and 0 for dir
         std::string _path;
         std::string _content_length;
+        std::string _content;
         // std::string _body;
         // std::string _type;
 

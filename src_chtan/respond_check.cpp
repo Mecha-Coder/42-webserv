@@ -6,7 +6,7 @@
 /*   By: chtan <chtan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 12:46:36 by chtan             #+#    #+#             */
-/*   Updated: 2025/05/18 11:02:36 by chtan            ###   ########.fr       */
+/*   Updated: 2025/05/18 13:21:57 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ int main(void)
     response r;//construct
 
     listDirectoryPOSIX(c.get_path(1));//get main path and check
-    checkPathAndSetResponse(c.get_path(1), r);
+    checkPathAndSetResponse("404.html", r);
     std::cout << r.get_status() << std::endl;
     
     return 0;
