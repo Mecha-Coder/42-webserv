@@ -6,7 +6,7 @@
 /*   By: chtan <chtan@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 12:46:44 by chtan             #+#    #+#             */
-/*   Updated: 2025/05/16 22:20:15 by chtan            ###   ########.fr       */
+/*   Updated: 2025/05/18 10:29:09 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ class header{
 
     protected:
         error_code err;
-        std::string err_msg(int i);
+        // std::string err_msg(int i);
 
     public:
         header(void);
@@ -89,6 +89,24 @@ class header{
         ~header(void);
         std::string get_map(int error) const;
         
+};
+
+class response
+{
+    private:
+        std::string _status;
+        std::string _content_type;
+        std::string _content_length;
+        // std::string _body;
+        // std::string _type;
+
+    public:
+        response(void);
+        response(const response &tocopy);
+        response &operator=(const response &tocopy);
+        ~response(void);
+
+        void set_status(const std::string& status);
 };
 
 // class client
@@ -102,5 +120,5 @@ class header{
 //     public:
 
 // };
-
-void    listDirectoryPOSIX(const std::string& path);
+// get path
+std::string    listDirectoryPOSIX(const std::string& path, response& r);

@@ -6,7 +6,7 @@
 /*   By: chtan <chtan@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 12:46:36 by chtan             #+#    #+#             */
-/*   Updated: 2025/05/16 22:20:42 by chtan            ###   ########.fr       */
+/*   Updated: 2025/05/18 10:28:30 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,9 @@ int main(void)
 {
     header h;//construct
     Client c;//construct
+    response r;//construct
 
-    listDirectoryPOSIX(c.get_path(1));//get main path and check
+    listDirectoryPOSIX(c.get_path(1), r);//get main path and check
     std::cout << h.get_map(404) << std::endl;// getter
     
     

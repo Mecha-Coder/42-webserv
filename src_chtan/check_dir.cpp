@@ -6,7 +6,7 @@
 /*   By: chtan <chtan@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 22:40:53 by chtan             #+#    #+#             */
-/*   Updated: 2025/05/16 13:05:09 by chtan            ###   ########.fr       */
+/*   Updated: 2025/05/18 10:25:58 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
  * 
  * @param path The path to the directory to list.
  */
-void listDirectoryPOSIX(const std::string& path) {
+std::string listDirectoryPOSIX(const std::string& path) {
     if(path.empty()) {
         std::cerr << "Path is empty." << std::endl;
         return;
@@ -50,10 +50,9 @@ void listDirectoryPOSIX(const std::string& path) {
 
         // Determine if it's a directory or file
         if (S_ISDIR(statBuf.st_mode)) {
-            std::cout << "[DIR]  " << entry->d_name << std::endl;
+            return(entry->d_name);
         } else {
-            std::cout << "[FILE] " << entry->d_name 
-                      << " (" << statBuf.st_size << " bytes)" << std::endl;
+            return(entry->d_name + " (" + std::to_string(statBuf.st_size) + " bytes)");
         }
     }
     closedir(dir);
