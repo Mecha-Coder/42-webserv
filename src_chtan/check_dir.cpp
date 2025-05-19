@@ -6,7 +6,7 @@
 /*   By: chtan <chtan@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 22:40:53 by chtan             #+#    #+#             */
-/*   Updated: 2025/05/19 12:23:48 by chtan            ###   ########.fr       */
+/*   Updated: 2025/05/19 15:00:55 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,42 +85,95 @@ void checkPathAndSetResponse(const std::string& path, response& res) {
     }
 }
 
-std::string search(const std::string& path, const std::string& filename, bool &check)
+std::string* search(const std::string& path, const std::string& filename, bool &check)
 {
+    str* result = new std::string;
     DIR* dir = opendir(path.c_str());
     if (!dir) {
         std::cerr << "Error opening directory: " << strerror(errno) << std::endl;
-        return "";
+        return (nullptr);
     }
 
     struct dirent* entry;
     while ((entry = readdir(dir)) != nullptr) {
+        std::cout << entry->d_name << std::endl;
         if (strcmp(entry->d_name, filename.c_str()) == 0) {
             closedir(dir);
             check = true;
-            return path + "/" + entry->d_name;
+            // return path + "/" + entry->d_name;
         }
     }
 
     closedir(dir);
+    return (nullptr);
+}
+
+std::string search_recursive(const std::string& dir, const std::string& filename) {
+    DIR* dp = opendir(dir.c_str());
+    if (!dp) {
+        std::cerr << "Error opening directory " << dir << ": " << strerror(errno) << std::endl;
+        return "";
+    }
+
+    struct dirent* entry;
+    while ((entry = readdir(dp)) != NULL) {
+        // Skip "." and ".."
+        if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0) {
+            continue;
+        }
+
+        std::string full_path = dir + "/" + entry->d_name;
+
+        // Check if this is a directory
+        struct stat stat_buf;
+        if (stat(full_path.c_str(), &stat_buf) != 0) {
+            std::cerr << "Error stating " << full_path << ": " << strerror(errno) << std::endl;
+            continue;
+        }
+
+        if (S_ISDIR(stat_buf.st_mode)) {
+            // Recursively search subdirectory
+            std::string found = search_recursive(full_path, filename);
+            if (!found.empty()) {
+                closedir(dp);
+                return found;
+            }
+        } else if (S_ISREG(stat_buf.st_mode)) {
+            // Check if filename matches
+            if (strcmp(entry->d_name, filename.c_str()) == 0) {
+                closedir(dp);
+                return full_path;
+            }
+        }
+    }
+
+    closedir(dp);
     return "";
 }
 
-namespace fs = std::filesystem;
-
-std::string search_recursive(const std::string& dir, const std::string& filename) {
-    try {
-        for (const auto& entry : fs::recursive_directory_iterator(dir)) {
-            if (entry.is_regular_file() && entry.path().filename() == filename) {
-                return entry.path().string(); // Returns full path (e.g., "website/error/404.html")
-            }
-        }
-    } catch (const fs::filesystem_error& e) {
-        std::cerr << "Filesystem error: " << e.what() << std::endl;
-    } catch (const std::exception& e) {
-        std::cerr << "General error: " << e.what() << std::endl;
+std::vector<std::string> read_dir(const std::string &path)
+{
+    std::vector<std::string> result;
+    DIR* dir = opendir(path.c_str());
+    if (!dir) {
+        std::cerr << "Error opening directory: " << strerror(errno) << std::endl;
+        return result;
     }
-    return ""; // Not found
+
+    struct dirent* entry;
+    while ((entry = readdir(dir)) != NULL) {
+        // Skip "." and ".." entries
+        if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
+            continue;
+
+        result.push_back(entry->d_name);
+    }
+
+    closedir(dir);
+    for (std::vector<std::string>::iterator it = result.begin(); it != result.end(); ++it) {
+        std::cout << *it << std::endl;
+    }
+    return result;
 }
 
 // std::string listDirectoryPOSIX(const std::string& path) {

@@ -6,7 +6,7 @@
 /*   By: chtan <chtan@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 12:46:44 by chtan             #+#    #+#             */
-/*   Updated: 2025/05/19 12:21:37 by chtan            ###   ########.fr       */
+/*   Updated: 2025/05/19 15:00:50 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,9 @@ void            checkPathAndSetResponse(const std::string& path, response& res);
 void            respond_error(int error);
 void            respond_default(response &res);
 // void            resDirlist(void);
-void             resDirlist(response &res);
-std::string search(const std::string& path, const std::string& filename, bool &check);
+void            resDirlist(response &res);
+std::string*    search(const std::string& path, const std::string& filename, bool &check);
+std::string     search_recursive(const std::string& dir, const std::string& filename);
+std::vector<std::string> read_dir(const std::string &path);
 
 

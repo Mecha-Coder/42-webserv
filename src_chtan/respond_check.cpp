@@ -6,7 +6,7 @@
 /*   By: chtan <chtan@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 12:46:36 by chtan             #+#    #+#             */
-/*   Updated: 2025/05/19 12:19:48 by chtan            ###   ########.fr       */
+/*   Updated: 2025/05/19 15:11:37 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,9 @@
 //     }
 //     return result;
 // }
-
+void testing(){
+    std::vector<std::string> files = read_dir("./website");
+}
 
 int main(void)
 {
@@ -93,13 +95,14 @@ int main(void)
 
     // listDirectoryPOSIX(c.get_path(1));//get main path and check
     // checkPathAndSetResponse("404.html", r);
-    std::cout << search("./website", "404.html", check);
-    if (check) {
-        std::cout << "File found!" << std::endl;
-    } else {
-        
-        std::cout << "File not found." << std::endl;
-    }
+    // std::cout << search("./website", "404.html", check);
+    // if (check) {
+    //     std::cout << "File found!" << std::endl;
+    // } else {
+    //     search_recursive("./website", "404.html");
+    //     std::cout << "File not found." << std::endl;
+    // }
+    
     // std::cout << r.get_status() << std::endl;
     
     return 0;
