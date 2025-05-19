@@ -36,13 +36,14 @@ std::vector<std::string> read_dir(const std::string &path)
     return result;
 }
 
-std::string get_html_template(const std::string& directory_name, const std::vector<std::string>& files) {
+std::string get_html_template(const std::string& directory_name, const std::vector<std::string>& files)
+{    
     std::string html = 
             "<!DOCTYPE html>\n"
             "<html lang=\"en\">\n"
             "<head>\n"
             "  <meta charset=\"UTF-8\">\n"
-            "  <title>Index of " + directory_name + "</title>\n"
+            "  <title>" + directory_name + "</title>\n"
             "  <style>\n"
             "    body {\n"
             "      font-family: sans-serif;\n"
@@ -71,7 +72,7 @@ std::string get_html_template(const std::string& directory_name, const std::vect
             "  </style>\n"
             "</head>\n"
             "<body>\n"
-            "  <h1>Index of " + directory_name + "</h1>\n"
+            "  <h1>" + directory_name + "</h1>\n"
             "  <hr>\n"
             "  <pre>\n"
             "<a href=\"../\">../</a>\n";
@@ -83,7 +84,12 @@ std::string get_html_template(const std::string& directory_name, const std::vect
             "  <hr>\n"
             "</body>\n"
             "</html>\n";
-        return html;
+        std::string head =
+            "HTTP/1.1 200 OK\r\n"
+            "Content-Type: text/html\r\n"
+            "Content-Length: " + std::to_string(html.size()) + "\r\n";
+        std::string ret = head + html;
+        return ret;
 }
 
 void testing(){
