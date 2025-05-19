@@ -3,35 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   respond_check.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chtan <chtan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: chtan <chtan@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 12:46:36 by chtan             #+#    #+#             */
-/*   Updated: 2025/05/18 13:21:57 by chtan            ###   ########.fr       */
+/*   Updated: 2025/05/19 11:46:14 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.hpp"
 #include "client_tmp.hpp"
 
-header::header()
-{
-}
+// header::header()
+// {
+// }
 
-header::~header()
-{
-}
+// header::~header()
+// {
+// }
 
-header::header(const header& other)
-{
-    *this = other;
-}
+// header::header(const header& other)
+// {
+//     *this = other;
+// }
 
-header& header::operator=(const header& other)
-{
-    if (this == &other)
-        return *this;
-    return *this;
-}
+// header& header::operator=(const header& other)
+// {
+//     if (this == &other)
+//         return *this;
+//     return *this;
+// }
 
 // std::string header::err_msg(int i)
 // {
@@ -86,7 +86,7 @@ header& header::operator=(const header& other)
 
 int main(void)
 {
-    header h;//construct
+    // header h;//construct
     Client c;//construct
     response r;//construct
 
