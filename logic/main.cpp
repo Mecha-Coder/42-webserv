@@ -1,13 +1,15 @@
 #include "../include/webserv.hpp"
-/*
+
 void test(const Str &request)
 {
     Client client(serverA());
 
     client.appendReq(request);
-    processReq(client);
-    std::cout << client.respond() << std::endl;
+    // processReq(client);
+    std::cout << "IN\n========\n" << request << std::endl;
+    std::cout << "OUT\n=========\n" << client.respond() << std::endl;
 }
+
 
 Str Missing_Path_and_Version() 
 {
@@ -570,92 +572,87 @@ Str req  =  "DELETE /delete/ HTTP/1.1\r\n"
             "\r\n";
 return req;
 }
-*/
 
 int main()
 {
     Server dummy(serverA());
 
-    dummy.showData();
-
-    /*
     // 1) Validation 
         // 1.a) Malform request (400 Bad Request)
-            test(Missing_Path_and_Version());
-            test(Missing_Version());
-            test(Invalid_Version());
+             test(Missing_Path_and_Version());
+            // test(Missing_Version());
+            // test(Invalid_Version());
   
         // 1.b) POST request: Body size issue (400 Bad Request)
-            test(Post_No_ContentLen());
-            test(Post_No_ContentType());
-            test(Bodysize_Not_Same_ContentLen());
+            // test(Post_No_ContentLen());
+            // test(Post_No_ContentType());
+            // test(Bodysize_Not_Same_ContentLen());
         
         // 1.c) Post request: Body exceed limit in config (413 Payload Too Large)
-            test(Body_Exceed_Limit());
+            // test(Body_Exceed_Limit());
         
     // 2) Check any route match URI & meet route requirement
 
         // 2.a) send /upload -> redirect to /upload/ to make it consistent
         // (308 Permanent Redirect)
-            test(Redirect_Consistent_Format());
+            // test(Redirect_Consistent_Format());
 
         // 2.b) No route match URI (404 Not Found)
-            test(Invalid_Route());
+            // test(Invalid_Route());
     
         // 2.c) Route is a redirect (301 Moved Permanently)
-            test(Redirect());
+            // test(Redirect());
         
         // 2.d) (405 Method Not Allowed)
-            test(Forbidden_Method());
-            test(Method_Not_Listed_Route());
+            // test(Forbidden_Method());
+            // test(Method_Not_Listed_Route());
 
     // 3) GET Request
         // 3.a) URI specify file but not exist (404 Not Found)
-            test(No_Such_File());
+            // test(No_Such_File());
         
         // 3.b) No default file, autoindex off (403 Forbidden)
-            test(No_Default_no_autoindex());
+            // test(No_Default_no_autoindex());
 
         // 3.c) Show me your autoindex (200 OK)
-            test(No_Default_autoindex_ON());
+            // test(No_Default_autoindex_ON());
         
         // 3.d) Show me your file Fetching (200 OK)
-            test(Fetch_default_file());
-            test(Fetch_large_image());
+            // test(Fetch_default_file());
+            // test(Fetch_large_image());
         
         // 3.e) Run simple cgi
-            test(Simple_get_CGI());
+            // test(Simple_get_CGI());
     
     // 4) POST Request
         // 4.a) Path support upload
-            test(Upload_txt_file());
+            // test(Upload_txt_file());
         
         // 4.b) No upload support: file doesn't exist
-            test(Post_Ghost_File());
+            // test(Post_Ghost_File());
 
         // 4.c) No upload support: no default file
-            test(Post_No_Default());
+            // test(Post_No_Default());
 
         // 4.d) No upload support: not a cgi
-            test(Post_Not_CGI());
+            // test(Post_Not_CGI());
 
         // 4.e) No upload support: is a cgi
-            test(CGI_Post_show_body_default_file());
+            // test(CGI_Post_show_body_default_file());
         
     // 5) DELETE Request
         // 5.a) Delete file is not there
-            test(Delete_File_Not_there());
+            // test(Delete_File_Not_there());
         
         // 5.b) Delete run as CGI
-            test(Delete_with_CGI());
+            // test(Delete_with_CGI());
 
         // 5.c) Delete actual file
-            test(Delete_actual_file());
+            // test(Delete_actual_file());
         
         // 5.d) Delete actual directory
-            test(Delete_actual_directory());
+            // test(Delete_actual_directory());
             
         // 5.e) Delete URI default file & run cgi
-            test(Delete_default_cgi());
-    */
+            // test(Delete_default_cgi());
 }

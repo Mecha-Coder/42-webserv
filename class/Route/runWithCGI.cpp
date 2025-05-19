@@ -18,8 +18,8 @@ const Str Route::runWithCGI(const Str &file) const
     CGI::const_iterator i = _cgi.begin();
     for (; i != this->_cgi.end(); i++)
     {
-        if (i->first == extension)
-            return (_root + i->second);
+        if (*i == extension)
+            return (_root + *i);
     }
     return "";
 }

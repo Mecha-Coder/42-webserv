@@ -8,7 +8,7 @@
 
 typedef std::string Str;
 typedef std::vector<Str> Method;
-typedef std::map<Str, Str> CGI;
+typedef std::vector<Str> CGI;
 
 class Route
 {

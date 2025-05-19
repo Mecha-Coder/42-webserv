@@ -62,7 +62,7 @@ Server serverA()
     );
     
     Method m5; m5.push_back("GET"), m5.push_back("POST"), m5.push_back("DELETE");
-    CGI is_cgi; is_cgi.insert(std::make_pair(".py", "/bin/"));
+    CGI is_cgi; is_cgi.push_back(".py");
     Route route5(
         "/bin/",
         root,
@@ -87,7 +87,7 @@ Server serverA()
     );
 
     Method m7; m7.push_back("DELETE");
-    CGI del_cgi; del_cgi.insert(std::make_pair(".py", "/delete/"));
+    CGI del_cgi; del_cgi.push_back(".py");
     Route route7 (
         "/delete/",
         root,

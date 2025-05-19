@@ -15,10 +15,10 @@ void Route::showData() const
     for (; i != this->_methods.end(); i++)
         std::cout << *i << ", ";
     
-    std::cout << "\n\tCGI path  : " << std::endl;
+    std::cout << "\n\tCGI     : ";
     
     CGI::const_iterator j = _cgi.begin();
     for (; j != this->_cgi.end(); j++)
-        std::cout << "\t\t" << j->first << ", " << j->second << std::endl;
-    std::cout << std::endl; 
+        std::cout << *j << ", ";
+    std::cout << "\n" << std::endl; 
 }
