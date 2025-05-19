@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   respone.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chtan <chtan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: chtan <chtan@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 10:26:35 by chtan             #+#    #+#             */
-/*   Updated: 2025/05/18 13:35:57 by chtan            ###   ########.fr       */
+/*   Updated: 2025/05/19 12:00:35 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,9 @@ void response::set_content_length(const std::string& len) {
 }
 
 std::string response::get_status() const {
+    if (_status.empty()) {
+        return "No status set";
+    }
     return _status;
 }
 

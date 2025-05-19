@@ -6,7 +6,7 @@
 /*   By: chtan <chtan@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 12:46:36 by chtan             #+#    #+#             */
-/*   Updated: 2025/05/19 11:46:14 by chtan            ###   ########.fr       */
+/*   Updated: 2025/05/19 12:19:48 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,10 +89,18 @@ int main(void)
     // header h;//construct
     Client c;//construct
     response r;//construct
+    bool check = false;
 
-    listDirectoryPOSIX(c.get_path(1));//get main path and check
-    checkPathAndSetResponse("404.html", r);
-    std::cout << r.get_status() << std::endl;
+    // listDirectoryPOSIX(c.get_path(1));//get main path and check
+    // checkPathAndSetResponse("404.html", r);
+    std::cout << search("./website", "404.html", check);
+    if (check) {
+        std::cout << "File found!" << std::endl;
+    } else {
+        
+        std::cout << "File not found." << std::endl;
+    }
+    // std::cout << r.get_status() << std::endl;
     
     return 0;
 }

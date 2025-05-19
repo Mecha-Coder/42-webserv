@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_dir.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chtan <chtan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: chtan <chtan@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 22:40:53 by chtan             #+#    #+#             */
-/*   Updated: 2025/05/18 10:55:59 by chtan            ###   ########.fr       */
+/*   Updated: 2025/05/19 12:23:48 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,43 @@ void checkPathAndSetResponse(const std::string& path, response& res) {
     }
 }
 
+std::string search(const std::string& path, const std::string& filename, bool &check)
+{
+    DIR* dir = opendir(path.c_str());
+    if (!dir) {
+        std::cerr << "Error opening directory: " << strerror(errno) << std::endl;
+        return "";
+    }
 
+    struct dirent* entry;
+    while ((entry = readdir(dir)) != nullptr) {
+        if (strcmp(entry->d_name, filename.c_str()) == 0) {
+            closedir(dir);
+            check = true;
+            return path + "/" + entry->d_name;
+        }
+    }
+
+    closedir(dir);
+    return "";
+}
+
+namespace fs = std::filesystem;
+
+std::string search_recursive(const std::string& dir, const std::string& filename) {
+    try {
+        for (const auto& entry : fs::recursive_directory_iterator(dir)) {
+            if (entry.is_regular_file() && entry.path().filename() == filename) {
+                return entry.path().string(); // Returns full path (e.g., "website/error/404.html")
+            }
+        }
+    } catch (const fs::filesystem_error& e) {
+        std::cerr << "Filesystem error: " << e.what() << std::endl;
+    } catch (const std::exception& e) {
+        std::cerr << "General error: " << e.what() << std::endl;
+    }
+    return ""; // Not found
+}
 
 // std::string listDirectoryPOSIX(const std::string& path) {
 //     if(path.empty()) {

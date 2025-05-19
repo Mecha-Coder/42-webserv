@@ -6,7 +6,7 @@
 /*   By: chtan <chtan@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 12:46:44 by chtan             #+#    #+#             */
-/*   Updated: 2025/05/19 11:46:34 by chtan            ###   ########.fr       */
+/*   Updated: 2025/05/19 12:21:37 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,13 @@
 #include <cerrno>    // For errno
 #include <cstring>   // For strerror()
 #include <cstdlib>
+#include <unistd.h> // For close()
+#include <filesystem>
+#include <string>
 
 typedef std::string str;
-
+// namespace fs = std::filesystem;
+// typedef std::filesystem fs;
 // enum nb {
 //     ERROR_505 = 505,
 //     ERROR_404 = 404
@@ -138,5 +142,6 @@ void            respond_error(int error);
 void            respond_default(response &res);
 // void            resDirlist(void);
 void             resDirlist(response &res);
+std::string search(const std::string& path, const std::string& filename, bool &check);
 
 
