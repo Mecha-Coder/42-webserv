@@ -22,8 +22,7 @@ void Client::showData()
               << "\tFile → "         << _file        << "\n"
               << "\tRedirect → "     << _redirect    << "\n"
               << "\tFile path → "    << _filePath    << "\n"
-              << "\tUpload dir → "   << _uploadDir   << "\n"
-              << "\tCGI path → "     << _cgiPath     << "\n\n"
+              << "\tUpload dir → "   << _uploadDir   << "\n\n"
 
              << "Getter \n===========\n"
              << "isKeepAlive → " << (this->isKeepAlive()? "Yes":"No") << "\n"

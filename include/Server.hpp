@@ -22,14 +22,14 @@ class Server
         Routes      _routes; 
 
     public:
-        const Str     _serverName;
-        const Str     _mainRoot;
-        const int     _clientBodySize;
+        const Str       _serverName;
+        const Str       _mainRoot;
+        const size_t    _clientBodySize;
 
         Server(
             const Str &serverName,
             const Str &mainRoot,
-            const int &clientBodySize,
+            const size_t &clientBodySize,
             const Address &listen,
             const ErrorPage &errorPage,
             const Routes &routes 

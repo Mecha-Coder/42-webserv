@@ -2,7 +2,7 @@
 
 Server serverA()
 {
-    Str root = "C:/Users/PC/Desktop/Webserve/test/website";
+    Str root = "/mnt/c/Users/PC/Desktop/Webserve/test/website";
     CGI noCgi;
 
     Address listen;
@@ -74,7 +74,7 @@ Server serverA()
         is_cgi
     );
 
-    Method m6; m6.push_back("POST"); m6.push_back("DELETE");
+    Method m6; m6.push_back("GET");m6.push_back("POST"); m6.push_back("DELETE");
     Route route6(
         "/test/",
         root,
@@ -92,7 +92,7 @@ Server serverA()
         "/delete/",
         root,
         "",
-        "",
+        "testDel.py",
         "",
         false,
         m7,
@@ -111,7 +111,7 @@ Server serverA()
     Server s(
         "www.example.com",
         root,
-        100,
+        1000,
         listen,
         errorPg,
         routes

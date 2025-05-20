@@ -16,18 +16,6 @@ const Str   Client::_myErrorPg(const int &code) const
 { return this->server.myErrorPg(code); }
 
 /*
-Purpose:
-- Wrapper function for Server Client Max Body Size
-
-_______________________________________________________________________________
-
-Return:
-- Number range from 1 - 2147483647 bytes
-*/
-int   Client::getMaxBodySize() const
-{ return this->server._clientBodySize; }
-
-/*
 ⚠️ NOTE: Call this ONLY after the request has been parsed.
 
 Purpose:
@@ -80,8 +68,8 @@ Return:
 - true  ➡️ Allowed
 - false ➡️ Not allowed
 */
-bool  Client::isMethodAllow(const Str &method) const
-{ return route? this->route->isMethodAllow(method) : false; }
+bool  Client::isMethodAllow() const
+{ return route? this->route->isMethodAllow(this->_method) : false; }
 
 /*
 Purpose:
@@ -130,5 +118,5 @@ Return:
 - Absolute path string ➡️ Handled with CGI
 - Empty string         ➡️ Not handled with CGI
 */
-const Str   Client::runWithCGI(const Str &file) const
-{ return route? this->route->runWithCGI(file) : ""; }
+bool   Client::runWithCGI() const
+{ return route? this->route->runWithCGI(this->_file) : false; }

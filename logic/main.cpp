@@ -5,16 +5,16 @@ void test(const Str &request)
     Client client(serverA());
 
     client.appendReq(request);
-    // processReq(client);
-    std::cout << "IN\n========\n" << request << std::endl;
-    std::cout << "OUT\n=========\n" << client.respond() << std::endl;
+    std::cout << GREEN "\nIN\n===" RESET << std::endl; showRawStr(request);
+    std::cout << CYAN "OUT\n===" RESET << std::endl; // showRawStr(client.respond());
+    processReq(client);
 }
-
 
 Str Missing_Path_and_Version() 
 {
-std::cout << YELLOW "Missing_Path_and_Version\n"
-          << "========================" RESET << std::endl;
+std::cout << YELLOW "\n=================================================================\n"
+          << "Missing_Path_and_Version\n" 
+          << "=================================================================" RESET << std::endl;
 
 Str req =   "PATCH \r\n"
             "Host: 127.0.0.1:8080\r\n"
@@ -37,8 +37,9 @@ return req;
 
 Str Missing_Version() 
 {
-std::cout << YELLOW "Missing_Version\n"
-          << "========================" RESET << std::endl;
+std::cout << YELLOW "\n=================================================================\n"
+          << "Missing_Version\n" 
+          << "=================================================================" RESET << std::endl;
 
 Str req =   "GET /test/ \r\n"
             "Host: 127.0.0.1:8080\r\n"
@@ -59,10 +60,11 @@ Str req =   "GET /test/ \r\n"
 return req;
 }
 
-Str Invalid_Version() 
+Str Invalid_Version()
 {
-std::cout << YELLOW "Invalid_Version\n"
-          << "========================" RESET << std::endl;
+std::cout << YELLOW "\n=================================================================\n"
+          << "Invalid_Version\n" 
+          << "=================================================================" RESET << std::endl;
 
 Str req  = "GET /test HTTP/2.1\r\n"
             "Host: 127.0.0.1:8080\r\n"
@@ -85,8 +87,9 @@ return req;
 
 Str Post_No_ContentLen() 
 {
-std::cout << YELLOW "Post_No_ContentLen\n"
-          << "========================" RESET << std::endl;
+std::cout << YELLOW "\n=================================================================\n"
+          << "Post_No_ContentLen\n" 
+          << "=================================================================" RESET << std::endl;
 
 Str req  =  "POST /submit-form HTTP/1.1\r\n"
             "Host: 127.0.0.1:8080 \r\n"
@@ -101,8 +104,9 @@ return req;
 
 Str Post_No_ContentType() 
 {
-std::cout << YELLOW "Post_No_ContentType\n"
-          << "========================" RESET << std::endl;
+std::cout << YELLOW "\n=================================================================\n"
+          << "Post_No_ContentType\n" 
+          << "=================================================================" RESET << std::endl;
 
 Str req  =  "POST /submit-form HTTP/1.1\r\n"
             "Host: 127.0.0.1:8080 \r\n"
@@ -117,8 +121,9 @@ return req;
 
 Str Bodysize_Not_Same_ContentLen() 
 {
-std::cout << YELLOW "Bodysize_Not_Same_ContentLen\n"
-          << "========================" RESET << std::endl;
+std::cout << YELLOW "\n=================================================================\n"
+          << "Bodysize_Not_Same_ContentLen\n" 
+          << "=================================================================" RESET << std::endl;
 
 Str req  =  "POST /submit-form HTTP/1.1\r\n"
             "Host: 127.0.0.1:8080 \r\n"
@@ -134,8 +139,9 @@ return req;
 
 Str Body_Exceed_Limit() 
 {
-std::cout << YELLOW "Body_Exceed_Limit\n"
-          << "========================" RESET << std::endl;
+std::cout << YELLOW "\n=================================================================\n"
+          << "Body_Exceed_Limit\n" 
+          << "=================================================================" RESET << std::endl;
 
 Str req  =  "POST /submit-form HTTP/1.1\r\n"
             "Host: 127.0.0.1:8080 \r\n"
@@ -151,8 +157,9 @@ return req;
 
 Str Redirect_Consistent_Format() 
 {
-std::cout << YELLOW "Redirect_Consistent_Format\n"
-          << "==================================" RESET << std::endl;
+std::cout << YELLOW "\n=================================================================\n"
+          << "Redirect_Consistent_Format\n" 
+          << "=================================================================" RESET << std::endl;
 
 Str req  =  "POST /submit-form HTTP/1.1\r\n"
             "Host: 127.0.0.1:8080 \r\n"
@@ -168,8 +175,9 @@ return req;
 
 Str Invalid_Route() 
 {
-std::cout << YELLOW "Invalid_Route\n"
-          << "========================" RESET << std::endl;
+std::cout << YELLOW "\n=================================================================\n"
+          << "Invalid_Route\n" 
+          << "=================================================================" RESET << std::endl;
 
 Str req  =  "POST /submit-form/what.html HTTP/1.1\r\n"
             "Host: 127.0.0.1:8080 \r\n"
@@ -185,8 +193,9 @@ return req;
 
 Str Redirect() 
 {
-std::cout << YELLOW "Redirect_please\n"
-          << "========================" RESET << std::endl;
+std::cout << YELLOW "\n=================================================================\n"
+          << "Redirect\n" 
+          << "=================================================================" RESET << std::endl;
 
 Str req =   "GET /redirect/ HTTP/1.1\r\n"
             "Host: 127.0.0.1:8080\r\n"
@@ -209,8 +218,9 @@ return req;
 
 Str Forbidden_Method()
 {
-std::cout << YELLOW "Forbidden_Method\n"
-          << "========================" RESET << std::endl;
+std::cout << YELLOW "\n=================================================================\n"
+          << "Forbidden_Method\n" 
+          << "=================================================================" RESET << std::endl;
 
 Str req =   "PATCH / HTTP/1.1\r\n"
             "Host: 127.0.0.1:8080\r\n"
@@ -233,10 +243,11 @@ return req;
 
 Str Method_Not_Listed_Route()
 {
-std::cout << YELLOW "Method_Not_Listed_Route()\n"
-          << "========================" RESET << std::endl;
+std::cout << YELLOW "\n=================================================================\n"
+          << "Method_Not_Listed_Route\n" 
+          << "=================================================================" RESET << std::endl;
 
-Str req =   "GET /upload/ HTTP/1.1\r\n"
+Str req =   "DELETE /upload/ HTTP/1.1\r\n"
             "Host: 127.0.0.1:8080\r\n"
             "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:138.0) Gecko/20100101 Firefox/138.0\r\n"
             "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*;q=0.8\r\n"
@@ -257,8 +268,9 @@ return req;
 
 Str No_Such_File()
 {
-std::cout << YELLOW "No_Such_file\n"
-          << "======================" RESET << std::endl;
+std::cout << YELLOW "\n=================================================================\n"
+          << "No_Such_File\n" 
+          << "=================================================================" RESET << std::endl;
 
 Str req =   "GET /unknown.txt HTTP/1.1\r\n"
             "Host: 127.0.0.1:8080\r\n"
@@ -281,10 +293,11 @@ return req;
 
 Str No_Default_no_autoindex()
 {
-std::cout << YELLOW "No_Default_no_autoindex\n"
-          << "======================" RESET << std::endl;
+std::cout << YELLOW "\n=================================================================\n"
+          << "No_Default_no_autoindex\n" 
+          << "=================================================================" RESET << std::endl;
 
-Str req =   "GET /cgi-bin/ \r\n"
+Str req =   "GET /test/ HTTP/1.1\r\n"
             "Host: 127.0.0.1:8080\r\n"
             "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:138.0) Gecko/20100101 Firefox/138.0\r\n"
             "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*;q=0.8\r\n"
@@ -305,8 +318,9 @@ return req;
 
 Str No_Default_autoindex_ON()
 {
-std::cout << YELLOW "No_Default_autoindex_ON\n"
-          << "======================" RESET << std::endl;
+std::cout << YELLOW "\n=================================================================\n"
+          << "No_Default_autoindex_ON\n" 
+          << "=================================================================" RESET << std::endl;
 
 Str req =   "GET /archive/ HTTP/1.1\r\n"
             "Host: 127.0.0.1:8080\r\n"
@@ -329,8 +343,9 @@ return req;
 
 Str Fetch_default_file()
 {
-std::cout << YELLOW "Fetch_default_file\n"
-          << "======================" RESET << std::endl;
+std::cout << YELLOW "\n=================================================================\n"
+          << "Fetch_default_file\n" 
+          << "=================================================================" RESET << std::endl;
 
 Str req =   "GET / HTTP/1.1\r\n"
             "Host: 127.0.0.1:8080\r\n"
@@ -353,8 +368,9 @@ return req;
 
 Str Fetch_large_image()
 {
-    std::cout << YELLOW "Fetch_large_image\n"
-          << "======================" RESET << std::endl;
+std::cout << YELLOW "\n=================================================================\n"
+          << "Fetch_large_image\n" 
+          << "=================================================================" RESET << std::endl;
 
 Str req =   "GET /archive/cpp_02.jpg HTTP/1.1\r\n"
             "Host: 127.0.0.1:8080\r\n"
@@ -377,8 +393,9 @@ return req;
 
 Str Simple_get_CGI()
 {
-std::cout << YELLOW "Simple_get_CGI\n"
-          << "======================" RESET << std::endl;
+std::cout << YELLOW "\n=================================================================\n"
+          << "Simple_get_CGI\n" 
+          << "=================================================================" RESET << std::endl;
 
 Str req =   "GET /bin/printenv.py HTTP/1.1\r\n"
             "Host: 127.0.0.1:8080\r\n"
@@ -401,8 +418,9 @@ return req;
 
 Str Upload_txt_file() 
 {
-std::cout << YELLOW "Upload_txt_file\n"
-          << "========================" RESET << std::endl;
+std::cout << YELLOW "\n=================================================================\n"
+          << "Upload_txt_file\n" 
+          << "=================================================================" RESET << std::endl;
 
 Str req  =  "POST /upload/ HTTP/1.1\r\n"
             "Host: 127.0.0.1:8080 \r\n"
@@ -418,8 +436,9 @@ return req;
 
 Str Post_Ghost_File() 
 {
-std::cout << YELLOW "Post_Ghost_File\n"
-          << "========================" RESET << std::endl;
+std::cout << YELLOW "\n=================================================================\n"
+          << "Post_Ghost_File\n" 
+          << "=================================================================" RESET << std::endl;
 
 Str req  =  "POST /bin/ghost.php HTTP/1.1\r\n"
             "Host: 127.0.0.1:8080 \r\n"
@@ -435,8 +454,9 @@ return req;
 
 Str Post_No_Default() 
 {
-std::cout << YELLOW "Post_No_Default\n"
-          << "========================" RESET << std::endl;
+std::cout << YELLOW "\n=================================================================\n"
+          << "Post_No_Default\n" 
+          << "=================================================================" RESET << std::endl;
 
 Str req  =  "POST /test/ HTTP/1.1\r\n"
             "Host: 127.0.0.1:8080 \r\n"
@@ -452,8 +472,9 @@ return req;
 
 Str Post_Not_CGI() 
 {
-std::cout << YELLOW "Post_Not_CGI\n"
-          << "========================" RESET << std::endl;
+std::cout << YELLOW "\n=================================================================\n"
+          << "Post_Not_CGI\n" 
+          << "=================================================================" RESET << std::endl;
 
 Str req  =  "POST /bin/test.php HTTP/1.1\r\n"
             "Host: 127.0.0.1:8080 \r\n"
@@ -469,8 +490,9 @@ return req;
 
 Str CGI_Post_show_body_default_file() 
 {
-std::cout << YELLOW "CGI_Post_show_body_default_file\n"
-          << "========================" RESET << std::endl;
+std::cout << YELLOW "\n=================================================================\n"
+          << "CGI_Post_show_body_default_file\n" 
+          << "=================================================================" RESET << std::endl;
 
 Str req  =  "POST /bin/ HTTP/1.1\r\n"
             "Host: 127.0.0.1:8080 \r\n"
@@ -486,8 +508,9 @@ return req;
 
 Str Delete_File_Not_there()
 {
-    std::cout << YELLOW "Delete_File_Not_there\n"
-          << "======================" RESET << std::endl;
+std::cout << YELLOW "\n=================================================================\n"
+          << "Delete_File_Not_there\n" 
+          << "=================================================================" RESET << std::endl;
 
 Str req =   "DELETE /archive/cat.png HTTP/1.1\r\n"
             "Host: 127.0.0.1:8080\r\n"
@@ -510,8 +533,9 @@ return req;
 
 Str Delete_with_CGI() 
 {
-std::cout << YELLOW "Delete_with_CGI\n"
-          << "========================" RESET << std::endl;
+std::cout << YELLOW "\n=================================================================\n"
+          << "Delete_with_CGI\n" 
+          << "=================================================================" RESET << std::endl;
 
 Str req  =  "DELETE /bin/removeMe.py HTTP/1.1\r\n"
             "Host: 127.0.0.1:8080 \r\n"
@@ -526,8 +550,9 @@ return req;
 
 Str Delete_actual_file() 
 {
-std::cout << YELLOW "Delete_actual_file\n"
-          << "========================" RESET << std::endl;
+std::cout << YELLOW "\n=================================================================\n"
+          << "Delete_actual_file\n" 
+          << "=================================================================" RESET << std::endl;
 
 Str req  =  "DELETE /archive/flowchar.png " 
             "HTTP/1.1\r\n"
@@ -543,8 +568,9 @@ return req;
 
 Str Delete_actual_directory() 
 {
-std::cout << YELLOW "Delete_actual_directory\n"
-          << "========================" RESET << std::endl;
+std::cout << YELLOW "\n=================================================================\n"
+          << "Delete_actual_directory\n" 
+          << "=================================================================" RESET << std::endl;
 
 Str req  =  "DELETE /test/ HTTP/1.1\r\n"
             "Host: 127.0.0.1:8080 \r\n"
@@ -559,8 +585,9 @@ return req;
 
 Str Delete_default_cgi() 
 {
-std::cout << YELLOW "Delete_default_cgi(\n"
-          << "========================" RESET << std::endl;
+std::cout << YELLOW "\n=================================================================\n"
+          << "Delete_default_cgi\n" 
+          << "=================================================================" RESET << std::endl;
 
 Str req  =  "DELETE /delete/ HTTP/1.1\r\n"
             "Host: 127.0.0.1:8080 \r\n"
@@ -576,83 +603,83 @@ return req;
 int main()
 {
     Server dummy(serverA());
-
+    
     // 1) Validation 
         // 1.a) Malform request (400 Bad Request)
-             test(Missing_Path_and_Version());
-            // test(Missing_Version());
-            // test(Invalid_Version());
+            test(Missing_Path_and_Version());
+            test(Missing_Version());
+            test(Invalid_Version());
   
         // 1.b) POST request: Body size issue (400 Bad Request)
-            // test(Post_No_ContentLen());
-            // test(Post_No_ContentType());
-            // test(Bodysize_Not_Same_ContentLen());
+            test(Post_No_ContentLen());
+            test(Post_No_ContentType());
+            test(Bodysize_Not_Same_ContentLen());
         
         // 1.c) Post request: Body exceed limit in config (413 Payload Too Large)
-            // test(Body_Exceed_Limit());
+            test(Body_Exceed_Limit());
         
     // 2) Check any route match URI & meet route requirement
 
         // 2.a) send /upload -> redirect to /upload/ to make it consistent
         // (308 Permanent Redirect)
-            // test(Redirect_Consistent_Format());
+            test(Redirect_Consistent_Format());
 
         // 2.b) No route match URI (404 Not Found)
-            // test(Invalid_Route());
+            test(Invalid_Route());
     
         // 2.c) Route is a redirect (301 Moved Permanently)
-            // test(Redirect());
+            test(Redirect());
         
         // 2.d) (405 Method Not Allowed)
-            // test(Forbidden_Method());
-            // test(Method_Not_Listed_Route());
+            test(Forbidden_Method());
+            test(Method_Not_Listed_Route());
 
     // 3) GET Request
         // 3.a) URI specify file but not exist (404 Not Found)
-            // test(No_Such_File());
+            test(No_Such_File());
         
         // 3.b) No default file, autoindex off (403 Forbidden)
-            // test(No_Default_no_autoindex());
+            test(No_Default_no_autoindex());
 
         // 3.c) Show me your autoindex (200 OK)
-            // test(No_Default_autoindex_ON());
+            test(No_Default_autoindex_ON());
         
         // 3.d) Show me your file Fetching (200 OK)
-            // test(Fetch_default_file());
-            // test(Fetch_large_image());
+            test(Fetch_default_file());
+            test(Fetch_large_image());
         
         // 3.e) Run simple cgi
-            // test(Simple_get_CGI());
+            test(Simple_get_CGI());
     
     // 4) POST Request
         // 4.a) Path support upload
-            // test(Upload_txt_file());
+            test(Upload_txt_file());
         
         // 4.b) No upload support: file doesn't exist
-            // test(Post_Ghost_File());
+            test(Post_Ghost_File());
 
         // 4.c) No upload support: no default file
-            // test(Post_No_Default());
+            test(Post_No_Default());
 
         // 4.d) No upload support: not a cgi
-            // test(Post_Not_CGI());
+            test(Post_Not_CGI());
 
         // 4.e) No upload support: is a cgi
-            // test(CGI_Post_show_body_default_file());
+            test(CGI_Post_show_body_default_file());
         
     // 5) DELETE Request
         // 5.a) Delete file is not there
-            // test(Delete_File_Not_there());
+            test(Delete_File_Not_there());
         
         // 5.b) Delete run as CGI
-            // test(Delete_with_CGI());
+            test(Delete_with_CGI());
 
         // 5.c) Delete actual file
-            // test(Delete_actual_file());
+            test(Delete_actual_file());
         
         // 5.d) Delete actual directory
-            // test(Delete_actual_directory());
+            test(Delete_actual_directory());
             
         // 5.e) Delete URI default file & run cgi
-            // test(Delete_default_cgi());
+            test(Delete_default_cgi());
 }

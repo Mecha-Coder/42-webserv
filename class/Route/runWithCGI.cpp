@@ -12,14 +12,14 @@ Return:
 - Absolute path string ➡️ Handled with CGI
 - Empty string         ➡️ Not handled with CGI
 */
-const Str Route::runWithCGI(const Str &file) const
+bool Route::runWithCGI(const Str &file) const
 {
     Str extension = file.substr(file.rfind("."));
     CGI::const_iterator i = _cgi.begin();
     for (; i != this->_cgi.end(); i++)
     {
         if (*i == extension)
-            return (_root + *i);
+            return true;
     }
-    return "";
+    return false;
 }

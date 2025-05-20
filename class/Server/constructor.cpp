@@ -3,7 +3,7 @@
 Server::Server (
     const Str &serverName,
     const Str &mainRoot,
-    const int &clientBodySize,
+    const size_t &clientBodySize,
     const Address &listen,
     const ErrorPage &errorPage,
     const Routes &routes 

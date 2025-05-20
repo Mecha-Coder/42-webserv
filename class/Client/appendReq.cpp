@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   appendReq.cpp                                      :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jpaul <jpaul@student.42kl.edu.my>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/09 16:27:03 by jpaul             #+#    #+#             */
-/*   Updated: 2025/05/14 14:23:22 by jpaul            ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../../include/Client.hpp"
 
 void parseLine(Client &client, Str line);
@@ -84,7 +72,9 @@ void getRouteInfo(Client &client, Route *route)
 {
     client._redirect = route->_redirect;
     client._filePath = route->_root + route->_uri;
-    client._uploadDir = route->_root + route->_uploadDir;
+    
+    if (!route->_uploadDir.empty())
+        client._uploadDir = route->_root + route->_uploadDir;
 }
 
 

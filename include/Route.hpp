@@ -35,9 +35,9 @@ class Route
             const CGI &cgi
         );
         
-        bool        isMethodAllow(const Str &method) const;
-        const Str   runWithCGI(const Str &file) const;
-        void        showData() const;
+        bool    isMethodAllow(const Str &method) const;
+        bool    runWithCGI(const Str &file) const;
+        void    showData() const;
 };
 
 #endif

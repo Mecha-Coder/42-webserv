@@ -25,14 +25,6 @@ class Client
     public:
         Client(const Server &_server_);
 
-        bool appendReq(Str request);
-        bool isHeadReady() const;
-        
-        const char *respond() {return reply.c_str();}
-
-        void reuseFd();
-        void showData();
-
         //////////////////////////////////////////////////////////
         ///            ALL INFO YOU NEED IS IN HERE           ////
         //////////////////////////////////////////////////////////
@@ -48,22 +40,38 @@ class Client
         // Path root + subdir
         Str         _filePath;
         Str         _uploadDir;
-        Str         _cgiPath;
         const Str   _myErrorPg(const int &code) const;
 
         ///////////////////////////////////////////////////////////
-        ///     GETTER FUNCTION : USE AFTER PARSE REQUEST       /// 
-        ///////////////////////////////////////////////////////////
+
+        // ******** POLLING STAGE ***********
+
+        bool    appendReq(Str request);
+        bool    isHeadReady() const;
         
-        int   getMaxBodySize() const;
+        // ****** PROCESS REQUEST *******
+        
+        bool    bodyWithinLimit() const;
+        bool    bodySizeMatch()const;
+        bool    haveRoute() const;
+
+        // *****  
+
+        const char *respond() {return reply.c_str();}
+
+        // UTILS
+        void reUseFd();
+        void showData();
+
+
 
         bool  isKeepAlive() const;   
         bool  isAutoIndex() const;
-        bool  isMethodAllow(const Str &method) const;
+        bool  isMethodAllow() const;
+        bool   runWithCGI() const;
 
         const Str   getHost() const;
         const Str   getDefaultFile() const;
-        const Str   runWithCGI(const Str &file) const;
 
         ///////////////////////////////////////////////////////////
         ///               PUT YOUR RESPONSE HERE                /// 
@@ -72,13 +80,13 @@ class Client
         void resError(int code)
         {
             if (this->_myErrorPg(code).empty())
-                resDefaultError();
+                resDefaultError(code);
             else
-                std::cout << "Respond custom error page" << std::endl;   
+                std::cout << code <<": Respond custom error page" << std::endl;   
         }
         
-        void resDefaultError()
-        {std::cout << "No custom page. Use default error page" << std::endl;}
+        void resDefaultError(int code)
+        {std::cout << code << ": No custom page. Use default error page" << std::endl;}
 
         void resDirList()
         {std::cout << "List of files / folder in dir" << std::endl; }
@@ -89,10 +97,10 @@ class Client
         void resSaveFile()
         {std::cout << "Post request, save file to specified dir" << std::endl;}
 
-        void resRedirect_1()
+        void resRedirectAddSlash()
         {std::cout << "308 preserve method and the request body during redirection" << std::endl;}
 
-        void resRedirect_2()
+        void resRedirectTo()
         {std::cout << "301 permanent redirect" << std::endl;}
         
         void resDeleteFile()

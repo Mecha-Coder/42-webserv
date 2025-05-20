@@ -15,8 +15,9 @@ RESET = \033[0m
 
 OBJ_DIR := obj
 
-SRCS := $(wildcard ./class/*/*.cpp), $(wildcard ./logic/*.cpp)
-
+SRCS := $(wildcard ./class/*/*.cpp) \
+		$(wildcard ./logic/*.cpp) \
+		$(wildcard ./utils/*.cpp)
 
 OBJS := $(patsubst %,$(OBJ_DIR)/%.o,$(basename $(SRCS)))
 

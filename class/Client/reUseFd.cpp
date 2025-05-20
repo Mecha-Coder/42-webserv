@@ -10,7 +10,7 @@ _______________________________________________________________________________
 Return:
 - return nothing - 
 */
-void Client::reuseFd()
+void Client::reUseFd()
 {
     this->data.clear();
     this->header.clear();
@@ -27,5 +27,4 @@ void Client::reuseFd()
     this->_redirect.clear();
     this->_filePath.clear();
     this->_uploadDir.clear();
-    this->_cgiPath.clear();
 }
