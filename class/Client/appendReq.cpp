@@ -61,8 +61,6 @@ bool Client::appendReq(Str request)
 
         this->route = this->server.findRoute(this->_path);
         if (this->route) getRouteInfo(*this, this->route);
-
-        std::cout << "HTTP header successfully parsed" << std::endl;
     }
     return (data.size() >= this->_contentLen);
 }

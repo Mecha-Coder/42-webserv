@@ -2,25 +2,24 @@
 
 bool validateRequest(Client &client)
 {
+    Str where = client.getHost() + " | validateRequest"; 
+
     if (client._method.empty() || client._path.empty() || client._version != "HTTP/1.1")
     {
-        std::cout << RED "Process Request=> Malform request line" RESET << std::endl;
-        client.resError(400);
-        return false; 
+        logMsg(where, "400: Malform Request line", 0);
+        return (client.resError(400), false);
     }     
-    else if (client._method == "POST")
+    if (client._method == "POST")
     {   
-        if (client._contentType.empty() || client._contentLen == 0 || !client.bodySizeMatch())
+        if (client._contentType.empty() || client._contentLen == 0 || !client.isBodyMatchLen())
         {
-            std::cout << RED "Process Request=> Invalid content header" RESET << std::endl;
-            client.resError(400);
-            return false;
+            logMsg(where, "400: Invalid content header", 0);
+            return (client.resError(400), false);
         }
-        else if (!client.bodyWithinLimit())
+        if (!client.isBodyWithinLimit())
         {
-            std::cout << RED "Process Request=> Client body exceed limit" RESET << std::endl;
-            client.resError(413);
-            return false;
+            logMsg(where, "413: Client body exceed limit", 0);
+            return (client.resError(413), false);
         }
     }
     return true;
@@ -28,45 +27,52 @@ bool validateRequest(Client &client)
 
 bool routeRule(Client &client)
 {
+    Str where = client.getHost() + " | routeRule"; 
+
     if (*client._path.rbegin() != '/')
     {
-        client.resRedirectAddSlash();
+        logMsg(where, "308: Redirect add slash '/'", 1);
+        return (client.resRedirectAddSlash(), false);
     }
-    else if (!client.haveRoute())
+    if (!client.haveRoute())
     {
-        std::cout << RED "Process Request=> No route=> " RESET << client._path << std::endl;
-        client.resError(404);
+        logMsg(where, "404: No route " + client._path, 0);
+        return (client.resError(404), false);
     }
-    else if (!client._redirect.empty())
+    if (!client._redirect.empty())
     {
-        client.resRedirectTo();
+        logMsg(where, "301: Redirect to " + client._redirect, 1);
+        return (client.resRedirectTo(), false);
     }
-    else if (!isFolderExist(client._filePath))
+    if (!isFolderExist(client._filePath))
     {
-        std::cout << RED "Process Request=> Path doesn't exist" RESET << std::endl;
-        client.resError(404);
+        logMsg(where, "404: Folder doesn't exist " + client._filePath, 0);
+        return (client.resError(404), false);
     }
     else if (!client.isMethodAllow())
     {
-        client.resError(405);
+        logMsg(where, "405: Method not allowed " + client._method, 0);
+        return (client.resError(405), false);
     }
-    else return true;
-    return false;
+    return true;
 }
 
 void do_GET(Client &client) 
 {
-    std::cout << "Do GET request" << std::endl;
+    Str where = client.getHost() + " | GET"; 
 
     if (client._file.empty())
         client._file = client.getDefaultFile();
     if (client._file.empty())
     {
         if (client.isAutoIndex())
+        {
+            logMsg(where, "200: Return directory list", 1);
             client.resDirList();
+        }
         else
         {
-            std::cout << RED "Process Request=> GET=> No default, no autoindex" RESET << std::endl;
+            logMsg(where, "403: No default file, no autoindex", 0);
             client.resError(403);
         }
     }
@@ -74,12 +80,20 @@ void do_GET(Client &client)
     {
         if (isValidFile(client._filePath + client._file))
         {
-            if (client.runWithCGI())  client.handleCGI();
-            else                      client.resFectchFile();
+            if (client.isCGI()) 
+            {
+                logMsg(where, "Run CGI on " + client._path + client._file, 1);
+                client.handleCGI();
+            }
+            else
+            {
+                logMsg(where, "200: Retrieve " + client._path + client._file, 1);
+                client.resFectchFile();
+            }
         }
         else
         {
-            std::cout << RED "Process Request=> GET=> No such file=> " RESET << client._file << std::endl;
+            logMsg(where, "404: File not found " + client._path + client._file, 0);
             client.resError(404);
         }
     }
@@ -87,88 +101,86 @@ void do_GET(Client &client)
 
 void do_POST(Client &client) 
 {
-    std::cout << "Do POST request" << std::endl;
-    std::cout << client._uploadDir << std::endl;
+    Str where = client.getHost() + " | POST";
 
-    if (client._uploadDir.empty())
+    if (!client._uploadDir.empty())
+    {
+        logMsg(where, "201: Save file @ " + client._uploadDir, 1);
+        client.resSaveFile();
+    }
+    else
     {
         if (client._file.empty())
         {
             client._file = client.getDefaultFile();
             if (client._file.empty() || !isValidFile(client._filePath + client._file))
             {
-                std::cout << RED "Process Request=> POST=> Invalid Post Request=> " RESET << std::endl;
-                client.resError(403);
-                return;
+                logMsg(where, "403: Invalid Post Request", 0);
+                client.resError(403); return;
             }
         }
         else
         {
             if (!isValidFile(client._filePath + client._file))
             {
-                std::cout << RED "Process Request=> POST=> No such file=> " RESET << client._file << std::endl;
-                client.resError(404);
-                return;
+                logMsg(where, "404: File not found " + client._path + client._file, 0);
+                client.resError(404); return;
             }
         }
 
-        if (client.runWithCGI()) client.handleCGI();
+        if (client.isCGI())
+        {
+            logMsg(where, "Run CGI on " + client._path + client._file, 1);
+            client.handleCGI();
+        }
         else
         {
-            std::cout << RED "Process Request=> POST=> Not a CGI=> " RESET << client._file << std::endl;
+            logMsg(where, "403: File not CGI " + client._path + client._file, 0);
             client.resError(403);
         }
-    }
-    else 
-        client.resSaveFile();
+    }    
 }
 
 void do_DELETE(Client &client) 
 {
-    std::cout << "Do DELETE request" << std::endl;
+    Str where = client.getHost() + " | DELETE";
 
     if (client._file.empty())
     {
         client._file = client.getDefaultFile();
-        std::cout << "Checking>> " << client._file << std::endl;
-        if (client._file.empty() || !client.runWithCGI())
+        if (client._file.empty() || !client.isCGI())
         {
-            client.resDeleteDir();
-            return;
+            logMsg(where, "204: Delete folder " + client._path, 1);
+            client.resDeleteDir(); return;
         }
-        else
+        if (!isValidFile(client._filePath + client._file))
         {
-            if (!isValidFile(client._filePath + client._file))
-            {
-                std::cout << RED "Process Request=> DELETE=> CGI, No file exist=> " RESET << client._file << std::endl;
-                client.resError(403);
-                return;
-            }
+            logMsg(where, "403: Is CGI, but file not found " + client._path + client._file, 0);
+            client.resError(403); return;
         }
     }
     else
     {
         if (!isValidFile(client._filePath + client._file))
         {
-            std::cout << RED "Process Request=> DELETE=> File gone=> " RESET << client._file << std::endl;
-            client.resError(410);
-            return;
+            logMsg(where, "410: File not found " + client._path + client._file, 0);
+            client.resError(410); return;
         }
-        else
+        if (!client.isCGI())
         {
-            if (!client.runWithCGI())
-            {
-                client.resDeleteFile();
-                return;
-            }
+            logMsg(where, "204: Delete file " + client._path + client._file, 1);
+            client.resDeleteFile(); return;
         }
     }
 
+    logMsg(where, "Run CGI on " + client._path + client._file, 1);
     client.handleCGI();
 }
 
 void processReq(Client &client)
 {
+    Str where = client.getHost() + " | processReq";
+
     if (!validateRequest(client) || !routeRule(client))
         return;
     else if (client._method == "GET")    do_GET(client);
@@ -176,7 +188,7 @@ void processReq(Client &client)
     else if (client._method == "DELETE") do_DELETE(client);
     else
     {
-        std::cout << RED "Process Request=> Fail to process" RESET << std::endl;
+        logMsg(where, "500: Fail to process " + client._path, 0);
         client.resError(500);
     }
 }

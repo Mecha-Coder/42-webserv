@@ -37,12 +37,13 @@ class Client
         Str     _file;
         Str     _redirect;
 
-        // Path root + subdir
         Str         _filePath;
         Str         _uploadDir;
         const Str   _myErrorPg(const int &code) const;
 
-        ///////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////
+        ///                     MY USAGE                      ////
+        //////////////////////////////////////////////////////////
 
         // ******** POLLING STAGE ***********
 
@@ -51,25 +52,22 @@ class Client
         
         // ****** PROCESS REQUEST *******
         
-        bool    bodyWithinLimit() const;
-        bool    bodySizeMatch()const;
+        bool    isBodyWithinLimit() const;
+        bool    isBodyMatchLen()const;
         bool    haveRoute() const;
+        bool    isAutoIndex() const;
+        bool    isMethodAllow() const;
+        bool    isCGI() const;
 
-        // *****  
-
+        // ******* POLLOUT STAGE ******
+        
         const char *respond() {return reply.c_str();}
+        bool        isKeepAlive() const; 
+        void        reUseFd();
 
-        // UTILS
-        void reUseFd();
-        void showData();
-
-
-
-        bool  isKeepAlive() const;   
-        bool  isAutoIndex() const;
-        bool  isMethodAllow() const;
-        bool   runWithCGI() const;
-
+        // ****** ADDITIONAL  **********
+        
+        void        showData();
         const Str   getHost() const;
         const Str   getDefaultFile() const;
 

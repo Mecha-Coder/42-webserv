@@ -14,16 +14,21 @@
 #include "Route.hpp"
 #include "Server.hpp"
 
-void processReq(Client &client);
+/////////////////////////////////////////////////////////////
+// LOGIC
+/////////////////////////////////////////////////////////////
+
 Server serverA();
+void processReq(Client &client);
 
 /////////////////////////////////////////////////////////////
 // UTILITY FUNCTION
 /////////////////////////////////////////////////////////////
 
-int setNoneBlock(const int &fd);
-void showRawStr(const Str &content);
-bool isFolderExist(const Str dir);
-bool isValidFile(const Str path);
+int     setNoneBlock(const int &fd);
+void    showRawStr(const Str &content);
+bool    isFolderExist(const Str dir);
+bool    isValidFile(const Str path);
+void    logMsg(const Str &where, Str action, int state);
 
 #endif

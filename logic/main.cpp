@@ -13,7 +13,7 @@ void test(const Str &request)
 Str Missing_Path_and_Version() 
 {
 std::cout << YELLOW "\n=================================================================\n"
-          << "Missing_Path_and_Version\n" 
+          << "1.a) Missing_Path_and_Version\n" 
           << "=================================================================" RESET << std::endl;
 
 Str req =   "PATCH \r\n"
@@ -38,7 +38,7 @@ return req;
 Str Missing_Version() 
 {
 std::cout << YELLOW "\n=================================================================\n"
-          << "Missing_Version\n" 
+          << "1.a) Missing_Version\n" 
           << "=================================================================" RESET << std::endl;
 
 Str req =   "GET /test/ \r\n"
@@ -63,7 +63,7 @@ return req;
 Str Invalid_Version()
 {
 std::cout << YELLOW "\n=================================================================\n"
-          << "Invalid_Version\n" 
+          << "1.a) Invalid_Version\n" 
           << "=================================================================" RESET << std::endl;
 
 Str req  = "GET /test HTTP/2.1\r\n"
@@ -88,7 +88,7 @@ return req;
 Str Post_No_ContentLen() 
 {
 std::cout << YELLOW "\n=================================================================\n"
-          << "Post_No_ContentLen\n" 
+          << "1.b) Post_No_ContentLen\n" 
           << "=================================================================" RESET << std::endl;
 
 Str req  =  "POST /submit-form HTTP/1.1\r\n"
@@ -105,7 +105,7 @@ return req;
 Str Post_No_ContentType() 
 {
 std::cout << YELLOW "\n=================================================================\n"
-          << "Post_No_ContentType\n" 
+          << "1.b) Post_No_ContentType\n" 
           << "=================================================================" RESET << std::endl;
 
 Str req  =  "POST /submit-form HTTP/1.1\r\n"
@@ -122,7 +122,7 @@ return req;
 Str Bodysize_Not_Same_ContentLen() 
 {
 std::cout << YELLOW "\n=================================================================\n"
-          << "Bodysize_Not_Same_ContentLen\n" 
+          << "1.b) Bodysize_Not_Same_ContentLen\n" 
           << "=================================================================" RESET << std::endl;
 
 Str req  =  "POST /submit-form HTTP/1.1\r\n"
@@ -140,7 +140,7 @@ return req;
 Str Body_Exceed_Limit() 
 {
 std::cout << YELLOW "\n=================================================================\n"
-          << "Body_Exceed_Limit\n" 
+          << "1.c) Body_Exceed_Limit\n" 
           << "=================================================================" RESET << std::endl;
 
 Str req  =  "POST /submit-form HTTP/1.1\r\n"
@@ -158,7 +158,7 @@ return req;
 Str Redirect_Consistent_Format() 
 {
 std::cout << YELLOW "\n=================================================================\n"
-          << "Redirect_Consistent_Format\n" 
+          << "2.a) Redirect_Consistent_Format\n" 
           << "=================================================================" RESET << std::endl;
 
 Str req  =  "POST /submit-form HTTP/1.1\r\n"
@@ -176,7 +176,7 @@ return req;
 Str Invalid_Route() 
 {
 std::cout << YELLOW "\n=================================================================\n"
-          << "Invalid_Route\n" 
+          << "2.b) Invalid_Route\n" 
           << "=================================================================" RESET << std::endl;
 
 Str req  =  "POST /submit-form/what.html HTTP/1.1\r\n"
@@ -194,7 +194,7 @@ return req;
 Str Redirect() 
 {
 std::cout << YELLOW "\n=================================================================\n"
-          << "Redirect\n" 
+          << "2.c) Redirect\n" 
           << "=================================================================" RESET << std::endl;
 
 Str req =   "GET /redirect/ HTTP/1.1\r\n"
@@ -219,7 +219,7 @@ return req;
 Str Forbidden_Method()
 {
 std::cout << YELLOW "\n=================================================================\n"
-          << "Forbidden_Method\n" 
+          << "2.d) Forbidden_Method\n" 
           << "=================================================================" RESET << std::endl;
 
 Str req =   "PATCH / HTTP/1.1\r\n"
@@ -244,7 +244,7 @@ return req;
 Str Method_Not_Listed_Route()
 {
 std::cout << YELLOW "\n=================================================================\n"
-          << "Method_Not_Listed_Route\n" 
+          << "2.d) Method_Not_Listed_Route\n" 
           << "=================================================================" RESET << std::endl;
 
 Str req =   "DELETE /upload/ HTTP/1.1\r\n"
@@ -269,7 +269,7 @@ return req;
 Str No_Such_File()
 {
 std::cout << YELLOW "\n=================================================================\n"
-          << "No_Such_File\n" 
+          << "3.a) No_Such_File\n" 
           << "=================================================================" RESET << std::endl;
 
 Str req =   "GET /unknown.txt HTTP/1.1\r\n"
@@ -294,7 +294,7 @@ return req;
 Str No_Default_no_autoindex()
 {
 std::cout << YELLOW "\n=================================================================\n"
-          << "No_Default_no_autoindex\n" 
+          << "3.b) No_Default_no_autoindex\n" 
           << "=================================================================" RESET << std::endl;
 
 Str req =   "GET /test/ HTTP/1.1\r\n"
@@ -319,7 +319,7 @@ return req;
 Str No_Default_autoindex_ON()
 {
 std::cout << YELLOW "\n=================================================================\n"
-          << "No_Default_autoindex_ON\n" 
+          << "3.c) No_Default_autoindex_ON\n" 
           << "=================================================================" RESET << std::endl;
 
 Str req =   "GET /archive/ HTTP/1.1\r\n"
@@ -344,7 +344,7 @@ return req;
 Str Fetch_default_file()
 {
 std::cout << YELLOW "\n=================================================================\n"
-          << "Fetch_default_file\n" 
+          << "3.d) Fetch_default_file\n" 
           << "=================================================================" RESET << std::endl;
 
 Str req =   "GET / HTTP/1.1\r\n"
@@ -369,7 +369,7 @@ return req;
 Str Fetch_large_image()
 {
 std::cout << YELLOW "\n=================================================================\n"
-          << "Fetch_large_image\n" 
+          << "3.d) Fetch_large_image\n" 
           << "=================================================================" RESET << std::endl;
 
 Str req =   "GET /archive/cpp_02.jpg HTTP/1.1\r\n"
@@ -394,7 +394,7 @@ return req;
 Str Simple_get_CGI()
 {
 std::cout << YELLOW "\n=================================================================\n"
-          << "Simple_get_CGI\n" 
+          << "3.e) Simple_get_CGI\n" 
           << "=================================================================" RESET << std::endl;
 
 Str req =   "GET /bin/printenv.py HTTP/1.1\r\n"
@@ -419,7 +419,7 @@ return req;
 Str Upload_txt_file() 
 {
 std::cout << YELLOW "\n=================================================================\n"
-          << "Upload_txt_file\n" 
+          << "4.a) Upload_txt_file\n" 
           << "=================================================================" RESET << std::endl;
 
 Str req  =  "POST /upload/ HTTP/1.1\r\n"
@@ -437,7 +437,7 @@ return req;
 Str Post_Ghost_File() 
 {
 std::cout << YELLOW "\n=================================================================\n"
-          << "Post_Ghost_File\n" 
+          << "4.b) Post_Ghost_File\n" 
           << "=================================================================" RESET << std::endl;
 
 Str req  =  "POST /bin/ghost.php HTTP/1.1\r\n"
@@ -455,7 +455,7 @@ return req;
 Str Post_No_Default() 
 {
 std::cout << YELLOW "\n=================================================================\n"
-          << "Post_No_Default\n" 
+          << "4.c) Post_No_Default\n" 
           << "=================================================================" RESET << std::endl;
 
 Str req  =  "POST /test/ HTTP/1.1\r\n"
@@ -473,7 +473,7 @@ return req;
 Str Post_Not_CGI() 
 {
 std::cout << YELLOW "\n=================================================================\n"
-          << "Post_Not_CGI\n" 
+          << "4.d) Post_Not_CGI\n" 
           << "=================================================================" RESET << std::endl;
 
 Str req  =  "POST /bin/test.php HTTP/1.1\r\n"
@@ -491,7 +491,7 @@ return req;
 Str CGI_Post_show_body_default_file() 
 {
 std::cout << YELLOW "\n=================================================================\n"
-          << "CGI_Post_show_body_default_file\n" 
+          << "4.e) CGI_Post_show_body_default_file\n" 
           << "=================================================================" RESET << std::endl;
 
 Str req  =  "POST /bin/ HTTP/1.1\r\n"
@@ -509,7 +509,7 @@ return req;
 Str Delete_File_Not_there()
 {
 std::cout << YELLOW "\n=================================================================\n"
-          << "Delete_File_Not_there\n" 
+          << "5.a) Delete_File_Not_there\n" 
           << "=================================================================" RESET << std::endl;
 
 Str req =   "DELETE /archive/cat.png HTTP/1.1\r\n"
@@ -534,7 +534,7 @@ return req;
 Str Delete_with_CGI() 
 {
 std::cout << YELLOW "\n=================================================================\n"
-          << "Delete_with_CGI\n" 
+          << "5.b) Delete_with_CGI\n" 
           << "=================================================================" RESET << std::endl;
 
 Str req  =  "DELETE /bin/removeMe.py HTTP/1.1\r\n"
@@ -551,7 +551,7 @@ return req;
 Str Delete_actual_file() 
 {
 std::cout << YELLOW "\n=================================================================\n"
-          << "Delete_actual_file\n" 
+          << "5.c) Delete_actual_file\n" 
           << "=================================================================" RESET << std::endl;
 
 Str req  =  "DELETE /archive/flowchar.png " 
@@ -569,7 +569,7 @@ return req;
 Str Delete_actual_directory() 
 {
 std::cout << YELLOW "\n=================================================================\n"
-          << "Delete_actual_directory\n" 
+          << "5.d) Delete_actual_directory\n" 
           << "=================================================================" RESET << std::endl;
 
 Str req  =  "DELETE /test/ HTTP/1.1\r\n"
@@ -586,7 +586,7 @@ return req;
 Str Delete_default_cgi() 
 {
 std::cout << YELLOW "\n=================================================================\n"
-          << "Delete_default_cgi\n" 
+          << "5.e) Delete_default_cgi\n" 
           << "=================================================================" RESET << std::endl;
 
 Str req  =  "DELETE /delete/ HTTP/1.1\r\n"
