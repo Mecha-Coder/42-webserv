@@ -6,7 +6,7 @@
 /*   By: chtan <chtan@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 22:40:53 by chtan             #+#    #+#             */
-/*   Updated: 2025/05/19 15:00:55 by chtan            ###   ########.fr       */
+/*   Updated: 2025/05/21 12:49:40 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,6 +149,28 @@ std::string search_recursive(const std::string& dir, const std::string& filename
 
     closedir(dp);
     return "";
+}
+
+std::string read_file(const std::string& filePath)
+{
+    std::ifstream file(filePath.c_str(), std::ios::in | std::ios::binary);
+    
+    if (!file) {
+        std::cerr << "Error: Could not open file " << filePath << std::endl;
+        return "";
+    }
+    
+    // Determine file size
+    file.seekg(0, std::ios::end);
+    std::ifstream::pos_type fileSize = file.tellg();
+    file.seekg(0, std::ios::beg);
+    
+    // Read file contents into a vector
+    std::vector<char> buffer(fileSize);
+    file.read(&buffer[0], fileSize);
+    
+    // Convert to string
+    return std::string(buffer.begin(), buffer.end());
 }
 
 std::vector<std::string> read_dir(const std::string &path)

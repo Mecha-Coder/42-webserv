@@ -6,7 +6,7 @@
 /*   By: chtan <chtan@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 12:46:44 by chtan             #+#    #+#             */
-/*   Updated: 2025/05/19 15:00:50 by chtan            ###   ########.fr       */
+/*   Updated: 2025/05/21 12:52:50 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@
 #include <unistd.h> // For close()
 #include <filesystem>
 #include <string>
+#include <fstream>
+#include <vector>
 
 typedef std::string str;
 // namespace fs = std::filesystem;
@@ -136,14 +138,20 @@ class response
 
 // };
 // get path
-std::string     listDirectoryPOSIX(const std::string& path);
-void            checkPathAndSetResponse(const std::string& path, response& res);
-void            respond_error(int error);
-void            respond_default(response &res);
 // void            resDirlist(void);
-void            resDirlist(response &res);
-std::string*    search(const std::string& path, const std::string& filename, bool &check);
-std::string     search_recursive(const std::string& dir, const std::string& filename);
-std::vector<std::string> read_dir(const std::string &path);
+
+//check_dir.cpp
+std::string                 listDirectoryPOSIX(const std::string& path);
+void                        checkPathAndSetResponse(const std::string& path, response& res);
+std::string*                search(const std::string& path, const std::string& filename, bool &check);
+std::string                 search_recursive(const std::string& dir, const std::string& filename);
+std::vector<std::string>    read_dir(const std::string &path);
+std::string                 read_file(const std::string& filePath);
 
 
+//resErr.cpp
+std::string                 respond_default(void);
+void                        respond_error(int error);
+void                        resDirlist(response &res);
+std::string                 res_dir_tmp(const std::string& directory_name, const std::vector<std::string>& files);
+void                        default_templete();

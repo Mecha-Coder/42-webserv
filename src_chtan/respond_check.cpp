@@ -6,7 +6,7 @@
 /*   By: chtan <chtan@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 12:46:36 by chtan             #+#    #+#             */
-/*   Updated: 2025/05/21 10:56:37 by chtan            ###   ########.fr       */
+/*   Updated: 2025/05/21 12:53:56 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,23 +86,23 @@
 //     std::vector<std::string> files = read_dir("./website");
 // }
 
-int main(void)
-{
-    // header h;//construct
-    // Client c;//construct
-    // response r;//construct
-    // bool check = false;
+// int main(void)
+// {
+//     // header h;//construct
+//     // Client c;//construct
+//     // response r;//construct
+//     // bool check = false;
 
-    // listDirectoryPOSIX(c.get_path(1));//get main path and check
-    // checkPathAndSetResponse("404.html", r);
-    // std::cout << search("./website", "404.html", check);
-    // if (check) {
-    //     std::cout << "File found!" << std::endl;
-    // } else {
-    //     search_recursive("./website", "404.html");
-    //     std::cout << "File not found." << std::endl;
-    // }
+//     // listDirectoryPOSIX(c.get_path(1));//get main path and check
+//     // checkPathAndSetResponse("404.html", r);
+//     // std::cout << search("./website", "404.html", check);
+//     // if (check) {
+//     //     std::cout << "File found!" << std::endl;
+//     // } else {
+//     //     search_recursive("./website", "404.html");
+//     //     std::cout << "File not found." << std::endl;
+//     // }
     
-    // std::cout << r.get_status() << std::endl;
-    return 0;
-}
+//     // std::cout << r.get_status() << std::endl;
+//     return 0;
+// }
