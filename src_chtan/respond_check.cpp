@@ -6,7 +6,7 @@
 /*   By: chtan <chtan@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 12:46:36 by chtan             #+#    #+#             */
-/*   Updated: 2025/05/19 15:11:37 by chtan            ###   ########.fr       */
+/*   Updated: 2025/05/21 10:56:37 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,16 +82,16 @@
 //     }
 //     return result;
 // }
-void testing(){
-    std::vector<std::string> files = read_dir("./website");
-}
+// void testing(){
+//     std::vector<std::string> files = read_dir("./website");
+// }
 
 int main(void)
 {
     // header h;//construct
-    Client c;//construct
-    response r;//construct
-    bool check = false;
+    // Client c;//construct
+    // response r;//construct
+    // bool check = false;
 
     // listDirectoryPOSIX(c.get_path(1));//get main path and check
     // checkPathAndSetResponse("404.html", r);
@@ -104,6 +104,5 @@ int main(void)
     // }
     
     // std::cout << r.get_status() << std::endl;
-    
     return 0;
 }
