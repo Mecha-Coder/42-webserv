@@ -640,15 +640,12 @@ int main()
         
         // 3.b) No default file, autoindex off (403 Forbidden)
             test(No_Default_no_autoindex());
-
+         */
         // 3.c) Show me your autoindex (200 OK)
             test(No_Default_autoindex_ON());
-        
+         /*
         // 3.d) Show me your file Fetching (200 OK)
-        */
             test(Fetch_default_file());
-        
-            /*
             test(Fetch_large_image());
         
         // 3.e) Run simple cgi

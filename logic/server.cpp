@@ -2,7 +2,7 @@
 
 Server serverA()
 {
-    Str root = "/mnt/c/Users/PC/Desktop/Webserve/test/website";
+    Str root = "/home/jpaul/Desktop/Webserve/test/website";
     CGI noCgi;
 
     Address listen;

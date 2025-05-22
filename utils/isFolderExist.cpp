@@ -21,22 +21,22 @@ bool isFolderExist(const Str dir)
 /*
 int main()
 {
-    Str root = "/mnt/c/Users/PC/Desktop/Webserve/test/website";
-    Str URI_1 = "/archive/";
-    Str URI_2 = "/unknown/";
+    Str root = "/home/jpaul/Desktop/Webserve/test/website";
+    Str URI_1 = "/archive";
+    Str URI_2 = "/unknown";
     Str URI_3 = "/bin";
 
-    if (isfolderExist(root + URI_1))
+    if (isFolderExist(root + URI_1))
         std::cout << root + URI_1 << " exists." << std::endl;
     else
         std::cout << "Directory does NOT exist." << std::endl;
     
-    if (isfolderExist(root + URI_2))
+    if (isFolderExist(root + URI_2))
         std::cout << root + URI_2 << " exists." << std::endl;
     else
         std::cout << "Directory does NOT exist." << std::endl;
     
-    if (isfolderExist(root + URI_3))
+    if (isFolderExist(root + URI_3))
         std::cout << root + URI_3 << " exists." << std::endl;
     else
         std::cout << "Directory does NOT exist." << std::endl;

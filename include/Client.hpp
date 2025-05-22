@@ -5,9 +5,16 @@
 #include <string>
 #include <map>
 #include <sstream>
+#include <cerrno>
+#include <filesystem>
+#include <dirent.h> 
+#include <sys/stat.h>
+#include <cstring>
+#include <unistd.h> 
 #include "Server.hpp"
 
 typedef std::string Str;
+typedef std::vector<Str> DirItems;
 typedef std::vector<char> Binary;
 typedef std::map<Str, Str> Header;
 
@@ -88,8 +95,7 @@ class Client
         void resDefaultError(int code)
         {std::cout << code << ": No custom page. Use default error page" << std::endl;}
 
-        void resDirList()
-        {std::cout << "List of files / folder in dir" << std::endl; }
+        void resDirList();
 
         void resFectchFile();
 
