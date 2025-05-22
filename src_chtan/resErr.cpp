@@ -6,7 +6,7 @@
 /*   By: chtan <chtan@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 15:10:27 by chtan             #+#    #+#             */
-/*   Updated: 2025/05/21 12:54:19 by chtan            ###   ########.fr       */
+/*   Updated: 2025/05/22 15:02:57 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,51 @@ std::string    respond_default(void)
 //     // }
 //     return result;
 // }
+
+std::string template_html(const std::string& error_code, const std::string& error_type, const std::string& error_type2)
+{
+    std::string body = 
+        "<!DOCTYPE html>\n"
+        "<html lang=\"en\">\n"
+        "<head>\n"
+        "    <meta charset=\"UTF-8\">\n"
+        "    <meta name=\"" + error_code + "\" content=\"width=device-width, initial-scale=1.0\">\n"
+        "    <title>" + error_code + error_type + "</title>\n"
+        "    <style>\n"
+        "        body {\n"
+        "            font-family: Arial, sans-serif;\n"
+        "            text-align: center;\n"
+        "            margin-top: 50px;\n"
+        "        }\n"
+        "        h1 {\n"
+        "            color: #d9534f;\n"
+        "        }\n"
+        "        #datetime {\n"
+        "            margin-top: 30px;\n"
+        "            font-size: 18px;\n"
+        "            color: #555;\n"
+        "        }\n"
+        "        a {\n"
+        "            display: inline-block;\n"
+        "            margin-top: 20px;\n"
+        "            color: #0066cc;\n"
+        "            text-decoration: none;\n"
+        "        }\n"
+        "    </style>\n"
+        "</head>\n"
+        "<body>\n"
+        "    <h1>" + error_code +"-" + error_type + "</h1>\n"
+        "    <p>" + error_type2 + "</p>\n"
+        "    <a href=\"/\">Return to Home Page</a>\n"
+        "</body>\n"
+        "</html>\n";
+
+    std::string head =
+        "HTTP/1.1" + error_code + error_type + "\r\n"
+        "Content-Type: text/html\r\n"
+        "Content-Length: " + std::to_string(body.size()) + "\r\n]\r\n";
+    std::string ret = head + body;
+}
 
 std::string res_dir_tmp(const std::string& directory_name, const std::vector<std::string>& files)
 {    
