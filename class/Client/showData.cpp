@@ -2,6 +2,9 @@
 
 void Client::showData()
 {
+    Str replyBody;
+    replyBody.append(&reply[0], reply.size());
+
     std::cout << "Request data:\n===========\n" << data << "\n\n"
               << "Header data: " << std::endl;
     
@@ -10,7 +13,7 @@ void Client::showData()
         std::cout << "\t" << i->first << " → " << i->second << std::endl;
     
     std::cout << "Route: " << (route? "Available\n\n" :  "NULL\n\n")
-              << "Respond data:\n===========\n" << reply << "\n"
+              << "Respond data:\n===========\n" << replyBody << "\n"
               << "Bytes Sent = " << byteSend << "\n\n"
 
               << "Parse Data \n===========\n"

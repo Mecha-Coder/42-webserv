@@ -9,10 +9,13 @@
 
 #include <fcntl.h>
 #include <sys/stat.h> 
+#include <fstream>
 
 #include "Client.hpp"
 #include "Route.hpp"
 #include "Server.hpp"
+
+typedef std::vector<char> Binary;
 
 /////////////////////////////////////////////////////////////
 // LOGIC
@@ -27,6 +30,7 @@ void processReq(Client &client);
 
 int     setNoneBlock(const int &fd);
 void    showRawStr(const Str &content);
+void    showRawStr(const Binary &content);
 bool    isFolderExist(const Str dir);
 bool    isValidFile(const Str path);
 void    logMsg(const Str &where, Str action, int state);

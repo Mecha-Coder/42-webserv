@@ -8,19 +8,20 @@
 #include "Server.hpp"
 
 typedef std::string Str;
+typedef std::vector<char> Binary;
 typedef std::map<Str, Str> Header;
 
 class Client
 {
     private:
-        Server    server;
+        Server      server;
         
-        Str        data;
-        Header     header;
-        Route      *route;
+        Str         data;
+        Header      header;
+        Route       *route;
         
-        Str        reply;
-        int        byteSend; 
+        Binary      reply;
+        int         byteSend; 
 
     public:
         Client(const Server &_server_);
@@ -61,7 +62,8 @@ class Client
 
         // ******* POLLOUT STAGE ******
         
-        const char *respond() {return reply.c_str();}
+        Binary respond(){return this->reply;}
+        //const char *respond() {return &reply[0];}
         bool        isKeepAlive() const; 
         void        reUseFd();
 
@@ -89,8 +91,7 @@ class Client
         void resDirList()
         {std::cout << "List of files / folder in dir" << std::endl; }
 
-        void resFectchFile()
-        {std::cout << "Fetch file. filePath + file" << std::endl; }
+        void resFectchFile();
 
         void resSaveFile()
         {std::cout << "Post request, save file to specified dir" << std::endl;}

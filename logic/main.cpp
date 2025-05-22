@@ -6,8 +6,8 @@ void test(const Str &request)
 
     client.appendReq(request);
     std::cout << GREEN "\nIN\n===" RESET << std::endl; showRawStr(request);
-    std::cout << CYAN "OUT\n===" RESET << std::endl; // showRawStr(client.respond());
     processReq(client);
+    std::cout << CYAN "OUT\n===" RESET << std::endl; showRawStr(client.respond());
 }
 
 Str Missing_Path_and_Version() 
@@ -603,7 +603,7 @@ return req;
 int main()
 {
     Server dummy(serverA());
-    
+    /*
     // 1) Validation 
         // 1.a) Malform request (400 Bad Request)
             test(Missing_Path_and_Version());
@@ -645,7 +645,10 @@ int main()
             test(No_Default_autoindex_ON());
         
         // 3.d) Show me your file Fetching (200 OK)
+        */
             test(Fetch_default_file());
+        
+            /*
             test(Fetch_large_image());
         
         // 3.e) Run simple cgi
@@ -682,4 +685,5 @@ int main()
             
         // 5.e) Delete URI default file & run cgi
             test(Delete_default_cgi());
+        */
 }
