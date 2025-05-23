@@ -6,7 +6,7 @@
 /*   By: chtan <chtan@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 12:46:44 by chtan             #+#    #+#             */
-/*   Updated: 2025/05/22 14:44:20 by chtan            ###   ########.fr       */
+/*   Updated: 2025/05/23 11:01:59 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,3 +159,6 @@ void                        respond_error(int error);
 void                        resDirlist(response &res);
 std::string                 res_dir_tmp(const std::string& directory_name, const std::vector<std::string>& files);
 void                        default_templete();
+
+//resRedirect.cpp
+std::string                 resRedirect(int statusCode, const std::string& redirectPath);
