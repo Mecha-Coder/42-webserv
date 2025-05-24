@@ -94,8 +94,8 @@ Str getHTML(const Str &route, const DirItems &items)
     DirItems::const_iterator i = items.begin();
     for (; i != items.end(); ++i)
     {
-        if (i->second) body += "      <tr><td><a href=\"" + i->first + "/\">subfolder/</a></td></tr>\n";
-        else           body += "      <tr><td><a href=\"" + i->first + "\">404.css</a></td></tr>\n";
+        if (i->second) body += "      <tr><td><a href=\"" + i->first + "/\">" + i->first + "/</a></td></tr>\n";
+        else           body += "      <tr><td><a href=\"" + i->first + "\">" + i->first + "</a></td></tr>\n";
     }
 
     body += 
@@ -125,6 +125,12 @@ void Client::resDirList()
     {
         result = getHTML(this->_path, items);
         this->reply.insert(this->reply.end(), result.begin(), result.end());
+
+        logMsg(this->getHost() + " | resDirList", "Respond: 200: Directory list created " + this->_file, 1);
     }
-    else this->resError(500);
+    else 
+    { 
+        logMsg(this->getHost() + " | resDirList", "Failed to create directory list", 0);
+        this->resError(500);
+    } 
 }

@@ -61,9 +61,11 @@ Str getHTML(const Str& errorCode, const Str & errorTitle, const Str& errorMsg)
 
 void Client::resDefaultError(int code)
 {
-     std::ostringstream oss;
+    std::ostringstream oss;
     oss << code;
 
     Str result = getHTML(oss.str(), getCodeShText(code), getCodeLgText(code));
     this->reply.insert(this->reply.end(), result.begin(), result.end());
+
+    logMsg(this->getHost() + " | resDefaultError", "Respond: " + oss.str(), 0);
 }

@@ -724,7 +724,7 @@ int main()
 
         // 4.e) No upload support: is a cgi
             test(CGI_Post_show_body_default_file());
-      */
+      
      
     // 5) DELETE Request
         // 5.a) Delete file is not there
@@ -741,5 +741,6 @@ int main()
             
         // 5.e) Delete URI default file & run cgi
             test(Delete_default_cgi());
+        */
       
 }

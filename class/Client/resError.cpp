@@ -21,6 +21,8 @@ void Client::resError(int code)
         
         this->reply.insert(this->reply.end(), head.begin(), head.end());
         this->reply.insert(this->reply.end(), body.begin(), body.end());
+
+        logMsg(this->getHost() + " | resError", "Respond: " + strCode.str(), 0);
     }
     else resDefaultError(code);
 }

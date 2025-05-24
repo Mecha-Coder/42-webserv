@@ -11,10 +11,12 @@ void Client::resDeleteDir()
             "HTTP/1.1 204 No Content\r\n"
             "Content-Length: 0\r\n\r\n";
         this->reply.insert(this->reply.end(), result.begin(), result.end());
-        std::cout << "Successfully deleted folder " << this->_path << std::endl;
+
+        logMsg(this->getHost() + " | resDeleteDir", "Respond: 204: Successfully deleted folder" + this->_path, 1);
     }
-    else { 
-        std::cout << "Failed to delete folder " << this->_path << std::endl;
+    else 
+    { 
+        logMsg(this->getHost() + " | resDeleteDir", "Failed to delete folder " + this->_path, 0);
         this->resError(500);
     } 
 }

@@ -6,7 +6,7 @@ bool validateRequest(Client &client)
 
     if (client._method.empty() || client._path.empty() || client._version != "HTTP/1.1")
     {
-        logMsg(where, "400: Malform Request line", 0);
+        logMsg(where, "Malform Request line", 0);
         return (client.resError(400), false);
     }     
     if (client._method == "POST")
@@ -14,12 +14,12 @@ bool validateRequest(Client &client)
         if (client._contentType.empty() || client._contentType.find("multipart/form-data; boundary=") ==  client._contentType.npos
             || client._contentLen == 0 || !client.isBodyMatchLen())
         {
-            logMsg(where, "400: Invalid content header", 0);
+            logMsg(where, "Invalid content header", 0);
             return (client.resError(400), false);
         }
         if (!client.isBodyWithinLimit())
         {
-            logMsg(where, "413: Client body exceed limit", 0);
+            logMsg(where, "Client body exceed limit", 0);
             return (client.resError(413), false);
         }
     }
@@ -32,27 +32,27 @@ bool routeRule(Client &client)
 
     if (*client._path.rbegin() != '/')
     {
-        logMsg(where, "308: Redirect add slash '/'", 1);
+        logMsg(where, "Redirect add slash \"/\"", 1);
         return (client.resRedirectAddSlash(), false);
     }
     if (!client.haveRoute())
     {
-        logMsg(where, "404: No route " + client._path, 0);
+        logMsg(where, "No route for " + client._path, 0);
         return (client.resError(404), false);
     }
     if (!client._redirect.empty())
     {
-        logMsg(where, "301: Redirect to " + client._redirect, 1);
+        logMsg(where, "Redirect to " + client._redirect, 1);
         return (client.resRedirectTo(), false);
     }
     if (!isFolderExist(client._filePath))
     {
-        logMsg(where, "404: Folder doesn't exist " + client._filePath, 0);
+        logMsg(where, "Folder \"" + client._filePath + "\" doesn't exist ", 0);
         return (client.resError(404), false);
     }
     else if (!client.isMethodAllow())
     {
-        logMsg(where, "405: Method not allowed " + client._method, 0);
+        logMsg(where, "This \"" + client._method + "\" methos is not allowed", 0);
         return (client.resError(405), false);
     }
     return true;
@@ -68,12 +68,12 @@ void do_GET(Client &client)
     {
         if (client.isAutoIndex())
         {
-            logMsg(where, "200: Return directory list", 1);
+            logMsg(where, "Return directory list / AutoIndex", 1);
             client.resDirList();
         }
         else
         {
-            logMsg(where, "403: No default file, no autoindex", 0);
+            logMsg(where, "No default file, no autoindex", 0);
             client.resError(403);
         }
     }
@@ -88,13 +88,13 @@ void do_GET(Client &client)
             }
             else
             {
-                logMsg(where, "200: Retrieve " + client._path + client._file, 1);
+                logMsg(where, "Retrieve " + client._path + client._file, 1);
                 client.resFectchFile();
             }
         }
         else
         {
-            logMsg(where, "404: File not found " + client._path + client._file, 0);
+            logMsg(where, "File \"" + client._path + client._file + "\"not found", 0);
             client.resError(404);
         }
     }
@@ -106,7 +106,7 @@ void do_POST(Client &client)
 
     if (!client._uploadDir.empty())
     {
-        logMsg(where, "201: Save file @ " + client._uploadDir, 1);
+        logMsg(where, "Upload file to " + client._uploadDir, 1);
         client.resSaveFile();
     }
     else
@@ -116,7 +116,7 @@ void do_POST(Client &client)
             client._file = client.getDefaultFile();
             if (client._file.empty() || !isValidFile(client._filePath + client._file))
             {
-                logMsg(where, "403: Invalid Post Request", 0);
+                logMsg(where, "Invalid Post Request", 0);
                 client.resError(403); return;
             }
         }
@@ -124,7 +124,7 @@ void do_POST(Client &client)
         {
             if (!isValidFile(client._filePath + client._file))
             {
-                logMsg(where, "404: File not found " + client._path + client._file, 0);
+                logMsg(where, "File \"" + client._path + client._file + "\"not found ", 0);
                 client.resError(404); return;
             }
         }
@@ -136,7 +136,7 @@ void do_POST(Client &client)
         }
         else
         {
-            logMsg(where, "403: File not CGI " + client._path + client._file, 0);
+            logMsg(where, "File \"" + client._path + client._file +  "\"not CGI", 0);
             client.resError(403);
         }
     }    
@@ -151,12 +151,12 @@ void do_DELETE(Client &client)
         client._file = client.getDefaultFile();
         if (client._file.empty() || !client.isCGI())
         {
-            logMsg(where, "204: Delete folder " + client._path, 1);
+            logMsg(where, "Delete folder " + client._path, 1);
             client.resDeleteDir(); return;
         }
         if (!isValidFile(client._filePath + client._file))
         {
-            logMsg(where, "403: Is CGI, but file not found " + client._path + client._file, 0);
+            logMsg(where, "Is CGI, but file \"" + client._path + client._file + "\"not found", 0);
             client.resError(403); return;
         }
     }
@@ -164,12 +164,12 @@ void do_DELETE(Client &client)
     {
         if (!isValidFile(client._filePath + client._file))
         {
-            logMsg(where, "410: File not found " + client._path + client._file, 0);
+            logMsg(where, "File \"" + client._path + client._file + "\"not found ", 0);
             client.resError(410); return;
         }
         if (!client.isCGI())
         {
-            logMsg(where, "204: Delete file " + client._path + client._file, 1);
+            logMsg(where, "Delete file \"" + client._path + client._file + "\"", 1);
             client.resDeleteFile(); return;
         }
     }
@@ -189,7 +189,7 @@ void processReq(Client &client)
     else if (client._method == "DELETE") do_DELETE(client);
     else
     {
-        logMsg(where, "500: Fail to process " + client._path, 0);
+        logMsg(where, "Fail to process " + client._path, 0);
         client.resError(500);
     }
 }

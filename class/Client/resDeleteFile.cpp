@@ -10,10 +10,12 @@ void Client::resDeleteFile()
             "HTTP/1.1 204 No Content\r\n"
             "Content-Length: 0\r\n\r\n";
         this->reply.insert(this->reply.end(), result.begin(), result.end());
-        std::cout << "Successfully deleted " << this->_file << std::endl;
+
+        logMsg(this->getHost() + " | resDeleteFile", "Respond: 204: Successfully deleted " + this->_file, 1);
     }
-    else { 
-        std::cout << "Failed to delete " << this->_file << std::endl;
+    else 
+    { 
+        logMsg(this->getHost() + " | resDeleteFile", "Failed to delete " + this->_file, 0);
         this->resError(500);
     } 
 }

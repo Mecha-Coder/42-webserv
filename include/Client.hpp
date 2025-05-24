@@ -12,6 +12,7 @@
 #include <cstring>
 #include <unistd.h> 
 #include "Server.hpp"
+void logMsg(const Str &where, Str action, int state);
 
 typedef std::string Str;
 typedef std::map<Str, bool> DirItems;
