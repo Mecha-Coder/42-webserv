@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surprise Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+        }
+        #surpriseBtn {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #surpriseBtn:hover {
+            background-color: #45a049;
+        }
+        #surpriseText {
+            margin-top: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to the Surprise Page!</h1>
+        <button id="surpriseBtn">Click for Surprise!</button>
+        <div id="surpriseText">surprise_mtfk</div>
+    </div>
+
+    <script>
+        // Show surprise on page load
+        window.onload = function() {
+            document.getElementById('surpriseText').style.display = 'block';
+        };
+
+        // Show surprise again when button is clicked
+        document.getElementById('surpriseBtn').addEventListener('click', function() {
+            document.getElementById('surpriseText').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

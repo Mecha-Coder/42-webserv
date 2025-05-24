@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Insult Generator</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #ffebee;
+        }
+        .container {
+            text-align: center;
+        }
+        #insultBtn {
+            padding: 12px 24px;
+            font-size: 18px;
+            background-color: #ff5722;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        #insultBtn:hover {
+            transform: scale(1.1);
+        }
+        #insultText {
+            margin-top: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #d32f2f;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Random Insult Generator</h1>
+        <button id="insultBtn">Generate Insult</button>
+        <div id="insultText">Click the button, you coward!</div>
+    </div>
+
+    <script>
+        const insults = [
+            "You fight like a dairy farmer!",
+            "You're as sharp as a marble!",
+            "I've seen smarter sandwiches!",
+            "Your family tree must be a cactus!",
+            "You're the reason the gene pool needs a lifeguard!",
+            "If laughter is the best medicine, your face must be curing the world!",
+            "You're not stupid; you just have bad luck thinking!",
+            "I'd agree with you, but then we'd both be wrong!"
+        ];
+
+        document.getElementById('insultBtn').addEventListener('click', function() {
+            const randomInsult = insults[Math.floor(Math.random() * insults.length)];
+            document.getElementById('insultText').textContent = randomInsult;
+        });
+    </script>
+</body>
+</html>

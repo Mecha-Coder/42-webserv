@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DO NOT CLICK</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #000;
+            color: #ff0000;
+            text-align: center;
+        }
+        #dangerBtn {
+            padding: 15px 30px;
+            font-size: 20px;
+            background-color: #ff0000;
+            color: white;
+            border: 2px solid #fff;
+            border-radius: 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        #dangerBtn:hover {
+            background-color: #990000;
+            box-shadow: 0 0 20px #ff0000;
+        }
+        #warningText {
+            font-size: 24px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
+        #secretText {
+            margin-top: 30px;
+            font-size: 28px;
+            color: #00ff00;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="warningText">⚠️ WARNING: DO NOT PRESS THE BUTTON ⚠️</div>
+        <button id="dangerBtn">I DARE YOU</button>
+        <div id="secretText">You just doomed the world... to laughter! 😆</div>
+    </div>
+
+    <script>
+        document.getElementById('dangerBtn').addEventListener('click', function() {
+            document.getElementById('secretText').style.display = 'block';
+            document.body.style.backgroundColor = '#330000';
+            document.getElementById('dangerBtn').style.display = 'none';
+            document.getElementById('warningText').textContent = "TOO LATE! THE BUTTON WAS PRESSED!";
+        });
+    </script>
+</body>
+</html>
