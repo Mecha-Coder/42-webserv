@@ -11,8 +11,7 @@ bool validateRequest(Client &client)
     }     
     if (client._method == "POST")
     {   
-        if (client._contentType.empty() || client._contentType.find("multipart/form-data; boundary=") ==  client._contentType.npos
-            || client._contentLen == 0 || !client.isBodyMatchLen())
+        if (client._contentType.empty() || client._contentLen == 0 || !client.isBodyMatchLen())
         {
             logMsg(where, "Invalid content header", 0);
             return (client.resError(400), false);
@@ -104,7 +103,8 @@ void do_POST(Client &client)
 {
     Str where = client.getHost() + " | POST";
 
-    if (!client._uploadDir.empty())
+    if (!client._uploadDir.empty() 
+        && client._contentType.find("multipart/form-data; boundary=") ==  client._contentType.npos)
     {
         logMsg(where, "Upload file to " + client._uploadDir, 1);
         client.resSaveFile();

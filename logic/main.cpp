@@ -659,7 +659,7 @@ int main()
 {
     Server dummy(serverA());
     
-    /*
+  /*
     // 1) Validation 
         // 1.a) Malform request (400 Bad Request)
             test(Missing_Path_and_Version());
@@ -689,6 +689,7 @@ int main()
         // 2.d) (405 Method Not Allowed)
             test(Forbidden_Method());
             test(Method_Not_Listed_Route());
+               
 
     // 3) GET Request
         // 3.a) URI specify file but not exist (404 Not Found)
@@ -708,7 +709,7 @@ int main()
         // 3.e) Run simple cgi
             test(Simple_get_CGI());
     
-   
+
     // 4) POST Request
         // 4.a) Path support upload
             test(Upload_2_files());
@@ -718,13 +719,13 @@ int main()
 
         // 4.c) No upload support: no default file
             test(Post_No_Default());
-
+ 
         // 4.d) No upload support: not a cgi
             test(Post_Not_CGI());
-
+   */ 
         // 4.e) No upload support: is a cgi
             test(CGI_Post_show_body_default_file());
-      
+      /*
      
     // 5) DELETE Request
         // 5.a) Delete file is not there
@@ -740,7 +741,6 @@ int main()
             test(Delete_actual_directory());
             
         // 5.e) Delete URI default file & run cgi
-            test(Delete_default_cgi());
-        */
-      
+            test(Delete_default_cgi()); */
+       
 }

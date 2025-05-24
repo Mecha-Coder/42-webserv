@@ -12,6 +12,8 @@
 #include <cstring>
 #include <unistd.h> 
 #include "Server.hpp"
+#include "CGIHandler.hpp"
+
 void logMsg(const Str &where, Str action, int state);
 
 typedef std::string Str;
@@ -97,7 +99,33 @@ class Client
         void resDeleteDir();
 
         void handleCGI()
-        {std::cout << "Run CGI" << std::endl;}
+        {
+            logMsg(getHost() +  " | handleCGI", "Run CGI", 1);
+
+            std::vector<Str> path; path.push_back(this->_filePath + this->_file);
+
+            Header env;
+            env["REQUEST_METHOD"] = this->_method;
+            env["CONTENT_LENGTH"] = this->_contentLen;
+            env["CONTENT_TYPE"] = this->_contentType;
+            env["PATH_INFO"] = this->_filePath + this->_file;
+
+            CGIHandler obj(env, this->data, path);
+
+            try 
+            {
+                Str result = obj.Execute();
+
+                std::cout << "CGI Result: \n=======\n" << result << std::endl;
+                this->reply.insert(this->reply.end(), result.begin(), result.end());
+            }
+            catch(std::exception &e)
+            {
+                std::cerr << "CGIHandler error: " << e.what() << std::endl;
+                this->resError(500);
+            }
+            
+        }
 };
 
 #endif
