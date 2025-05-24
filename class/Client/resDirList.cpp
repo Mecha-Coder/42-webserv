@@ -8,11 +8,12 @@ bool readDir(const Str &path, DirItems &items)
     struct dirent* entry;
     while ((entry = readdir(dir)) != NULL) 
     {
-        // Skip "." and ".." entries
-        if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
+        // Skip (".")  ("..") (symbolic link) and (unknown)
+        if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0 
+            || entry->d_type == DT_LNK || entry->d_type == DT_UNKNOWN)
             continue;
 
-        items.push_back(entry->d_name);
+        items.insert(std::make_pair(entry->d_name, (entry->d_type == DT_DIR)));
     }
     closedir(dir);
     return true;
@@ -28,42 +29,78 @@ Str getHTML(const Str &route, const DirItems &items)
         "  <title>" + route + "</title>\n"
         "  <style>\n"
         "    body {\n"
-        "      font-family: sans-serif;\n"
-        "      margin: 1em;\n"
+        "      font-family: \"Segoe UI\", Tahoma, Geneva, Verdana, sans-serif;\n"
+        "      background-color: #f9f9f9;\n"
+        "      color: #333;\n"
+        "      padding: 20px;\n"
         "    }\n"
+        "\n"
         "    h1 {\n"
-        "      font-size: 1.5em;\n"
-        "      margin-bottom: 0.2em;\n"
+        "      font-size: 2em;\n"
+        "      margin-bottom: 10px;\n"
         "    }\n"
+        "\n"
         "    hr {\n"
         "      border: none;\n"
-        "      border-top: 1px solid #aaa;\n"
-        "      margin: 0.5em 0;\n"
+        "      border-top: 1px solid #ccc;\n"
+        "      margin: 20px 0;\n"
         "    }\n"
-        "    pre {\n"
-        "      font-family: monospace;\n"
-        "      line-height: 1.4;\n"
+        "\n"
+        "    table {\n"
+        "      width: 100%;\n"
+        "      border-collapse: collapse;\n"
         "    }\n"
-        "    pre a {\n"
+        "\n"
+        "    th, td {\n"
+        "      text-align: left;\n"
+        "      padding: 8px 12px;\n"
+        "    }\n"
+        "\n"
+        "    th {\n"
+        "      background-color: #f2f2f2;\n"
+        "      border-bottom: 2px solid #ddd;\n"
+        "    }\n"
+        "\n"
+        "    tr:nth-child(even) {\n"
+        "      background-color: #fdfdfd;\n"
+        "    }\n"
+        "\n"
+        "    tr:hover {\n"
+        "      background-color: #f1f1f1;\n"
+        "    }\n"
+        "\n"
+        "    a {\n"
+        "      color: #0073e6;\n"
         "      text-decoration: none;\n"
-        "      color: #00f;\n"
         "    }\n"
-        "    pre a:hover {\n"
+        "\n"
+        "    a:hover {\n"
         "      text-decoration: underline;\n"
         "    }\n"
         "  </style>\n"
         "</head>\n"
         "<body>\n"
-        "  <h1>" + route + "</h1>\n"
+        "  <h1>Index of " + route + "</h1>\n"
         "  <hr>\n"
-        "  <pre>\n"
-        "<a href=\"../\">../</a>\n";
+        "  <table>\n"
+        "    <thead>\n"
+        "      <tr>\n"
+        "        <th>Name</th>\n"
+        "      </tr>\n"
+        "    </thead>\n"
+        "    <tbody>\n"
+        "      <tr><td><a href=\"../\">../</a></td></tr>\n";
 
-        for (size_t i = 0; i < items.size(); ++i)
-        {
-            body += "<a href=\"" + items[i] + "/\">" + items[i] + "/</a>\n";
-        }
-        body += "  </pre>\n"
+    DirItems::const_iterator i = items.begin();
+    for (; i != items.end(); ++i)
+    {
+        if (i->second) body += "      <tr><td><a href=\"" + i->first + "/\">subfolder/</a></td></tr>\n";
+        else           body += "      <tr><td><a href=\"" + i->first + "\">404.css</a></td></tr>\n";
+    }
+
+    body += 
+        "    </tbody>\n"
+        "  </table>\n"
         "  <hr>\n"
         "</body>\n"
         "</html>\n";

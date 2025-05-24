@@ -43,8 +43,8 @@ bool readFile(const Str& filename, Binary &content)
     File.read(&content[0], static_cast<std::streamsize>(size));
 
     if (!File)
-        return false;
-    return true;
+        return (false);
+    return (File.close(), true);
 }
 
 /*

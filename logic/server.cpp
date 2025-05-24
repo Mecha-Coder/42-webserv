@@ -2,7 +2,7 @@
 
 Server serverA()
 {
-    Str root = "/home/jpaul/Desktop/Webserve/test/website";
+    Str root = "/mnt/c/Users/PC/Desktop/Webserve/test/website";
     CGI noCgi;
 
     Address listen;
@@ -41,7 +41,7 @@ Server serverA()
     Route route3(
         "/redirect/",
         root,
-        "www.youtube.com",
+        "https://www.youtube.com/",
         "",
         "",
         false,
@@ -111,7 +111,7 @@ Server serverA()
     Server s(
         "www.example.com",
         root,
-        1000,
+        20000,
         listen,
         errorPg,
         routes

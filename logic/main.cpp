@@ -6,8 +6,9 @@ void test(const Str &request)
 
     client.appendReq(request);
     std::cout << GREEN "\nIN\n===" RESET << std::endl; showRawStr(request);
+    std::cout << CYAN "OUT\n===" RESET << std::endl;
     processReq(client);
-    std::cout << CYAN "OUT\n===" RESET << std::endl; showRawStr(client.respond());
+    showRawStr(client.respond());
 }
 
 Str Missing_Path_and_Version() 
@@ -391,6 +392,31 @@ Str req =   "GET /archive/cpp_02.jpg HTTP/1.1\r\n"
 return req;
 }
 
+Str Fetch_another_file()
+{
+std::cout << YELLOW "\n=================================================================\n"
+          << "3.d) Fetch_another_file\n" 
+          << "=================================================================" RESET << std::endl;
+
+Str req =   "GET /archive/random_numbers.txt HTTP/1.1\r\n"
+            "Host: 127.0.0.1:8080\r\n"
+            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:138.0) Gecko/20100101 Firefox/138.0\r\n"
+            "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*;q=0.8\r\n"
+            "Accept-Language: en-US,en;q=0.5\r\n"
+            "Accept-Encoding: gzip, deflate, br, zstd\r\n"
+            "DNT: 1\r\n"
+            "Sec-GPC: 1\r\n"
+            "Connection: close\r\n"
+            "Upgrade-Insecure-Requests: 1\r\n"
+            "Sec-Fetch-Dest: document\r\n"
+            "Sec-Fetch-Mode: navigate\r\n"
+            "Sec-Fetch-Site: none\r\n"
+            "Sec-Fetch-User: ?1\r\n"
+            "Priority: u=0, i\r\n"
+            "\r\n";
+return req;
+}
+
 Str Simple_get_CGI()
 {
 std::cout << YELLOW "\n=================================================================\n"
@@ -416,21 +442,50 @@ Str req =   "GET /bin/printenv.py HTTP/1.1\r\n"
 return req;
 }
 
-Str Upload_txt_file() 
+Str Upload_2_files() 
 {
 std::cout << YELLOW "\n=================================================================\n"
-          << "4.a) Upload_txt_file\n" 
+          << "4.a) Upload_2_files\n" 
           << "=================================================================" RESET << std::endl;
 
+    Binary file1; readFile("./website/dummy/mime.txt", file1);
+    Binary file2; readFile("./website/dummy/test_image.jpeg", file2);
+
 Str req  =  "POST /upload/ HTTP/1.1\r\n"
-            "Host: 127.0.0.1:8080 \r\n"
-            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)\r\n"
-            "Content-Type: application/x-www-form-urlencoded\r\n"
-            "Content-Length: 573\r\n"
-            "Accept: *\r\n"
+            "Host: localhost:8080\r\n"
             "Connection: keep-alive\r\n"
+            "Content-Length: 12496\r\n"
+            "sec-ch-ua-platform: \"Windows\"\r\n"
+            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0\r\n"
+            "sec-ch-ua: \"Chromium\";v=\"136\", \"Microsoft Edge\";v=\"136\", \"Not.A/Brand\";v=\"99\"\r\n"
+            "DNT: 1\r\n"
+            "Content-Type: multipart/form-data; boundary=----WebKitFormBoundarypfFLeGoyUU5ieF18\r\n"
+            "sec-ch-ua-mobile: \?0\r\n"
+            "Accept: */*\r\n"
+            "Origin: http://localhost:8080\r\n"
+            "Sec-Fetch-Site: same-origin\r\n"
+            "Sec-Fetch-Mode: cors\r\n"
+            "Sec-Fetch-Dest: empty\r\n"
+            "Referer: http://localhost:8080/upload.html\r\n"
+            "Accept-Encoding: gzip, deflate, br, zstd\r\n"
+            "Accept-Language: en-US,en;q=0.9\r\n"
             "\r\n"
-            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum";
+            "------WebKitFormBoundarypfFLeGoyUU5ieF18\r\n"
+            "Content-Disposition: form-data; name=\"files\"; filename=\"mime.txt\"\r\n"
+            "Content-Type: text/plain\r\n"
+            "\r\n";
+
+Str req1  = "\r\n------WebKitFormBoundarypfFLeGoyUU5ieF18\r\n"
+            "Content-Disposition: form-data; name=\"files\"; filename=\"test_image.jpeg\"\r\n"
+            "Content-Type: image/jpeg\r\n"
+            "\r\n";
+
+Str req2  = "\r\n------WebKitFormBoundarypfFLeGoyUU5ieF18--\r\n";
+
+    req.append(file1.begin(), file1.end());
+    req += req1;
+    req.append(file2.begin(), file2.end());
+    req += req2;
 return req;
 }
 
@@ -603,6 +658,9 @@ return req;
 int main()
 {
     Server dummy(serverA());
+    
+    test(Upload_2_files());
+    
     /*
     // 1) Validation 
         // 1.a) Malform request (400 Bad Request)
@@ -640,20 +698,22 @@ int main()
         
         // 3.b) No default file, autoindex off (403 Forbidden)
             test(No_Default_no_autoindex());
-         */
+
         // 3.c) Show me your autoindex (200 OK)
             test(No_Default_autoindex_ON());
-         /*
+        
         // 3.d) Show me your file Fetching (200 OK)
             test(Fetch_default_file());
-            test(Fetch_large_image());
+            test(Fetch_another_file());
+            //test(Fetch_large_image());
         
         // 3.e) Run simple cgi
             test(Simple_get_CGI());
     
+   
     // 4) POST Request
         // 4.a) Path support upload
-            test(Upload_txt_file());
+            test(Upload_2_files());
         
         // 4.b) No upload support: file doesn't exist
             test(Post_Ghost_File());

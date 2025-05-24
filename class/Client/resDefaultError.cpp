@@ -1,5 +1,8 @@
 #include "../../include/Client.hpp"
 
+Str getCodeShText(int code);
+Str getCodeLgText(int code);
+
 Str getHTML(const Str& errorCode, const Str & errorTitle, const Str& errorMsg)
 {
     Str body =
@@ -58,5 +61,9 @@ Str getHTML(const Str& errorCode, const Str & errorTitle, const Str& errorMsg)
 
 void Client::resDefaultError(int code)
 {
-    
+     std::ostringstream oss;
+    oss << code;
+
+    Str result = getHTML(oss.str(), getCodeShText(code), getCodeLgText(code));
+    this->reply.insert(this->reply.end(), result.begin(), result.end());
 }

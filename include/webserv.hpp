@@ -35,4 +35,5 @@ bool    isFolderExist(const Str dir);
 bool    isValidFile(const Str path);
 void    logMsg(const Str &where, Str action, int state);
 
+bool readFile(const Str& filename, Binary &content);
 #endif

@@ -1,6 +1,6 @@
 #include "../include/webserv.hpp"
 
-void getMimeType(std::map<Str, Str> &mime)
+void mimeType(std::map<Str, Str> &mime)
 {
     // Text types
     mime.insert(std::make_pair("txt", "text/plain"));
@@ -69,31 +69,16 @@ void getMimeType(std::map<Str, Str> &mime)
     mime.insert(std::make_pair("avi", "video/x-msvideo"));
 }
 
-Str contentBuilder(const Str &filename, size_t size)
+Str getContentType(const Str &filename)
 {
-    Str content, type;
     std::map<Str, Str> mime; 
     
-    getMimeType(mime);
+    mimeType(mime);
     size_t pos = filename.find(".");
     if (pos != filename.npos)
     {
-        type = mime[filename.substr(pos + 1)];
-        if (type.empty()) type = "text/plain";
+        Str type = mime[filename.substr(pos + 1)];
+        if (!type.empty()) return type;
     }
-    else 
-    {type = "text/plain";} 
-
-    std::ostringstream oss;
-    oss << size;
-    content += "Content-Type: " + type + "\r\n";
-    content += "Content-Length: " + oss.str() + "\r\n";
-    return content;
+    return "text/plain";
 }
-
-/*
-int main()
-{
-    std::cout << contentBuilder("file.css", 5) << std::endl;
-}
-*/

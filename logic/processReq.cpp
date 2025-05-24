@@ -11,7 +11,8 @@ bool validateRequest(Client &client)
     }     
     if (client._method == "POST")
     {   
-        if (client._contentType.empty() || client._contentLen == 0 || !client.isBodyMatchLen())
+        if (client._contentType.empty() || client._contentType.find("multipart/form-data; boundary=") ==  client._contentType.npos
+            || client._contentLen == 0 || !client.isBodyMatchLen())
         {
             logMsg(where, "400: Invalid content header", 0);
             return (client.resError(400), false);

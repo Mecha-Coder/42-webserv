@@ -14,7 +14,7 @@
 #include "Server.hpp"
 
 typedef std::string Str;
-typedef std::vector<Str> DirItems;
+typedef std::map<Str, bool> DirItems;
 typedef std::vector<char> Binary;
 typedef std::map<Str, Str> Header;
 
@@ -33,6 +33,7 @@ class Client
     public:
         Client(const Server &_server_);
 
+        size_t bodySize() const {return data.size();}
         //////////////////////////////////////////////////////////
         ///            ALL INFO YOU NEED IS IN HERE           ////
         //////////////////////////////////////////////////////////
@@ -84,30 +85,14 @@ class Client
         ///               PUT YOUR RESPONSE HERE                /// 
         ///////////////////////////////////////////////////////////
 
-        void resError(int code)
-        {
-            if (this->_myErrorPg(code).empty())
-                resDefaultError(code);
-            else
-                std::cout << code <<": Respond custom error page" << std::endl;   
-        }
-        
-        void resDefaultError(int code)
-        {std::cout << code << ": No custom page. Use default error page" << std::endl;}
-
-        void resDirList();
-
         void resFectchFile();
+        void resDirList();
+        void resDefaultError(int code);        
+        void resError(int code);
+        void resRedirectAddSlash();
+        void resRedirectTo();
+        void resSaveFile();
 
-        void resSaveFile()
-        {std::cout << "Post request, save file to specified dir" << std::endl;}
-
-        void resRedirectAddSlash()
-        {std::cout << "308 preserve method and the request body during redirection" << std::endl;}
-
-        void resRedirectTo()
-        {std::cout << "301 permanent redirect" << std::endl;}
-        
         void resDeleteFile()
         {std::cout << "Delete file" << std::endl;}
 
