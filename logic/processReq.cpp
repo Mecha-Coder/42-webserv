@@ -89,7 +89,7 @@ void do_GET(Client &client)
             else
             {
                 logMsg(where, "Retrieve " + client._path + client._file, 1);
-                client.resFectchFile();
+                client.resFetchFile();
             }
         }
         else

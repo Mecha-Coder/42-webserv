@@ -8,4 +8,6 @@ void Client::resRedirectTo()
             "Content-Length: 0\r\n\r\n";
 
     this->reply.insert(this->reply.end(), result.begin(), result.end());
+
+    logMsg(this->getHost() + " | resRedirectTo", "Respond: 301", 1);
 }

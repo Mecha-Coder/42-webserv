@@ -86,7 +86,7 @@ class Client
         ///               PUT YOUR RESPONSE HERE                /// 
         ///////////////////////////////////////////////////////////
 
-        void resFectchFile();
+        void resFetchFile();
         void resDirList();
         void resDefaultError(int code);        
         void resError(int code);

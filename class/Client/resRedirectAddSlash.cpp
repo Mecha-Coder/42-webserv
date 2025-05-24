@@ -8,4 +8,6 @@ void Client::resRedirectAddSlash()
             "Content-Length: 0\r\n\r\n";
 
     this->reply.insert(this->reply.end(), result.begin(), result.end());
+
+    logMsg(this->getHost() + " | resRedirectAddSlash", "Respond: 308", 1);
 }

@@ -2,22 +2,18 @@
 
 bool saveFile(const Str &filename, const Str &data);
 
-void processFile(Str &File, Str saveHere)
+bool processFile(Str &File, Str &saveHere, Str &name)
 {
     Str raw  = File.substr(File.find("\r\n\r\n") + 4);
-    Str name = File.substr(0, File.find("\"\r\n"));
+    name = File.substr(0, File.find("\"\r\n"));
     name.erase(0, File.find("filename=\"") + 10);
 
-    if (saveFile(saveHere + name, raw))
-        std::cout << name << " saved at " << saveHere << std::endl;
-    else
-        std::cout << name << " failed to save " << std::endl;
-    
+    return saveFile(saveHere + name, raw);
 }
 
 void Client::resSaveFile()
 {
-    Str File;
+    Str File, name;
     Str boundary = this->_contentType;
     boundary = "--" + boundary.substr(boundary.find("boundary=") + 9);
 
@@ -27,7 +23,12 @@ void Client::resSaveFile()
     while (pos != this->data.npos)
     {
         File = this->data.substr(0, pos - 2);
-        processFile(File, this->_uploadDir);
+        
+        if (processFile(File, this->_uploadDir, name))
+            logMsg(this->getHost() + " | resSaveFile", name + " saved", 1);
+        else
+            logMsg(this->getHost() + " | resSaveFile", name + " failed to save", 0);
+
         this->data.erase(0, pos + boundary.size() + 2);
         pos = this->data.find(boundary);
     }

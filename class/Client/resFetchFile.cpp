@@ -3,7 +3,7 @@
 Str     getContentType(const Str &filename);
 bool    readFile(const Str& filename, Binary &content);
 
-void Client::resFectchFile()
+void Client::resFetchFile()
 {
     Binary body;
     std::ostringstream oss;
@@ -20,7 +20,12 @@ void Client::resFectchFile()
         
         this->reply.insert(this->reply.end(), head.begin(), head.end());
         this->reply.insert(this->reply.end(), body.begin(), body.end());
+        
+        logMsg(this->getHost() + " | resFetchFile", "Respond: 200: Successfully read " + this->_file, 1);
     }
-    else
+    else 
+    { 
+        logMsg(this->getHost() + " | resFetchFile", "fail to read " + this->_file, 0);
         this->resError(500);
+    } 
 }
