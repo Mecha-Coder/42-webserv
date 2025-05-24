@@ -1,0 +1,160 @@
+POST /upload HTTP/1.1\r\n
+Host: localhost:8080\r\n
+Connection: keep-alive\r\n
+Content-Length: 12505\r\n
+sec-ch-ua-platform: \"Windows\"\r\n
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0\r\n
+sec-ch-ua: \"Chromium\";v=\"136\", \"Microsoft Edge\";v=\"136\", \"Not.A/Brand\";v=\"99\"\r\n
+DNT: 1\r\n
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryipCCkBiDNj2h00NS\r\n
+sec-ch-ua-mobile: \?0\r\n
+Accept: */*\r\n
+Origin: http://localhost:8080\r\n
+Sec-Fetch-Site: same-origin\r\n
+Sec-Fetch-Mode: cors\r\n
+Sec-Fetch-Dest: empty\r\n
+Referer: http://localhost:8080/upload.html\r\n
+Accept-Encoding: gzip, deflate, br, zstd\r\n
+Accept-Language: en-US,en;q=0.9\r\n
+\r\n
+------WebKitFormBoundaryipCCkBiDNj2h00NS\r\n
+Content-Disposition: form-data; name=\"files\"; filename=\"mime.types.txt\"\r\n
+Content-Type: text/plain\r\n
+\r\n
+\r\n
+types {\r\n
+    text/html                                        html htm shtml;\r\n
+    text/css                                         css;\r\n
+    text/xml                                         xml;\r\n
+    image/gif                                        gif;\r\n
+    image/jpeg                                       jpeg jpg;\r\n
+    application/javascript                           js;\r\n
+    application/atom+xml                             atom;\r\n
+    application/rss+xml                              rss;\r\n
+\r\n
+    text/mathml                                      mml;\r\n
+    text/plain                                       txt;\r\n
+    text/vnd.sun.j2me.app-descriptor                 jad;\r\n
+    text/vnd.wap.wml                                 wml;\r\n
+    text/x-component                                 htc;\r\n
+\r\n
+    image/avif                                       avif;\r\n
+    image/png                                        png;\r\n
+    image/svg+xml                                    svg svgz;\r\n
+    image/tiff                                       tif tiff;\r\n
+    image/vnd.wap.wbmp                               wbmp;\r\n
+    image/webp                                       webp;\r\n
+    image/x-icon                                     ico;\r\n
+    image/x-jng                                      jng;\r\n
+    image/x-ms-bmp                                   bmp;\r\n
+\r\n
+    font/woff                                        woff;\r\n
+    font/woff2                                       woff2;\r\n
+\r\n
+    application/java-archive                         jar war ear;\r\n
+    application/json                                 json;\r\n
+    application/mac-binhex40                         hqx;\r\n
+    application/msword                               doc;\r\n
+    application/pdf                                  pdf;\r\n
+    application/postscript                           ps eps ai;\r\n
+    application/rtf                                  rtf;\r\n
+    application/vnd.apple.mpegurl                    m3u8;\r\n
+    application/vnd.google-earth.kml+xml             kml;\r\n
+    application/vnd.google-earth.kmz                 kmz;\r\n
+    application/vnd.ms-excel                         xls;\r\n
+    application/vnd.ms-fontobject                    eot;\r\n
+    application/vnd.ms-powerpoint                    ppt;\r\n
+    application/vnd.oasis.opendocument.graphics      odg;\r\n
+    application/vnd.oasis.opendocument.presentation  odp;\r\n
+    application/vnd.oasis.opendocument.spreadsheet   ods;\r\n
+    application/vnd.oasis.opendocument.text          odt;\r\n
+    application/vnd.openxmlformats-officedocument.presentationml.presentation\r\n
+                                                     pptx;\r\n
+    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\r\n
+                                                     xlsx;\r\n
+    application/vnd.openxmlformats-officedocument.wordprocessingml.document\r\n
+                                                     docx;\r\n
+    application/vnd.wap.wmlc                         wmlc;\r\n
+    application/wasm                                 wasm;\r\n
+    application/x-7z-compressed                      7z;\r\n
+    application/x-cocoa                              cco;\r\n
+    application/x-java-archive-diff                  jardiff;\r\n
+    application/x-java-jnlp-file                     jnlp;\r\n
+    application/x-makeself                           run;\r\n
+    application/x-perl                               pl pm;\r\n
+    application/x-pilot                              prc pdb;\r\n
+    application/x-rar-compressed                     rar;\r\n
+    application/x-redhat-package-manager             rpm;\r\n
+    application/x-sea                                sea;\r\n
+    application/x-shockwave-flash                    swf;\r\n
+    application/x-stuffit                            sit;\r\n
+    application/x-tcl                                tcl tk;\r\n
+    application/x-x509-ca-cert                       der pem crt;\r\n
+    application/x-xpinstall                          xpi;\r\n
+    application/xhtml+xml                            xhtml;\r\n
+    application/xspf+xml                             xspf;\r\n
+    application/zip                                  zip;\r\n
+\r\n
+    application/octet-stream                         bin exe dll;\r\n
+    application/octet-stream                         deb;\r\n
+    application/octet-stream                         dmg;\r\n
+    application/octet-stream                         iso img;\r\n
+    application/octet-stream                         msi msp msm;\r\n
+\r\n
+    audio/midi                                       mid midi kar;\r\n
+    audio/mpeg                                       mp3;\r\n
+    audio/ogg                                        ogg;\r\n
+    audio/x-m4a                                      m4a;\r\n
+    audio/x-realaudio                                ra;\r\n
+\r\n
+    video/3gpp                                       3gpp 3gp;\r\n
+    video/mp2t                                       ts;\r\n
+    video/mp4                                        mp4;\r\n
+    video/mpeg                                       mpeg mpg;\r\n
+    video/quicktime                                  mov;\r\n
+    video/webm                                       webm;\r\n
+    video/x-flv                                      flv;\r\n
+    video/x-m4v                                      m4v;\r\n
+    video/x-mng                                      mng;\r\n
+    video/x-ms-asf                                   asx asf;\r\n
+    video/x-ms-wmv                                   wmv;\r\n
+    video/x-msvideo                                  avi;\r\n
+}\r\n
+\r\n
+------WebKitFormBoundaryipCCkBiDNj2h00NS\r\n
+Content-Disposition: form-data; name=\"files\"; filename=\"1696857033983.jpeg\"\r\n
+Content-Type: image/jpeg\r\n
+\r\n
+����\0\x10JFIF\0\x01\x01\0\0\x01\0\x01\0\0��\0C\0\x03\x02\x02\x03\x02\x02\x03\x03\x03\x03\x04\x03\x03\x04\x05\b\x05\x05\x04\x04\x05\n
+\a\a\x06\b\f\n
+\f\f\v\n
+\v\v\r\x0E\x12\x10\r\x0E\x11\x0E\v\v\x10\x16\x10\x11\x13\x14\x15\x15\x15\f\x0F\x17\x18\x16\x14\x18\x12\x14\x15\x14��\0C\x01\x03\x04\x04\x05\x04\x05\t\x05\x05\t\x14\r\v\r\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14��\0\x11\b\0�\0�\x03\x01\"\0\x02\x11\x01\x03\x11\x01��\0\x1C\0\x01\0\x02\x03\x01\x01\x01\0\0\0\0\0\0\0\0\0\0\a\b\x04\x05\x06\x03\x02\x01��\0\x1C\x01\x01\0\x02\x03\x01\x01\x01\0\0\0\0\0\0\0\0\0\0\x04\x06\x01\x02\x03\x05\a\b��\0\f\x03\x01\0\x02\x10\x03\x10\0\0\x01� \0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\01�s�c`\x06\x1E�f5���tC=@\0\0\0\x01���]b򎻍�g_�α�p$��.��F�]G����%�\x12MW\x7F�����bm�ӭ�[\r���v��6��~Y�~@\0\x03��\x1F>\x7F�Ú���sW=�ܨ��\x16�ӯ*\x13o)H��\x1E�r�\x15�������Ʋ*\x1C\x05��f�]�z�����oS�p�\0q}�Y���ظ��v<\x1C���b�k���v���fK�S�)5\x1A4\x13�!����\'A��\0�\b�\0�\'�\x1F�K�������\0\a��c�ͣ�\"QF\x1BôG�9I�o�;W\'\x15\x16\x05\x1C�]�{\x1D�&���\x1F�\x12K��\0\x05\x1B����\\aY�k�)�=w���\\�\\9\x1Bz*���\n
+]��aU��\fSl�x4��\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x03��\0)\x10\0\x02\x02\x02\x01\x02\x06\x01\x05\x01\0\0\0\0\0\0\x04\x05\x02\x03\x01\x06\0\a\x11\x12\x13\x14\x15 0\x16\x10\x17#1p@��\0\b\x01\x01\0\x01\x05\x02�\03�����S؆B�\b�Ke��k4�!�џF�ݠ�͠�rO��@��p�,�\x0E:�Ԟq\r��\x16fy�#�Z�G+t\x05��iB\x18�3��T.�c�D��kC\vMa��P��nͫ8��X\x11��\f\x15�l\v������\a\v:섡5OKQb͂��z�s��\x1C��o�����\x0EȋsBg1q\x1C�I��\0L��\x7F�G9⚧��׎��S�N�Cέ�$S\x1F�2���F\x19�P�\x19�>Y�#�\x05���R�ke���a~�7!\\kĿ�\x1D��.��\'.����V�=�\07\x01�/+S����\x13瀛�@�\x1F\x1F#vJh�q�&\r#�(��\x1E��]dA���\t�t\x15lb7\"q�\']S�iQEl7���Z�QX�ͫ�\t���^��7�m��5����q�Ŋ��%m�\bGFSz����FUX��\x19�\a\'�\x14Ι�\f�=\x1D��S.7�\b$�4��ɈO!*�\n
+y�UB��\n
+��\x1E��_Ϸ;s�;s����αQ]AD\x0F\fݨ\t�z���9ܓaB��\x13k�Խr�W�\x18(R6蔵h��{\'\x06��1|�}L��K|\x1D��\0�\"������!ȋ:�6AG}C6W�\x17^\x18��\x12���\x19���Vj���KA2\x06�T\x1EQ��\x1C\x13�5�\\26�\x16\r�5�ʹv�ߢ\">{ )�]��K=|��\x1Ek�&�\x1C(\x19چn��c\x17�]\x1A�r�~:�h�1�d�N��U��M+�v�[\x0F����\02\x11\0\x01\x02\x04\x03\x06\x03\a\x05\0\0\0\0\0\0\0\x01\x02\x03\0\x04\x05\x11\x12!1\x13\"AQa�\x06\x10�\x14 #0���P`q����\0\b\x01\x03\x01\x01\?\x01�$((\\y��h!n��µ\0~D�ky��\x1B\x18j�⥶\f9�`k�\x1D��YEj;�~�C���]�~Q\?U4֬��V�;�5Onm!�_�W|�F��m���؇�1��]˞��仭��b�Aic;{�`�2\x119(�ЬjÖ��\0�I�1*���\x19�wH�\x1E\x1F����$鍸�<]�N�R�X��O%\x18��8��I\'\t�+�C�\x01�G\f�0�4q\x13�O_H9��%�r�}n�T�RT\x13|�\x10��U͢\x1E\a\x0F\v\r={�b�DnI��3\?��Eb��Ai�+\x02G=�Si\x12�\x0Em]V3�->�+7\"�eT�\x19X��5�i�S����3h��3�\x05�i�\x0F�\x1F��\0,\x11\0\x01\x03\x03\x02\x04\x03\t\0\0\0\0\0\0\0\0\x01\0\x02\x03\x04\x11\x12\x13!\x05 1A2q�\x10\"0P`a�����\0\b\x01\x02\x01\x01\?\x01�I\x04l}�{[�(\x10z|\b�\x18��\v��\x1B\x1Cڲ6�*9�M�\x03\x7F��\x14�cu\x18,��L�t\b\0\x13���\n
+���\x0Fm�Y��孶���|%�co��ڬ��v�a��U�ue ��Ux2,�eGP�\x18Q�Ź8��\x1A\x1B��ך��x��\b\x04��F\x0E\x19����W�z���(}������uQ\x14��\x16\x1B\"�\x03����T_1�5�m�B���\x1F��\0C\x10\0\x02\x01\x03\x02\x02\x06\x05\t\x06\x03\t\0\0\0\0\x01\x02\x03\0\x04\x11\x12!\x051\x13\x14\"AQa\x152q��\x06\x10#0BR��� 3b���4Sp\x16Pcrs������\0\b\x01\x01\0\x06\?\x02�\0L�F�s��c�.\x17�k�t�s���\x05�Y>\x7F_o՘�I�\x14\'\x7F]�#�Evm��yI�j�F��_�\x0F�\n
+\x02��\x13�\x01���r�p~n�^ʩ�F9����WH��\x1B*/%\x14�F��+\'aK�έ���x�ZV�\x02|:A^#ʷ��2 u�a�\n
+�(\x1D¦\f�F�\x14�\x1F��@\x06=\x06�;��<���R\f��l\x1F��~c$��\x01�G��c��H���\x1B�\x02�4����\0�:�Y[B�Ν_�\f�n�B�����D�|�\r��R���P0�tw�ީ��\x18%n�\x03\x1B\x1F�\x7F���\?Z�G2�\0�\'�V��K}��\0�Ԗ\x1D����Q��WW�����,v��Og\aپ<�H\x19o\n
+Tm����g�>\x1A��[\f՞\x01\a�]��Q+\\<���H\0r�U�_~E_ƌM\x04f3�t�C��ģRyyRD\x03\x05���n�e�f>�\x0E~�/m(c�������!��qރb�dg�[G�\0z��\?�Q.�!�fǫ�w�*G�_�\x1D��j\x1E\"�Q\t\?�\x1D\x7Fְ�\x14y\n
+5:�q\x14.e�\x1D��\x02���\fǐ\x12\n
+���3U��m_\x01���\\N!ѓ�o��U������W:���\x14{�4\x1D��ڻn _�\x16��h�\\g��O����\x1DUƟ[����hI!k��\0��{�R\x15���\x0F3�I\x1Av��W}��v|w��S\x01��XΟ\x1C/\x7F�����e��\x1B����)\x12B:m=�r\'ʤ�\x1Da�~��(�w�DR�y\x01]$�k��ܾ���\\J���]fh�h�\x10\n
+/}u��B\x1FW�\x7F�4�\x13�����0=�׭\x0E\"M�,rI��@\x03rOw�2�ȩ:���\f;�,��$r����g���*dG%�\x19�3*3��¯�5ro\x0E]�\x14g[i\\m\x13�ʀ��]\x1Fw�#\x15�o �����\x15�\x11;zϫ\x04�\x05z�G���:��\?�\x15G�]�r�\0����gq\x1C\b�cN�{�gB��~�k\n
+۷J�er<�=����Fw>�K\x1Cj\x11\x14`(e�\x1BlTҢ(DQ����\0p�^z&�^\x1Bi7E,��#|x�Un./�O2,�4�*\x18dg\x1C���{oGuN�Ү�|x�\fb�>�^����ͷ����}H�!�ί\fs�\x18���8C!Ԍ�(�I\"�5�9b�\a�>��S�\x15��\f\\<1�\t!Μs�Υ�\x11���\"8vl���Ο��k;\'��*��j��φ��\r�Ʌ�˥����*��[�눧���o��#�YEt�\x0F\x13�Wu�5li\x05�\?�5�\x0E���Y�1F�o\01��n\"8�}U[Im�\r<�w���%H��\x18����\\\x16Aգ���O\x1B\a��=_<\x11]Dq\x18�ƭ\x1C���j�Om/\x10\t2Hb`c}���\x02\x0EA�\x1F�=ٱ��u�ݘ��#�\x7FJ�}^��kk���\x01����8�/ut1��\"�\x16c�\x0E\\�9�ƾH��8�`��rJl����\x1B�F4�ӈ�����\x10��\x0F��_���߃G5���\x06�H ���+����ˠ�\x13�\f}1�\x1F\x1C�\x1Ed���k��W����=��\x1A�@��n���(�^�~�����K�{�u�.�Z�A����\x1BU���\'.��_4�N\x1C���w�q�c�\x0F\x18�1��Fq����\x15���𙮌0�\vۃ�\x04����u�x��%�E�Ě�\x1Cv�@�\x01��\x15gĢ�8������\x1Bj�]�a�,{�k�@I�-䲒\x10���i f�N�\x1E\x1B=����$�\x1DŁ���R|��\0gB܉�zO��9�\x7F���lf�In&�Cn�;R\x0E��uXG\"�� Ee=�H���T\x12D�K+r\"��\v,L�Rjv`��\x1F��\0��\0(\x10\x01\0\x01\x03\x03\x03\x03\x05\x01\x01\0\0\0\0\0\0\x01\x11\0!1AQaq�� ��\x100p���@��\0\b\x01\x01\0\x01\?!�f)�\x01a�������HH��H>�R^kb �j&�K�\x1D塭��N�\x16x�u��jL�E��\n
+{0<Y��X\x18O���\x13<\x1D�a�\x14�k*��p*�\x0E� \x04���6\'�q�\r�I\x06X��� f$uR\b�3��#i\x05\x1C\x12� (��\"d`���}�\x05\x10�.ejLA[�\x0E�@\r1�,����\0vm��K����\x1E�\x02�\x1F#��e��lr�\v���\a\vARbw�v����t�Q\x04�_Ņn\x05/��\0\bּ.�=�� \0�Ͻ{Ts;&]�\x11څ�\x0E��p\x14}h�\v�\\T<k���\x06q�\f׾���Pu�݋oAԞ\x04\x16��Z�3�\0�.\r�]�RS\x01g�e��>|��D\x1A۽G5\x1C�\x18%�yl�W�n��� \x17WJ7�D�].S�*\x01\x04�\x19|�o�U\n
+�e}M����T�p���J\x19�we�\f�E{�^�\v^WzC�\v\x15�Q����ե�����hz�\x1B\x1B�~���\")Ȏ\a��k�{_\az\b\'{��K�\x11�6�nt�BW~r�\x18�P-�\x1F\x14\x17�W�)�,�\0�P��\x1B�#��&o¤�C�!nL�\x02��D�@�\x05��B\x03\x12_�4�B!�#��]h��uqۗ\?�0��\n
+\x0F�I(Q�Z&�-�^^��B�\x1A<�J��D^c-M�\x03�x���p\rf��\x19�����$�@I\x12\x15&�=@�;М\"\x11(�\x11�J)\bA\\�\0Ed`\x17�f+8ѥ��H\x16�ؒ\b��\n
+H\\b\x04S.s�_,����+�0��z�X\?��Cj#j�7��[\x0F�7F\x18\x06f(���phv��\x11`\x14RO�4}�l\x01`\x0F\\O��滼�*\x1B\x7F�_��efK�zJ\x1A��bpLлV���Aa�\x0EH\x17\t����Q�Y�:>�sZ\0\'�\0\b��4\v�!��O�X�&�[x�\x03\v�`�s��Qۆ�7�c�)�n8\x10\x19B�FP�@^\b�2�IR�,��gJ�TJ\x01\x02ܖ\x185��r\0�Z����v9K\a�\x0E�\x19���C\x04S���Գ�\x19x���!\x04I�͘�q@��$��p��I`\x1D��M�\\\x0F$\n
+�l��s���\x1C\n
+p�D\x04�\x1B��XJ�D���Vq�[�\0��\x043tE#�\aE��#-��x�y{\x1472\0\r��H��J����\x12\x19��΍�\'k\fADo�\x14��\'[\fE�k�5uI���\x04\f��\x7F��\x1E�7�5\x17�*\x10����VV�P\x1D�X��Pƅ8�\x15�mɉ�XmoN��p��Icd,��z�CɈ\x02=�ڎ�Ң\x11+�<Lȏ���\0��\0\f\x03\x01\0\x02\0\x03\0\0\0\x10��<��<��<��<��<��<��<��<��<��<��<�\x0F<��<��-[�\x1C}><��2\x1F�6I�lS�\x02��\x11r�t��<k���\x0F<��<��\f��,��\x1C��<��<��<��<��<��<��<��<��<��<��<��<��<���\0)\x11\x01\x01\0\x02\x01\x03\x02\x05\x04\x03\0\0\0\0\0\0\x01\x11!1\0AQaq�\x10 ���0P`������\0\b\x01\x03\x01\x01\?\x10�����|wS��\t\x01A�\x7FB��\x1FDz#�s\x11� Eֈ��d�rE饖\x16�\t5��q��S��.�g:�OF4�6ή\x10���Hv#\x16���N1`\f\x10R��7�nu\x1EO�\0��kۚʄR�~\x06�;�{���D{w��X�8뜄&1��\?˿\x1BE(E\x05�T�;C���2}i�����Lp::��a��\x03Vjt\x0E8\0��B��@�� ��\x12#��nc�(\x1D\?/�^�\x15/Ŭ���\0e��\0h2�!�\x0E\x10@u�����-^�\x05�\x13\x13\t��ҁ�e|��U�=�\x12��vv�\x1F~�\x1EQ\x15����\x05 �5�;�ۥ=y\x17V2�p\x19\\�\x10��9h\x15`h��^M��^_�\x7F��\0\'\x11\x01\0\x01\x04\x01\x03\x03\x04\x03\0\0\0\0\0\0\0\x01\x11\0!1AQaq�\x10 �0P��`����\0\b\x01\x02\x01\x01\?\x10�J0C�\x02\x01<����%I�#�5@��Id4����Wh#\r���Bs��/�H2[�\x7FV�l\x10@,T`�ıҳI;\?�\x11\0�n�q\x13�-���\x1F)\bor�M8l�A&,��G\0㿊�\x15\x04�\x14>C�j=\"\v݈��\a\x0E\x11\x1F\x19�R\0���\x1F���A\x1E��\x14�]�\x18�u�\fuܭf׻2f�g\x12��t�`���Ԡ2\x1F9Ge�׋\v\x04R�U�\x1F��\x16\\�_\vnksg�\b\x1A�$\0cD�:��\x11PT\x1F��\0��\0(\x10\x01\0\x02\x02\x02\x01\x03\x05\0\x02\x03\0\0\0\0\0\x01\x11!\01AQaq��\x10 0��p�@����\0\b\x01\x01\0\x01\?\x10�\0\x19���Eȭ\x01\x13�;��|�k6`^�k5\x04x\x06\x13\x1Eд�\x1A\0&2�\x16��7\x1C�*\x04F�[�Fî�\x0EZk\x11*\0�����$\x11��\0\x12�<d�\x7F\x13����)0��\x01���w\x10\x01�O�\n
+iFPH��F1��PWƬ� \x010)Jf+�j�k�߁%gZ�>��\r�����/v�vJ9����\x1Bz���\f�\"cR ����2�Y}\x110\x10\x10p\r\0Pb4h�9\x01�Z�\t\x11��\x0F#�\n
+�\x01�a��\x01\x05%\x04\b�����}R[�\x0F�{}\x04���,p\x0F��U\\�F�\x03\x05Y!�E�j���C\x17XD\x06V\t\x05.�;���=\?��A\0Z�\x18����Z��Q2F�eoA�� \x14b�D�`�� �w7����� ��$�\'l\x03��4\b\x1D��|��0�\x13+��@�G\x10`\0AP\x1C�a���\x1C�6P�\x06� la$\x18��\x1E������U|c�Y�ɺm��.eh���o�%�P��\x05)vY!@����\a�K��F\\�\x14����P�\x02e\x17(�ˌ\"\x17h�\x1E�]�\f��_����,u\t��dG�\x0F~R\x02\x01U�\x7Fx\x1F\x198\ak���\x05��*(�\'\x174��Q\x1B�AH�\x17�\x1Bu�@�u$4\x12-F�FbIe�A~�\x10N�N���Ή�\x19�O�G^�\x19\x12D�~�|���\0\x16W�ס���������\x1C����\fe��sC�H����\x06�0Xy�rL����c[�y zK�\x17�H;\0Wʸ\x1A}�ʅ�(�X�\x17�X1vVn\x17�\x03\x1C$�nPH���:|\vTc�$��\n
+G�bL�V+\x1A;O�\x1As�\a�\x03�5sTћ\x1D�\n
+ �%W\x03=zb��2���7���0P���E\x1C\x19\0\\\b@�6����\f�����d`-m\x02U\x03�<��d��C��|\f<f�\x15J\053vڸd�p�zr\t�FV:�\x01\x02�tD�\x04`A$F����H��\"I�\x103�&�\x11Y�\x1A9#J�0(\x13bZ\x12�FQ��F@�X�S��#n�\v\b��f�IG\'\x02\x13wA��\n
+@�\0��\x0F�s`6�vS�,�i.�|n���\'a��\x7FXY��\'��gBM��\0cXB��l(��&�q�Ͷ�4��S0\"�r\x1D�ŝ������`\?�\x01\b\00NIV\x19\x18a�O���δ\x02�\x02>�l\x0F�C�ː���w�g�}\\�0\x03D\x7F�8�\b�\f\"tH\"c5u8�\x1Fj�\f#��<(�2\x13�[k\v\x11�\"\0\x01�H)j@��\v#D�T^��/\vVX�$H[.�\x10M,\r�\x03*�eٛ�\r\x1C,FĴ���EGu�\x1A�\n
+�L8��9�\x04�8 $�2���j�t0<Y�\x02#�$��\x01\x06�!��#�\r��hY��\x1B��\x11�P!.F\x19\x1D�d/��h)B�t�M�DI�R��Wus\b\x06�\x14�\x1D��p��5�jg\x05k\'=:\x10\x12��/\x03��$H��9��PR�D\x03�\r�\x11\v��\f�\x04\x15�\'a\x1C \x18�E�2��AJZ��{��m0�4�w`]\0P!\0��s�\x03Mp\x02ʕ>����P�<�l�\x7FP\x14Z�~ń��]H\x16j\t�\x02�\x05�\x12�\x14e��a�+\x13���\'\x01獛�\x14�.�KԢ\x05�\n
+5$\bU\x04�I0\x15��lf���\x10����\x1ER7\0\x06 Z�Xfl��D\x0F�(�\b8 \x046$̡�&h�l��>v\x03�~��՗\r\x03�\x1F\x06�<��G��L�첑\x14O8\0#�G#\x19\r�2��\?��\0��\r\n
+------WebKitFormBoundaryipCCkBiDNj2h00NS--\r\n
+------------------------------
+
+[33mShutting down server!
+[0m

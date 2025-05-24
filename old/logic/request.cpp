@@ -32,6 +32,7 @@ bool listen_request()
         return (err_msg("connection failed", errno));
 
     read_bytes = recv(new_sock, request, BUFFER_SIZE, 0);
+    std::cout << "Bytes read " << read_bytes << " " << BUFFER_SIZE << std::endl;
     if      (read_bytes > 0)  process_request(new_sock, request, read_bytes);
     else if (read_bytes < 0)  fail_reading(new_sock, errno);
     else                      disconnected();

@@ -36,7 +36,7 @@ bool parse_request(t_request &req, str s);
 // REQUEST
 ///////////////////////////////////////////////////////////
 
-void process_request(int sock, char *reqest, int end);
+void process_request(int sock, char *reqest, size_t end);
 void fail_reading(int sock, int code);
 void disconnected();
 

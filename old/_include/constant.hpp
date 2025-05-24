@@ -13,7 +13,7 @@
 #ifndef CONSTANT_HPP
 #define CONSTANT_HPP
 
-#define BUFFER_SIZE 4096
+#define BUFFER_SIZE 70000
 
 #define RED    "\033[0;31m"
 #define GREEN  "\033[0;32m"
