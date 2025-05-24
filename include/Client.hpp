@@ -92,12 +92,8 @@ class Client
         void resRedirectAddSlash();
         void resRedirectTo();
         void resSaveFile();
-
-        void resDeleteFile()
-        {std::cout << "Delete file" << std::endl;}
-
-        void resDeleteDir()
-        {std::cout << "Delete Directory" << std::endl;}
+        void resDeleteFile();
+        void resDeleteDir();
 
         void handleCGI()
         {std::cout << "Run CGI" << std::endl;}
