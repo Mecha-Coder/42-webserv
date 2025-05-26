@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CGIHandler.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jpaul <jpaul@student.42kl.edu.my>          +#+  +:+       +#+        */
+/*   By: rcheong <rcheong@student.42kl.edu.my>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 21:09:56 by rcheong           #+#    #+#             */
-/*   Updated: 2025/05/24 15:56:18 by jpaul            ###   ########.fr       */
+/*   Updated: 2025/05/26 10:46:51 by rcheong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,8 +177,11 @@ std::string CGIHandler::Execute() {
 			throw std::runtime_error("fork() failed");
 		} else if (pid == 0) {
 			// child
-			if (dup2(fdResponse[1], STDOUT_FILENO) == -1 ||
-				dup2(fdRequest[0], STDIN_FILENO) == -1) {
+			if (dup2(fdResponse[1], STDOUT_FILENO) == -1) {
+				perror("dup2");
+				exit(1);
+			}
+			if (!_requestBody.empty() && dup2(fdRequest[0], STDIN_FILENO) == -1) {
 				perror("dup2");
 				exit(1);
 			}
@@ -194,7 +197,9 @@ std::string CGIHandler::Execute() {
 		} else {
 			// parent
 			close(fdRequest[0]);
-			write(fdRequest[1], _requestBody.c_str(), _requestBody.size());
+			if (!_requestBody.empty()) {
+				write(fdRequest[1], _requestBody.c_str(), _requestBody.size());
+			}
 			close(fdRequest[1]);
 			close(fdResponse[1]);
 
