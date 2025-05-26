@@ -17,7 +17,7 @@ int main() {
 	std::vector<std::string> cgiPaths;
 	cgiPaths.push_back("hello.py");
 
-	CGIHandler handler(env, requestBody, cgiPaths);
+	CGIHandler handler(env, "", cgiPaths);
 	gettimeofday(&start, NULL);
 	std::string response = handler.Execute();
 	std::cout << "CGI response:\n" << response << std::endl;

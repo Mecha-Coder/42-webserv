@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   CgiHandler.hpp                                     :+:      :+:    :+:   */
+/*   CGIHandler.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rcheong <rcheong@student.42kl.edu.my>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 21:09:50 by rcheong           #+#    #+#             */
-/*   Updated: 2025/05/17 21:24:31 by rcheong          ###   ########.fr       */
+/*   Updated: 2025/05/26 10:49:15 by rcheong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,14 +52,14 @@
 
 class CGIHandler {
 	public:
-		static CGIHandler* Create(Client& client,
+		static CGIHandler* Create(
 			const std::map<std::string, std::string>& env,
 			const std::string& body,
 			const std::vector<std::string>& cgiPaths);
 	
 		~CGIHandler();
 	
-		std::string Execute(Client& client);
+		std::string Execute();
 	
 	// private:
 		CGIHandler(const std::map<std::string, std::string>& env,

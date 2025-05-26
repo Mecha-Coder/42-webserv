@@ -1,20 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   CgiHandler.cpp                                     :+:      :+:    :+:   */
+/*   CGIHandler.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rcheong <rcheong@student.42kl.edu.my>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 21:09:56 by rcheong           #+#    #+#             */
-/*   Updated: 2025/05/17 21:24:23 by rcheong          ###   ########.fr       */
+/*   Updated: 2025/05/26 10:51:38 by rcheong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "CGIHandler.hpp"
 #include <algorithm>
 
-CGIHandler* CGIHandler::Create(Client& client,
-	const std::map<std::string, std::string>& env,
+CGIHandler* CGIHandler::Create(const std::map<std::string, std::string>& env,
 	const std::string& body,
 	const std::vector<std::string>& cgiPaths) {
 	CGIHandler* handler = NULL;
@@ -22,7 +21,6 @@ CGIHandler* CGIHandler::Create(Client& client,
 		handler = new CGIHandler(env, body, cgiPaths);
 		return (handler);
 	} catch (...) {
-		client.resError(500);
 		std::cerr << "CGIHandler Factory failed before construction.\n";
 		delete handler;
 		return NULL;
@@ -163,7 +161,7 @@ std::string CGIHandler::addContentLength(const std::string& httpResponse) {
 	return modifiedHeaders.str() + "\r\n\r\n" + body;
 }
 
-std::string CGIHandler::Execute(Client& client) {
+std::string CGIHandler::Execute() {
 	try {
 		std::string cmd_ = getCmd();
 		setArgs(cmd_);
@@ -251,7 +249,6 @@ std::string CGIHandler::Execute(Client& client) {
 		}
 	} catch (const std::exception& e) {
 		std::cerr << "CGIHandler error: " << e.what() << std::endl;
-		client.resError(500);
 		return "";
 	}
 }
