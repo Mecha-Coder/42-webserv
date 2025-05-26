@@ -6,16 +6,15 @@
 /*   By: rcheong <rcheong@student.42kl.edu.my>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 21:09:56 by rcheong           #+#    #+#             */
-/*   Updated: 2025/05/26 10:46:51 by rcheong          ###   ########.fr       */
+/*   Updated: 2025/05/26 11:03:18 by rcheong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/CGIHandler.hpp"
 #include <algorithm>
 
-CGIHandler* CGIHandler::Create(
-	const std::map<std::string, std::string>& env,
-	const std::string& body,
+CGIHandler* CGIHandler::Create(const std::map<std::string, std::string>& env,
+	const std::string* body,
 	const std::vector<std::string>& cgiPaths) {
 	CGIHandler* handler = NULL;
 	try {
@@ -29,7 +28,7 @@ CGIHandler* CGIHandler::Create(
 }
 
 CGIHandler::CGIHandler(const std::map<std::string, std::string>& env,
-	const std::string& body,
+	const std::string* body,
 	const std::vector<std::string>& cgiPaths)
 	: _envMap(env), _cgiPaths(cgiPaths), _requestBody(body), _argv(0) {
 	if (cgiPaths.empty()) {
@@ -178,12 +177,14 @@ std::string CGIHandler::Execute() {
 		} else if (pid == 0) {
 			// child
 			if (dup2(fdResponse[1], STDOUT_FILENO) == -1) {
-				perror("dup2");
+				perror("dup2 stdout");
 				exit(1);
 			}
-			if (!_requestBody.empty() && dup2(fdRequest[0], STDIN_FILENO) == -1) {
-				perror("dup2");
-				exit(1);
+			if (_requestBody && !_requestBody->empty()) {
+				if (dup2(fdRequest[0], STDIN_FILENO) == -1) {
+					perror("dup2 stdin");
+					exit(1);
+				}
 			}
 
 			close(fdResponse[0]);
@@ -197,8 +198,8 @@ std::string CGIHandler::Execute() {
 		} else {
 			// parent
 			close(fdRequest[0]);
-			if (!_requestBody.empty()) {
-				write(fdRequest[1], _requestBody.c_str(), _requestBody.size());
+			if (_requestBody && !_requestBody->empty()) {
+				write(fdRequest[1], _requestBody->c_str(), _requestBody->size());
 			}
 			close(fdRequest[1]);
 			close(fdResponse[1]);
