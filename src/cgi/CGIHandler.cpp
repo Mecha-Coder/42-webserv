@@ -6,7 +6,7 @@
 /*   By: rcheong <rcheong@student.42kl.edu.my>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 21:09:56 by rcheong           #+#    #+#             */
-/*   Updated: 2025/05/26 10:51:38 by rcheong          ###   ########.fr       */
+/*   Updated: 2025/05/26 11:14:09 by rcheong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <algorithm>
 
 CGIHandler* CGIHandler::Create(const std::map<std::string, std::string>& env,
-	const std::string& body,
+	const std::string* body,
 	const std::vector<std::string>& cgiPaths) {
 	CGIHandler* handler = NULL;
 	try {
@@ -28,7 +28,7 @@ CGIHandler* CGIHandler::Create(const std::map<std::string, std::string>& env,
 }
 
 CGIHandler::CGIHandler(const std::map<std::string, std::string>& env,
-	const std::string& body,
+	const std::string* body,
 	const std::vector<std::string>& cgiPaths)
 	: _envMap(env), _cgiPaths(cgiPaths), _requestBody(body), _argv(0) {
 	if (cgiPaths.empty()) {
@@ -168,14 +168,15 @@ std::string CGIHandler::Execute() {
 
 		int fdResponse[2];
 		int fdRequest[2];
-		if (pipe(fdResponse) == -1 || pipe(fdRequest) == -1)
+		if (pipe(fdResponse) == -1 || pipe(fdRequest) == -1) {
 			throw std::runtime_error("pipe() failed");
+		}
 
 		pid_t pid = fork();
 		if (pid == -1) {
 			throw std::runtime_error("fork() failed");
 		} else if (pid == 0) {
-			// child
+		// child
 			if (dup2(fdResponse[1], STDOUT_FILENO) == -1 ||
 				dup2(fdRequest[0], STDIN_FILENO) == -1) {
 				perror("dup2");
@@ -193,22 +194,28 @@ std::string CGIHandler::Execute() {
 		} else {
 			// parent
 			close(fdRequest[0]);
-			write(fdRequest[1], _requestBody.c_str(), _requestBody.size());
+
+			if (_requestBody) {
+				write(fdRequest[1], _requestBody->c_str(), _requestBody->size());
+			}
 			close(fdRequest[1]);
+
 			close(fdResponse[1]);
 
 			struct pollfd pfd;
 			pfd.fd = fdResponse[0];
 			pfd.events = POLLIN;
-		
+
 			std::string responseBody;
 			char buffer_[1024];
 			int totalElapsed = 0;
 			const int pollInterval = 25; // 25ms
-			const int maxTimeout = 5000; // 5s max
+			const int maxTimeout = 500; // 500ms
 
-			while (totalElapsed < maxTimeout) {
-				int poll_ret = poll(&pfd, 1, pollInterval); // run poll every 25ms
+			bool childExited = false;
+
+			while (!childExited) {
+				int poll_ret = poll(&pfd, 1, pollInterval);
 				totalElapsed += pollInterval;
 
 				if (poll_ret < 0) {
@@ -216,34 +223,39 @@ std::string CGIHandler::Execute() {
 					close(fdResponse[0]);
 					waitpid(pid, 0, 0);
 					throw std::runtime_error("poll() failed");
-				} else if (poll_ret == 0) {
-					continue; // keep polling
+				} else if (poll_ret > 0 && (pfd.revents & POLLIN)) {
+					int bytes = read(fdResponse[0], buffer_, sizeof(buffer_));
+					if (bytes < 0) {
+						kill(pid, SIGKILL);
+						close(fdResponse[0]);
+						waitpid(pid, 0, 0);
+						throw std::runtime_error("read() failed");
+					} else if (bytes == 0) {
+						// EOF reached
+						break;
+					} else {
+						responseBody.append(buffer_, bytes);
+					}
 				}
 
-				int bytes = read(fdResponse[0], buffer_, sizeof(buffer_));
-				if (bytes < 0) {
+				// Check if child exited
+				int status;
+				pid_t result = waitpid(pid, &status, WNOHANG);
+				if (result == pid) {
+					childExited = true;
+				}
+
+				if (totalElapsed >= maxTimeout) {
 					kill(pid, SIGKILL);
 					close(fdResponse[0]);
 					waitpid(pid, 0, 0);
-					throw std::runtime_error("read() failed");
-				} else if (bytes == 0) {
-					break;
-				} else {
-					responseBody.append(buffer_, bytes);
+					throw std::runtime_error("CGI script timeout after 5s");
 				}
-			}
-
-			// timeout exceeded
-			if (totalElapsed >= maxTimeout) {
-				kill(pid, SIGKILL);
-				close(fdResponse[0]);
-				waitpid(pid, 0, 0);
-				throw std::runtime_error("CGI script timeout after 5s");
 			}
 
 			close(fdResponse[0]);
 			int status;
-			waitpid(pid, &status, 0);
+			waitpid(pid, &status, 0); // ensure full cleanup
 
 			return addContentLength(responseBody);
 		}

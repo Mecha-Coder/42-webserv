@@ -7,17 +7,17 @@
 int main() {
 	struct timeval start, end;
 	std::map<std::string, std::string> env;
-	env["REQUEST_METHOD"] = "POST";
-	env["CONTENT_LENGTH"] = "13";
+	std::string requestBody = "\nname=Ryan\nage=26\nprofession=sarcasm"; // example request body
+	env["REQUEST_METHOD"] = "GET";
+	env["CONTENT_LENGTH"] = std::to_string(requestBody.size());
 	env["CONTENT_TYPE"] = "application/x-www-form-urlencoded";
 	env["PATH_INFO"] = "/cgi-bin/hello.py"; // path to script
 	// env["PATH_INFO"] = "/cgi/cgi-bin/hello.py"; // error test
 
-	std::string requestBody = "\nname=Ryan\nage=26\nprofession=sarcasm"; // example request body
 	std::vector<std::string> cgiPaths;
 	cgiPaths.push_back("hello.py");
 
-	CGIHandler handler(env, "", cgiPaths);
+	CGIHandler handler(env, &requestBody, cgiPaths);
 	gettimeofday(&start, NULL);
 	std::string response = handler.Execute();
 	std::cout << "CGI response:\n" << response << std::endl;

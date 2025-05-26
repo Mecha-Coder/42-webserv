@@ -6,7 +6,7 @@
 /*   By: rcheong <rcheong@student.42kl.edu.my>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 21:09:50 by rcheong           #+#    #+#             */
-/*   Updated: 2025/05/26 10:49:15 by rcheong          ###   ########.fr       */
+/*   Updated: 2025/05/26 11:05:22 by rcheong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ class CGIHandler {
 	public:
 		static CGIHandler* Create(
 			const std::map<std::string, std::string>& env,
-			const std::string& body,
+			const std::string* body,
 			const std::vector<std::string>& cgiPaths);
 	
 		~CGIHandler();
@@ -63,7 +63,7 @@ class CGIHandler {
 	
 	// private:
 		CGIHandler(const std::map<std::string, std::string>& env,
-				   const std::string& body,
+				   const std::string* body,
 				   const std::vector<std::string>& cgiPaths);
 	
 		// void setEnv(const std::map<std::string, std::string>& env);
@@ -78,7 +78,7 @@ class CGIHandler {
 	private:
 		std::map<std::string, std::string> _envMap;
 		std::vector<std::string> _cgiPaths;
-		std::string _requestBody;
+		const std::string* _requestBody;
 		std::string _cgiPath;
 	
 		ScopedEnvArray _env;
