@@ -110,7 +110,7 @@ class Client
             env["CONTENT_TYPE"] = this->_contentType;
             env["PATH_INFO"] = this->_filePath + this->_file;
 
-            CGIHandler obj(env, this->data, path);
+            CGIHandler obj(env, &this->data, path);
 
             try 
             {
