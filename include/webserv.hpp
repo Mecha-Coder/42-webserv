@@ -11,12 +11,13 @@
 #include <sys/stat.h> 
 #include <fstream>
 #include <cstdio>
+#include <sstream>
 
 #include "Client.hpp"
 #include "Route.hpp"
 #include "Server.hpp"
 
-typedef std::vector<char> Binary;
+typedef std::map<Str, bool> DirItems;
 
 /////////////////////////////////////////////////////////////
 // LOGIC
@@ -36,4 +37,11 @@ bool    isFolderExist(const Str dir);
 bool    isValidFile(const Str path);
 void    logMsg(const Str &where, Str action, int state);
 bool    readFile(const Str& filename, Binary &content);
+
+/////////////////////////////////////////////////////////////
+// STATUS CODE
+/////////////////////////////////////////////////////////////
+
+
+
 #endif

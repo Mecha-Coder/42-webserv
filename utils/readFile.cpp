@@ -27,24 +27,22 @@ Return:
      0 ➡️ Successful read
     -1 ➡️ Fail
 */
-bool readFile(const Str& filename, Binary &content) 
+bool readFile(const Str& filename, Str &content) 
 {
     std::ifstream File(filename.c_str(), std::ios::in | std::ios::binary | std::ios::ate);
     
-    if (!File) 
-        return false;
-    
+    if (!File) return false;
+
     std::ifstream::pos_type size = File.tellg();
-    if (size == std::ifstream::pos_type(-1)) 
-        return false;
+    if (size == std::ifstream::pos_type(-1))  return false;
+
+    if (size == 0) return (true);
 
     content.resize(static_cast<std::size_t>(size));
     File.seekg(0, std::ios::beg);
     File.read(&content[0], static_cast<std::streamsize>(size));
 
-    if (!File)
-        return (false);
-    return (File.close(), true);
+    return File.good();
 }
 
 /*

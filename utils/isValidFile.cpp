@@ -9,7 +9,7 @@ Return:
     True  ➡️ Valid file
     False ➡️ Invalid file return 404
 */
-bool isValidFile(const Str path) 
+bool isFileExist(const Str path) 
 {
     struct stat info;
     if (stat(path.c_str(), &info) == 0)

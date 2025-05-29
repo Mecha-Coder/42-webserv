@@ -1,102 +1,64 @@
 #include "../include/webserv.hpp"
 
-bool validateRequest(Client &client)
+bool validateRequest(Client &x)
 {
-    Str where = client.getHost() + " | validateRequest"; 
+    Str where = x._host + " | validateRequest"; 
 
-    if (client._method.empty() || client._path.empty() || client._version != "HTTP/1.1")
-    {
-        logMsg(where, "Malform Request line", 0);
-        return (client.resError(400), false);
-    }     
-    if (client._method == "POST")
+    if (x.isRequestLine_Malform()) return (
+        logError(where, "Malform Request line"), x.resError(_400));
+    
+    if (x._method == "POST")
     {   
-        if (client._contentType.empty() || client._contentLen == 0 || !client.isBodyMatchLen())
-        {
-            logMsg(where, "Invalid content header", 0);
-            return (client.resError(400), false);
-        }
-        if (!client.isBodyWithinLimit())
-        {
-            logMsg(where, "Client body exceed limit", 0);
-            return (client.resError(413), false);
-        }
+        if (x.isContentHeader_Invalid()) return (
+            logError(where, "Invalid content header"), x.resError(_400));
+        
+        if (x.isBody_ExceedLimit()) return (
+            logError(where, "Client body exceeded limit"), x.resError(_413));
     }
     return true;
 }
 
-bool routeRule(Client &client)
+bool routeRule(Client &x)
 {
-    Str where = client.getHost() + " | routeRule"; 
+    Str where = x._host + " | routeRule"; 
 
-    if (*client._path.rbegin() != '/')
-    {
-        logMsg(where, "Redirect add slash \"/\"", 1);
-        return (client.resRedirectAddSlash(), false);
-    }
-    if (!client.haveRoute())
-    {
-        logMsg(where, "No route for " + client._path, 0);
-        return (client.resError(404), false);
-    }
-    if (!client._redirect.empty())
-    {
-        logMsg(where, "Redirect to " + client._redirect, 1);
-        return (client.resRedirectTo(), false);
-    }
-    if (!isFolderExist(client._filePath))
-    {
-        logMsg(where, "Folder \"" + client._filePath + "\" doesn't exist ", 0);
-        return (client.resError(404), false);
-    }
-    else if (!client.isMethodAllow())
-    {
-        logMsg(where, "This \"" + client._method + "\" methos is not allowed", 0);
-        return (client.resError(405), false);
-    }
+    if (x.isPath_noSlash()) return (
+        logAction(where, "Redirect add slash \"/\" to " + x._path), x.resAddSlash());
+    
+    if (x.isPath_noRoute()) return (
+        logError(where, "No route for " + x._path), x.resError(_404));
+    
+    if (x.isRedirect_True()) return (
+        logAction(where, "Redirect to " + x.getRedirect()), x.resRedirect());
+    
+    if (x.isPath_noExist()) return (
+        logError(where  , "Folder \"" + x._path + "\" doesn't exist"), x.resError(_404));
+    
+    if (!x.isMethod_Illegal()) return (
+        logError(where, "Method \"" + x._method + "\" is not allowed"), x.resError(_405));
+
     return true;
 }
 
-void do_GET(Client &client) 
+bool do_GET(Client &x) 
 {
-    Str where = client.getHost() + " | GET"; 
+    Str where = x._host + " | GET"; 
 
-    if (client._file.empty())
-        client._file = client.getDefaultFile();
-    if (client._file.empty())
+    if (x.isFile_Empty() && x.noDefaultFile()) 
     {
-        if (client.isAutoIndex())
-        {
-            logMsg(where, "Return directory list / AutoIndex", 1);
-            client.resDirList();
-        }
-        else
-        {
-            logMsg(where, "No default file, no autoindex", 0);
-            client.resError(403);
-        }
+        if (x.isAutoIndex_On()) return (
+            logAction(where, "Return directory list for" + x._path), x.resDirList());
+        
+        return (logError(where, "No default file or autoindex for " + x._path), x.resError(_403));
     }
-    else
-    {
-        if (isValidFile(client._filePath + client._file))
-        {
-            if (client.isCGI()) 
-            {
-                logMsg(where, "Run CGI on " + client._path + client._file, 1);
-                client.handleCGI();
-            }
-            else
-            {
-                logMsg(where, "Retrieve " + client._path + client._file, 1);
-                client.resFetchFile();
-            }
-        }
-        else
-        {
-            logMsg(where, "File \"" + client._path + client._file + "\"not found", 0);
-            client.resError(404);
-        }
-    }
+
+    if (x.isFile_noExist()) return (
+        logMsg(where, "File \"" + x._uri + "\"not found", 0), x.resError(_404));
+    
+    if (x.isCGI()) return ( 
+        logAction(where, "Run CGI on " + x._uri), x.handleCGI());
+    
+    return (logAction(where, "Fetch " + x._uri), x.resFetchFile());
 }
 
 void do_POST(Client &client) 
@@ -180,7 +142,7 @@ void do_DELETE(Client &client)
 
 void processReq(Client &client)
 {
-    Str where = client.getHost() + " | processReq";
+    Str where = client._host + " | processReq";
 
     if (!validateRequest(client) || !routeRule(client))
         return;
@@ -190,6 +152,6 @@ void processReq(Client &client)
     else
     {
         logMsg(where, "Fail to process " + client._path, 0);
-        client.resError(500);
+        client.resError(_500);
     }
 }

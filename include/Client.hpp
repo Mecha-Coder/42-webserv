@@ -1,131 +1,187 @@
 #ifndef CLIENT_HPP
 #define CLIENT_HPP
 
-#include <iostream>
-#include <string>
-#include <map>
-#include <sstream>
-#include <cerrno>
 #include <filesystem>
-#include <dirent.h> 
-#include <sys/stat.h>
+#include <iostream>
+#include <sstream>
 #include <cstring>
-#include <unistd.h> 
+#include <string>
+#include <cerrno>
+#include <map>
+
+#include <sys/stat.h>
+#include <dirent.h> 
+#include <unistd.h>
+
 #include "Server.hpp"
 #include "CGIHandler.hpp"
+#include "constant.hpp"
 
-void logMsg(const Str &where, Str action, int state);
+void logError(const Str &where, Str action);
+void logAction(const Str &where, Str action);
+Str toStr(T value);
 
 typedef std::string Str;
 typedef std::map<Str, bool> DirItems;
-typedef std::vector<char> Binary;
+typedef std::vector<Str> List;
 typedef std::map<Str, Str> Header;
 
+/*
+Attribute:
+	Server data
+	===========
+		_server
+			# Assigned at instantiation (fixed)
+		*_route
+			# NULL if no matching route for _path, 
+			# This will be determine after parsing request header
+	
+	Request data
+	============
+		_data
+			# Incoming request data is appended here
+			# Once a complete HTTP header is received > it is 
+			# parsed > storead in _header > and removed from _data
+			# The remaining string left is the request body
+		_header
+			# Request header data (stored as key-value pair)
+
+2)
+
+*/
 class Client
 {
-    private:
-        Server      server;
-        
-        Str         data;
-        Header      header;
-        Route       *route;
-        
-        Binary      reply;
-        int         byteSend; 
+	private:
+		// Server data -----------------------------
+		const Server	_server;
+		Route			*_route;
 
-    public:
-        Client(const Server &_server_);
+		// Request data ----------------------------
+		Str				_data;
+		Header			_header;
 
-        size_t bodySize() const {return data.size();}
-        //////////////////////////////////////////////////////////
-        ///            ALL INFO YOU NEED IS IN HERE           ////
-        //////////////////////////////////////////////////////////
-    
-        Str     _method;
-        Str     _path;
-        Str     _version;
-        Str     _contentType;
-        size_t  _contentLen;
-        Str     _file;
-        Str     _redirect;
+		Str				_version;
+		Str				_contentType;
+		size_t			_contentLen;
 
-        Str         _filePath;
-        Str         _uploadDir;
-        const Str   _myErrorPg(const int &code) const;
+		// Response data --------------------------
+		Str				_reply;
+		size_t			_byteSent; 
 
-        //////////////////////////////////////////////////////////
-        ///                     MY USAGE                      ////
-        //////////////////////////////////////////////////////////
+	public:
+		// Easy access to data ---------------------
+		Str				_method;
+		Str				_uri;
+		Str				_path;
+		Str				_file;
+		Str				_host;
+		bool			_keepAlive;
 
-        // ******** POLLING STAGE ***********
+		// Checker - validate request -------------
+		bool isRequestLine_Malform() const;
+		bool isContentHeader_Invalid() const;
+		bool isBody_ExceedLimit() const;
 
-        bool    appendReq(Str request);
-        bool    isHeadReady() const;
-        
-        // ****** PROCESS REQUEST *******
-        
-        bool    isBodyWithinLimit() const;
-        bool    isBodyMatchLen()const;
-        bool    haveRoute() const;
-        bool    isAutoIndex() const;
-        bool    isMethodAllow() const;
-        bool    isCGI() const;
+		// Checker - route requirement ------------
+		bool isRedirect_True() const;
+		bool isPath_noSlash() const;
+		bool isPath_noRoute() const;
+		bool isPath_noExist() const;
+		bool isMethod_Illegal() const;
 
-        // ******* POLLOUT STAGE ******
-        
-        Binary respond(){return this->reply;}
-        //const char *respond() {return &reply[0];}
-        bool        isKeepAlive() const; 
-        void        reUseFd();
+		// Checker - do GET request
+		bool isFile_Empty() const;
+		bool isAutoIndex_On() const;
+		bool isFile_noExist() const;
+		bool noDefaultFile();
 
-        // ****** ADDITIONAL  **********
-        
-        void        showData();
-        const Str   getHost() const;
-        const Str   getDefaultFile() const;
+		// Checker - do Post request --------------
 
-        ///////////////////////////////////////////////////////////
-        ///               PUT YOUR RESPONSE HERE                /// 
-        ///////////////////////////////////////////////////////////
+		Str tmplErrDefault(Code code);
+		Str tmplErrCustom(Code code, const Str &body);
+		Str tmplDirList(const Str &path, const DirItems &items);
+		Str tmplFetch(const Str &filename, const Str &body);
+		Str tmplSave(List saveFile);
+		Str tmplDelete(const Str &item);
+		Str tmplRedirect(Code code, const Str &redirectTo);
 
-        void resFetchFile();
-        void resDirList();
-        void resDefaultError(int code);        
-        void resError(int code);
-        void resRedirectAddSlash();
-        void resRedirectTo();
-        void resSaveFile();
-        void resDeleteFile();
-        void resDeleteDir();
+		// Getter
+		const Str &getRedirect() const;
+	
 
-        void handleCGI()
-        {
-            logMsg(getHost() +  " | handleCGI", "Run CGI", 1);
+		Client(const Server &_server_);
+		size_t bodySize() const {return data.size();}
 
-            std::vector<Str> path; path.push_back(this->_filePath + this->_file);
+		// ******** POLLING STAGE ***********
 
-            Header env;
-            env["REQUEST_METHOD"] = this->_method;
-            env["CONTENT_LENGTH"] = this->_contentLen;
-            env["CONTENT_TYPE"] = this->_contentType;
-            env["PATH_INFO"] = this->_filePath + this->_file;
+		bool    appendReq(Str request);
+		bool    isHeadReady() const;
+		
+		// ****** PROCESS REQUEST *******
+		
+		bool    isBodyWithinLimit() const;
+		bool    isBodyMatchLen()const;
+		bool    isAutoIndex() const;
+		bool    isMethodAllow() const;
+		bool    isCGI() const;
 
-            CGIHandler obj(env, this->data, path);
+		// ******* POLLOUT STAGE ******
+		
+		Binary respond(){return this->reply;}
+		//const char *respond() {return &reply[0];}
+		bool        isKeepAlive() const; 
+		void        reUseFd();
 
-            try 
-            {
-                Str result = obj.Execute();
+		// ****** ADDITIONAL  **********
+		
+		void        showData();
+		
+		
 
-                std::cout << "CGI Result: \n=======\n" << result << std::endl;
-                this->reply.insert(this->reply.end(), result.begin(), result.end());
-            }
-            catch(std::exception &e)
-            {
-                std::cerr << "CGIHandler error: " << e.what() << std::endl;
-                this->resError(500);
-            }
-            
-        }
+		///////////////////////////////////////////////////////////
+		///               PUT YOUR RESPONSE HERE                /// 
+		///////////////////////////////////////////////////////////
+
+		bool resFetchFile();
+		bool resDirList();
+		bool resDefaultError(Code code);        
+		
+		bool resError(Code code);
+		bool resAddSlash();
+		bool resRedirect();
+
+		bool resSaveFile();
+		bool resDeleteFile();
+		bool resDeleteDir();
+
+		bool handleCGI()
+		{
+			logMsg(getHost() +  " | handleCGI", "Run CGI", 1);
+
+			std::vector<Str> path; path.push_back(this->_filePath + this->_file);
+
+			Header env;
+			env["REQUEST_METHOD"] = this->_method;
+			env["CONTENT_LENGTH"] = this->_contentLen;
+			env["CONTENT_TYPE"] = this->_contentType;
+			env["PATH_INFO"] = this->_filePath + this->_file;
+
+			CGIHandler obj(env, this->data, path);
+
+			try 
+			{
+				Str result = obj.Execute();
+
+				std::cout << "CGI Result: \n=======\n" << result << std::endl;
+				this->reply.insert(this->reply.end(), result.begin(), result.end());
+			}
+			catch(std::exception &e)
+			{
+				std::cerr << "CGIHandler error: " << e.what() << std::endl;
+				this->resError(500);
+			}
+			
+		}
 };
 
 #endif
