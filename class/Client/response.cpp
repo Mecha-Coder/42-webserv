@@ -8,19 +8,22 @@ bool saveMultiPart(Str &bodyPart, const Str &saveHere, Str &filename);
 bool deleteFile(const Str& filePath);
 bool deleteFolder(const Str& path);
 
+void logError(const Str &where, Str action);
+void logAction(const Str &where, Str action);
+
 /////////////////////////////////////////////////////////////////////////////////////
 
-bool Client::resDefaultError(Code code)
+bool Client::resDefaultError(Code code, const Str &msg)
 {
     Str where = _host + " | resDefaultError";
 
     _reply = tmplErrDefault(code);
-    return (logError(where, "Respond: " + toStr(code)), false);
+    return (logError(where, "Respond: " + toStr(code) + ": " + msg), false);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
 
-bool Client::resError(Code code)
+bool Client::resError(Code code, const Str &msg)
 {
     Str where = _host + " | resError";
 
@@ -30,9 +33,9 @@ bool Client::resError(Code code)
     if (!path.empty() && readFile(path, body))
     {
         _reply = tmplErrCustom(code, body);
-        return (logError(where, "Respond: " + toStr(code)), false);
+        return (logError(where, "Respond: " + toStr(code) + ": " + msg), false);
     }
-    return resDefaultError(code);
+    return resDefaultError(code, msg);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
@@ -46,9 +49,9 @@ bool Client::resDirList()
     if (readDir(_route->_root + _path, items))
     {
         _reply = tmplDirList(_path, items);
-        return (logAction(where, "Respond: 200: Return directory list " + _path), true);
+        return (logAction(where, "Respond: 200: Return directory list for" + _path), true);
     }
-    return (logError(where, "Failed to create directory list"), resError(_500));
+    return resError(_500, "resDirList: Failed directory list for " + _path);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -64,7 +67,7 @@ bool Client::resFetchFile()
         _reply = tmplFetch(_file, body);
         return (logAction(where, "Respond: 200: Fetch " + _uri), true);
     }
-    return (logError(where, "Fail to read " + _uri), resError(_500));
+    return resError(_500, "resFetchFile: Fail to read " + _uri);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -74,7 +77,7 @@ bool Client::resAddSlash()
     Str where = _host + " | resAddSlash";
 
     _reply = tmplRedirect(_308, _uri + "/");
-    return (logAction(where, "Respond: 308"), false);
+    return (logAction(where, "Respond: 308: Redirect add slash \"/\" to " + _uri), false);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -84,7 +87,7 @@ bool Client::resRedirect()
     Str where = _host + " | resRedirect";
 
     _reply = tmplRedirect(_301, _route->_redirect);
-    return (logAction(where, "Respond: 301"), false);
+    return (logAction(where, "Respond: 301: Redirect to " +_route->_redirect), false);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -94,7 +97,7 @@ bool Client::resSaveFile()
     Str where = _host + " | resSaveFile";
     
     size_t pos;
-    List saveFile;
+    List fileSaved;
     Str bodyPart, boundary, filename;
     
     pos      = _contentType.find("boundary=") + 9;
@@ -111,15 +114,15 @@ bool Client::resSaveFile()
         if (saveMultiPart(bodyPart, _route->_uploadDir, filename))
         {
             logAction(where, filename + " saved");
-            saveFile.push_back(filename);
+            fileSaved.push_back(filename);
         }
         else logError(where, filename + " failed to save");
     }
 
-    if (saveFile.empty())
-        return resError(_500);
+    if (fileSaved.empty())
+        return resError(_500, "resSaveFile: No files were saved");
 
-    _reply = tmplSave(saveFile);
+    _reply = tmplSave(fileSaved);
     return (logAction(where, "Respond: 201"), true);
 }
 
@@ -134,7 +137,7 @@ bool Client::resDeleteFile()
         _reply = tmplDelete(_uri);
         return (logAction(where, "Respond: 204: Deleted " + _uri), true);
     }
-    return (logError(where, "Failed to delete " + _uri), resError(_500));
+    return resError(_500, "resDeleteFile: Failed to delete " + _uri);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -148,5 +151,34 @@ bool Client::resDeleteDir()
         _reply = tmplDelete(_path);
         return (logAction(where, "Respond: 204: Deleted folder" + _path), true);
     }
-    return (logError(where, "Failed to delete folder " + _path), resError(_500));
+    return resError(_500, "resDeleteDir: Failed to delete folder " + _path);
+}
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+bool Client::resCGI(const Str &msg)
+{
+    Str where = _host + " | resCGI";
+
+    List path; 
+    path.push_back(_route->_root + _uri);
+
+    Header env;
+    env["REQUEST_METHOD"] = _method;
+    env["CONTENT_LENGTH"] = toStr(_contentLen);
+    env["CONTENT_TYPE"]   = _contentType;
+    env["PATH_INFO"]      = _route->_root + _uri;
+
+    CGIHandler CGI(env, _data, path);
+
+    try
+    { 
+        _reply = CGI.Execute();
+        return (logAction(where, msg + ": Executed CGI for " + _uri), true); 
+    }
+    catch(std::exception &e) 
+    { 
+        resError(_500, msg + ": resCGI: " + Str(e.what() + Str(" >> ") + _uri)); 
+    }
+    return false;
 }

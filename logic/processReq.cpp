@@ -2,75 +2,70 @@
 
 bool validateRequest(Client &x)
 {
-    Str where = x._host + " | validateRequest"; 
-
-    if (x.isRequestLine_Malform()) return (
-        logError(where, "Malform Request line"), x.resError(_400));
+    if (x.isRequestLine_Malform())
+        return x.resError(_400, "Validate req: Malform request line");
     
     if (x._method == "POST")
     {   
-        if (x.isContentHeader_Invalid()) return (
-            logError(where, "Invalid content header"), x.resError(_400));
+        if (x.isContentHeader_Invalid())
+            return x.resError(_400, "Validate req: Invalid content header");
         
-        if (x.isBody_ExceedLimit()) return (
-            logError(where, "Client body exceeded limit"), x.resError(_413));
+        if (x.isBody_ExceedLimit())
+            return x.resError(_413, "Validate req: Client body exceeded limit");
     }
     return true;
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 bool routeRule(Client &x)
 {
-    Str where = x._host + " | routeRule"; 
+    if (x.isPath_noSlash()) 
+        return x.resAddSlash();
 
-    if (x.isPath_noSlash()) return (
-        logAction(where, "Redirect add slash \"/\" to " + x._path), x.resAddSlash());
+    if (x.isPath_noRoute())
+        return x.resError(_404, "Route rule: No route for " + x._path);
     
-    if (x.isPath_noRoute()) return (
-        logError(where, "No route for " + x._path), x.resError(_404));
+    if (x.isRedirect_True()) 
+        return x.resRedirect();
     
-    if (x.isRedirect_True()) return (
-        logAction(where, "Redirect to " + x.getRedirect()), x.resRedirect());
+    if (x.isPath_noExist())
+        return x.resError(_404, "Route rule: Folder \"" + x._path + "\" doesn't exist");
     
-    if (x.isPath_noExist()) return (
-        logError(where  , "Folder \"" + x._path + "\" doesn't exist"), x.resError(_404));
-    
-    if (!x.isMethod_Illegal()) return (
-        logError(where, "Method \"" + x._method + "\" is not allowed"), x.resError(_405));
+    if (!x.isMethod_Illegal())
+        return x.resError(_405, "Route rule: Method \"" + x._method + "\" is not allowed");
 
     return true;
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 bool do_GET(Client &x) 
 {
-    Str where = x._host + " | GET"; 
-
     if (x.isFile_Empty() && x.noDefaultFile()) 
     {
-        if (x.isAutoIndex_On()) return (
-            logAction(where, "Return directory list for" + x._path), x.resDirList());
-        
-        return (logError(where, "No default file or autoindex for " + x._path), x.resError(_403));
+        if (x.isAutoIndex_On())
+            return x.resDirList();
+
+        return x.resError(_403, "Do GET: No default file or autoindex for " + x._path);
     }
 
-    if (x.isFile_noExist()) return (
-        logMsg(where, "File \"" + x._uri + "\"not found", 0), x.resError(_404));
+    if (x.isFile_noExist()) 
+        return  x.resError(_404, "Do GET: File \"" + x._uri + "\"not found");
     
-    if (x.isCGI()) return ( 
-        logAction(where, "Run CGI on " + x._uri), x.handleCGI());
+    if (x.isCGI()) 
+        return x.resCGI("Do GET");
     
-    return (logAction(where, "Fetch " + x._uri), x.resFetchFile());
+    return x.resFetchFile();
 }
 
-void do_POST(Client &client) 
-{
-    Str where = client.getHost() + " | POST";
+/////////////////////////////////////////////////////////////////////////////////////////////
 
-    if (!client._uploadDir.empty() 
-        && client._contentType.find("multipart/form-data; boundary=") ==  client._contentType.npos)
-    {
-        logMsg(where, "Upload file to " + client._uploadDir, 1);
-        client.resSaveFile();
-    }
+bool do_POST(Client &x) 
+{
+    if (x.isReq_Upload())
+        return x.resSaveFile();
+        
     else
     {
         if (client._file.empty())
@@ -103,6 +98,8 @@ void do_POST(Client &client)
         }
     }    
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 void do_DELETE(Client &client) 
 {

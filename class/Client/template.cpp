@@ -4,6 +4,8 @@ Str getCodeShText(Code code);
 Str getCodeLgText(Code code);
 Str getContentType(const Str &filename);
 
+/////////////////////////////////////////////////////////////////////////////////////
+
 Str Client::tmplErrDefault(Code code)
 {
     Str errCode  = toStr(code);
@@ -61,6 +63,8 @@ Str Client::tmplErrDefault(Code code)
     return (head + body);
 }
 
+/////////////////////////////////////////////////////////////////////////////////////
+
 Str Client::tmplErrCustom(Code code, const Str &body)
 {
     Str head = 
@@ -70,6 +74,8 @@ Str Client::tmplErrCustom(Code code, const Str &body)
     
     return (head + body);
 }
+
+/////////////////////////////////////////////////////////////////////////////////////
 
 Str Client::tmplDirList(const Str &path, const DirItems &items)
 {
@@ -167,6 +173,8 @@ Str Client::tmplDirList(const Str &path, const DirItems &items)
     return (head + body);
 }
 
+/////////////////////////////////////////////////////////////////////////////////////
+
 Str Client::tmplFetch(const Str &filename, const Str &body)
 {
     Str head = 
@@ -177,6 +185,8 @@ Str Client::tmplFetch(const Str &filename, const Str &body)
     
     return (head + body);
 }
+
+/////////////////////////////////////////////////////////////////////////////////////
 
 Str Client::tmplSave(List saveFile)
 {
@@ -200,6 +210,8 @@ Str Client::tmplSave(List saveFile)
     return (head + body);
 }
 
+/////////////////////////////////////////////////////////////////////////////////////
+
 Str Client::tmplDelete(const Str &item)
 {
     Str head = 
@@ -210,6 +222,8 @@ Str Client::tmplDelete(const Str &item)
     return (head + item);
 }
 
+/////////////////////////////////////////////////////////////////////////////////////
+
 Str Client::tmplRedirect(Code code, const Str &redirectTo)
 {
     Str head = 
@@ -219,3 +233,5 @@ Str Client::tmplRedirect(Code code, const Str &redirectTo)
     
     return head;
 }
+
+/////////////////////////////////////////////////////////////////////////////////////

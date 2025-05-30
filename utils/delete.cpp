@@ -18,19 +18,13 @@ bool deleteFolder(const Str& path)
 
         if (entry->d_type == DT_DIR)
         {
-            if (!deleteFolder(path + entry->d_name + "/"))
-            {
-                closedir(dir);
-                return false;
-            }
+            if (deleteFolder(path + entry->d_name + "/") == false)
+                return (closedir(dir), false);
         }
         else
         {
-            if (!deleteFile(path + entry->d_name))
-            {
-                closedir(dir);
-                return false;
-            }
+            if (deleteFile(path + entry->d_name) == false)
+                return (closedir(dir), false);
         }
     }
     closedir(dir);

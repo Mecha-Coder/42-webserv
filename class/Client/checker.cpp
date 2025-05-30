@@ -1,10 +1,11 @@
 #include "../../include/Client.hpp"
+
 bool isFolderExist(const Str dir);
 bool isFileExist(const Str path);
 
-/////////////////////////////////////////////////////////////////////
+/*******************************************************************************/
 // Validate Request
-/////////////////////////////////////////////////////////////////////
+/*******************************************************************************/
 
 bool Client::isRequestLine_Malform() const
 { return (_method.empty() || _uri.empty() || _version != "HTTP/1.1"); }
@@ -15,9 +16,10 @@ bool Client::isContentHeader_Invalid() const
 bool Client::isBody_ExceedLimit() const
 { return (_data.size() > _server._clientBodySize); }
 
-/////////////////////////////////////////////////////////////////////
+
+/*******************************************************************************/
 // Route Requirement
-/////////////////////////////////////////////////////////////////////
+/*******************************************************************************/
 
 bool Client::isPath_noSlash() const
 { return *_path.rbegin() != '/'; }
@@ -34,9 +36,9 @@ bool Client::isPath_noExist() const
 bool  Client::isMethod_Illegal() const
 { return !_route->isMethodAllow(_method); }
 
-/////////////////////////////////////////////////////////////////////
+/*******************************************************************************/
 // Do GET 
-/////////////////////////////////////////////////////////////////////
+/*******************************************************************************/
 
 bool Client::isFile_Empty() const
 { return _file.empty(); }
@@ -55,25 +57,23 @@ bool Client::isAutoIndex_On() const
 bool Client::isFile_noExist() const
 { return !isFileExist(_route->_root + _uri); }
 
-///////////////////////////////////////////////////////////////////// 
+/*******************************************************************************/
+// Do POST
+/*******************************************************************************/
+
+bool Client::isReq_Upload() const
+{
+    return (!_route->_uploadDir.empty() &&
+        (_contentType.find("multipart/form-data; boundary=") != _contentType.npos));
+}
+
+/*******************************************************************************/
 // Others
-/////////////////////////////////////////////////////////////////////
+/*******************************************************************************/
 
 bool Client::isHeadReady() const
-{ return (header.size() && !_method.empty()); }
+{ return (_header.size() && !_method.empty()); }
 
 
 bool   Client::isCGI() const
 { return _route->runWithCGI(_file); }
-
-
-bool  Client::isKeepAlive() const
-{   
-    Header::const_iterator i = this->header.find("Connection");
-    
-    if (i != header.end())
-    {
-        if (i->second == "keep-alive") return true; 
-    }
-    return false;
-}
