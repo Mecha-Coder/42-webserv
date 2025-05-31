@@ -15,9 +15,25 @@
 
 #include "Server.hpp"
 #include "CGIHandler.hpp"
-#include "constant.hpp"
 
 template <typename T> Str toStr(T value);
+
+typedef enum t_code
+{
+    _200 = 200, 
+    _201 = 201, 
+    _204 = 204, 
+    _301 = 301, 
+    _308 = 308,
+    
+    _400 = 400,
+    _403 = 403,
+    _404 = 404, 
+    _405 = 405, 
+    _410 = 410, 
+    _413 = 413,
+    _500 = 500 
+}   Code;
 
 typedef std::string Str;
 typedef std::map<Str, bool> DirItems;
@@ -28,7 +44,7 @@ class Client
 {
 	private:
 		// Server data ---------------------------------------
-		const Server	_server;
+		Server			&_server;
 		Route			*_route;
 
 		// Request data -------------------------------------
@@ -44,6 +60,7 @@ class Client
 		size_t			_byteSent; 
 
 	public:
+		// Request data - quick access to data --------------
 		Str				_method;
 		Str				_uri;
 		Str				_path;
@@ -51,46 +68,42 @@ class Client
 		Str				_host;
 		bool			_keepAlive;
 
-		Client(const Server &_server_);
+		/*************************************************/
+		// Polling Stage
+		/*************************************************/
 
-		bool    appendReq(Str request);
-		void	reUseFd();
+		Client(Server &_server_);
+		void	reuseFd();
 		void	showData();
-		
-		
+		const Str		&getReply(){return _reply;}
+
+		/*************************************************/
+		// Request: Append and parse
+		/*************************************************/
+
+		bool	appendReq(const char *request, size_t byteRead);
+		void	parseHead(Str info);
+		void	parseLine(Str line);
+
 		/*************************************************/
 		// Checker
 		/*************************************************/
 
-		// Validate request
-
 		bool isRequestLine_Malform() const;
 		bool isContentHeader_Invalid() const;
 		bool isBody_ExceedLimit() const;
-
-		// Route Requirement
 
 		bool isRedirect_True() const;
 		bool isPath_noSlash() const;
 		bool isPath_noRoute() const;
 		bool isPath_noExist() const;
 		bool isMethod_Illegal() const;
-
-		// GET request
-		
 	
-
-		// POST request
-		bool isReq_Upload() const;
-
-		// DELETE request
-
-		// Others
-		bool isFile_Empty() const;
 		bool isAutoIndex_On() const;
+		bool isReq_Upload() const;
+		bool isFile_Empty() const;
 		bool isFile_noExist() const;
 		bool noDefaultFile();
-		bool isHeadReady() const;
 		bool isCGI() const;
 
 		/*************************************************/
@@ -111,7 +124,7 @@ class Client
 
 
 		/*************************************************/
-		// Response Template
+		// Template for response 
 		/*************************************************/
 
 		Str tmplErrDefault(Code code);
@@ -122,5 +135,7 @@ class Client
 		Str tmplDelete(const Str &item);
 		Str tmplRedirect(Code code, const Str &redirectTo);
 };
+
+#include "../utils/toStr.tpp"
 
 #endif

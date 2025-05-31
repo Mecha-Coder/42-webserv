@@ -1,11 +1,19 @@
 #include "../include/webserv.hpp"
 
+bool isFileExist(const Str path);
+
+////////////////////////////////////////////////////////////////////////////////
+
 bool deleteFile(const Str& filePath) 
 { 
-    return std::remove(filePath.c_str()) == 0;
+    if (isFileExist(filePath))
+        return (std::remove(filePath.c_str()) == 0);
+    return false;
 }
 
-bool deleteFolder(const Str& path)
+////////////////////////////////////////////////////////////////////////////////
+
+bool deleteDir(const Str& path)
 {
     DIR* dir = opendir(path.c_str());
     if (!dir) return false;
@@ -18,7 +26,7 @@ bool deleteFolder(const Str& path)
 
         if (entry->d_type == DT_DIR)
         {
-            if (deleteFolder(path + entry->d_name + "/") == false)
+            if (deleteDir(path + entry->d_name + "/") == false)
                 return (closedir(dir), false);
         }
         else
@@ -28,21 +36,21 @@ bool deleteFolder(const Str& path)
         }
     }
     closedir(dir);
-    rmdir(path.c_str());
-    return true;
+    return (rmdir(path.c_str()) == 0);
 }
 
-/*
+/////////////////////////////////////////////////////////////////////////////////
+
+/* OK
 int main()
 {
-    if (deleteFile("/mnt/c/Users/PC/Desktop/Webserve/test/website/deleteme.txt"))
-        std::cout << "Successfully deleted file" << std::endl;
-    else 
-        std::cout << "Failed to delete file" << std::endl;
-
-    if (deleteFolder("/mnt/c/Users/PC/Desktop/Webserve/test/website/folder/"))
-        std::cout << "Successfully folder" << std::endl;
-    else
-        std::cout << "Failed to delete folder" << std::endl;
+    //std::cout << "Valid file " + toStr(deleteFile("../deleteme.txt")) << std::endl;
+    //std::cout << "File is not there " + toStr(deleteFile("../deleteme.txt")) << std::endl; ; 
+    //std::cout << "Invalid file " + toStr(deleteFile("../website/archive/test_folder/another_folder")) << std::endl;
+    
+    //std::cout << "folder with stuff " + toStr(deleteDir("../zzDeleteme/")) << std::endl;
+    //std::cout << "empty folder" + toStr(deleteDir("../zzempty")) << std::endl;
+    //std::cout << "Folder is not there " + toStr(deleteDir("../zzDeleteme")) << std::endl;
+    //std::cout << "Invalid folder " + toStr(deleteDir("../website/archive/test_folder/cpp_02.jpg")) << std::endl;
 }
 */

@@ -2,13 +2,19 @@
 
 void test(const Str &request)
 {
-    Client client(serverA());
+    Server server = serverA();
+    Client client(server);
 
-    client.appendReq(request);
-    std::cout << GREEN "\nIN\n===" RESET << std::endl; showRawStr(request);
-    std::cout << CYAN "OUT\n===" RESET << std::endl;
-    processReq(client);
-    showRawStr(client.respond());
+    if (client.appendReq(&request[0], request.size()))
+    {
+        std::cout << YELLOW "Parsed request" RESET << std::endl;
+        client.showData();
+        
+        std::cout << GREEN "\nIN\n===" RESET << std::endl; showHttp(request);
+        std::cout << CYAN "OUT\n===" RESET << std::endl;
+        processReq(client);
+        showHttp(client.getReply());
+    }
 }
 
 Str Missing_Path_and_Version() 
@@ -130,11 +136,11 @@ Str req  =  "POST /submit-form HTTP/1.1\r\n"
             "Host: 127.0.0.1:8080 \r\n"
             "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)\r\n"
             "Content-Type: application/x-www-form-urlencoded\r\n"
-            "Content-Length: 200\r\n"
+            "Content-Length: 20\r\n"
             "Accept: *\r\n"
             "Connection: keep-alive\r\n"
             "\r\n"
-            "username=test&password=12345";
+            "username=test&password=12345fdskl;jfakljkfdls;jakl;dfsjakl;dsfja;";
 return req;
 }
 
@@ -189,6 +195,21 @@ Str req  =  "POST /submit-form/what.html HTTP/1.1\r\n"
             "Connection: keep-alive\r\n"
             "\r\n"
             "username=test&password=12345";
+return req;
+}
+
+Str Route_match_noneExist() 
+{
+std::cout << YELLOW "\n=================================================================\n"
+          << "2.b) Route_match_noneExist\n" 
+          << "=================================================================" RESET << std::endl;
+
+Str req  =  "GET /test/ HTTP/1.1\r\n"
+            "Host: 127.0.0.1:8080 \r\n"
+            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)\r\n"
+            "Accept: *\r\n"
+            "Connection: keep-alive\r\n"
+            "\r\n";
 return req;
 }
 
@@ -373,7 +394,7 @@ std::cout << YELLOW "\n=========================================================
           << "3.d) Fetch_large_image\n" 
           << "=================================================================" RESET << std::endl;
 
-Str req =   "GET /archive/cpp_02.jpg HTTP/1.1\r\n"
+Str req =   "GET /archive/unnamed.jpg HTTP/1.1\r\n"
             "Host: 127.0.0.1:8080\r\n"
             "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:138.0) Gecko/20100101 Firefox/138.0\r\n"
             "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*;q=0.8\r\n"
@@ -448,8 +469,8 @@ std::cout << YELLOW "\n=========================================================
           << "4.a) Upload_2_files\n" 
           << "=================================================================" RESET << std::endl;
 
-    Binary file1; readFile("./website/dummy/mime.txt", file1);
-    Binary file2; readFile("./website/dummy/test_image.jpeg", file2);
+    Str file1; readFile("./website/dummy/mime.txt", file1);
+    Str file2; readFile("./website/dummy/test_image.jpeg", file2);
 
 Str req  =  "POST /upload/ HTTP/1.1\r\n"
             "Host: localhost:8080\r\n"
@@ -461,7 +482,7 @@ Str req  =  "POST /upload/ HTTP/1.1\r\n"
             "DNT: 1\r\n"
             "Content-Type: multipart/form-data; boundary=----WebKitFormBoundarypfFLeGoyUU5ieF18\r\n"
             "sec-ch-ua-mobile: \?0\r\n"
-            "Accept: */*\r\n"
+            "Accept: \r\n"
             "Origin: http://localhost:8080\r\n"
             "Sec-Fetch-Site: same-origin\r\n"
             "Sec-Fetch-Mode: cors\r\n"
@@ -595,8 +616,6 @@ std::cout << YELLOW "\n=========================================================
 Str req  =  "DELETE /bin/removeMe.py HTTP/1.1\r\n"
             "Host: 127.0.0.1:8080 \r\n"
             "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)\r\n"
-            "Content-Type: application/x-www-form-urlencoded\r\n"
-            "Content-Length: 573\r\n"
             "Accept: *\r\n"
             "Connection: keep-alive\r\n"
             "\r\n";
@@ -613,8 +632,6 @@ Str req  =  "DELETE /archive/flowchar.png "
             "HTTP/1.1\r\n"
             "Host: 127.0.0.1:8080 \r\n"
             "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)\r\n"
-            "Content-Type: application/x-www-form-urlencoded\r\n"
-            "Content-Length: 573\r\n"
             "Accept: *\r\n"
             "Connection: keep-alive\r\n"
             "\r\n";
@@ -630,8 +647,6 @@ std::cout << YELLOW "\n=========================================================
 Str req  =  "DELETE /test/ HTTP/1.1\r\n"
             "Host: 127.0.0.1:8080 \r\n"
             "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)\r\n"
-            "Content-Type: application/x-www-form-urlencoded\r\n"
-            "Content-Length: 573\r\n"
             "Accept: *\r\n"
             "Connection: keep-alive\r\n"
             "\r\n";
@@ -647,8 +662,6 @@ std::cout << YELLOW "\n=========================================================
 Str req  =  "DELETE /delete/ HTTP/1.1\r\n"
             "Host: 127.0.0.1:8080 \r\n"
             "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)\r\n"
-            "Content-Type: application/x-www-form-urlencoded\r\n"
-            "Content-Length: 573\r\n"
             "Accept: *\r\n"
             "Connection: keep-alive\r\n"
             "\r\n";
@@ -657,90 +670,53 @@ return req;
 
 int main()
 {
-    Server dummy(serverA());
-     test(Upload_2_files());
-  /*
     // 1) Validation 
         // 1.a) Malform request (400 Bad Request)
-            test(Missing_Path_and_Version());
-            test(Missing_Version());
-            test(Invalid_Version());
+            //test(Missing_Path_and_Version());
+            //test(Missing_Version());
+            //test(Invalid_Version());
   
         // 1.b) POST request: Body size issue (400 Bad Request)
-            test(Post_No_ContentLen());
-            test(Post_No_ContentType());
-            test(Bodysize_Not_Same_ContentLen());
+            //test(Post_No_ContentLen());
+            //test(Post_No_ContentType());
+            //test(Bodysize_Not_Same_ContentLen());
         
-        // 1.c) Post request: Body exceed limit in config (413 Payload Too Large)
-            test(Body_Exceed_Limit());
+            //test(Body_Exceed_Limit()); // 1.c) Post request: Body exceed limit in config (413 Payload Too Large)
         
     // 2) Check any route match URI & meet route requirement
-
-        // 2.a) send /upload -> redirect to /upload/ to make it consistent
-        // (308 Permanent Redirect)
-            test(Redirect_Consistent_Format());
-
-        // 2.b) No route match URI (404 Not Found)
-            test(Invalid_Route());
-    
-        // 2.c) Route is a redirect (301 Moved Permanently)
-            test(Redirect());
+            //test(Redirect_Consistent_Format());  // 2.a) add slash /upload -> /upload/ (301 Moved Permanent)
+            //test(Invalid_Route());               // 2.b) No route match URI (404 Not Found)
+            //test(Route_match_noneExist());         // 2.c) Route match per config, but noneExist (404 Not Found)
+            //test(Redirect());                    // 2.c) Route is a redirect (301 Moved Permanently)
         
         // 2.d) (405 Method Not Allowed)
-            test(Forbidden_Method());
-            test(Method_Not_Listed_Route());
+            //test(Forbidden_Method());
+            //test(Method_Not_Listed_Route());
                
 
     // 3) GET Request
-        // 3.a) URI specify file but not exist (404 Not Found)
-            test(No_Such_File());
+            //test(No_Such_File());               // 3.a) URI specify file but not exist (404 Not Found)
+            //test(No_Default_no_autoindex());    // 3.b) No default file, autoindex off (403 Forbidden)
+            //test(No_Default_autoindex_ON());    // 3.c) Show me your autoindex (200 OK)
+            //test(Simple_get_CGI());             // 3.e) Run simple cgi
         
-        // 3.b) No default file, autoindex off (403 Forbidden)
-            test(No_Default_no_autoindex());
-
-        // 3.c) Show me your autoindex (200 OK)
-            test(No_Default_autoindex_ON());
-        
-        // 3.d) Show me your file Fetching (200 OK)
-            test(Fetch_default_file());
-            test(Fetch_another_file());
+        // 3.d) file Fetching (200 OK)
+            //test(Fetch_default_file());
+            //test(Fetch_another_file());
             //test(Fetch_large_image());
         
-        // 3.e) Run simple cgi
-            test(Simple_get_CGI());
-    
-
     // 4) POST Request
-        // 4.a) Path support upload
-            test(Upload_2_files());
-        
-        // 4.b) No upload support: file doesn't exist
-            test(Post_Ghost_File());
-
-        // 4.c) No upload support: no default file
-            test(Post_No_Default());
- 
-        // 4.d) No upload support: not a cgi
-            test(Post_Not_CGI());
-
-        // 4.e) No upload support: is a cgi
-            test(CGI_Post_show_body_default_file());
+            //test(Upload_2_files());                  // 4.a) Path support upload
+            //test(Post_Ghost_File());                 // 4.b) No upload support: file doesn't exist
+            //test(Post_No_Default());                 // 4.c) No upload support: no default file
+            //test(Post_Not_CGI());                    // 4.d) No upload support: not a cgi
+            // test(CGI_Post_show_body_default_file()); // 4.e) No upload support: is a cgi
       
      
     // 5) DELETE Request
-        // 5.a) Delete file is not there
-            test(Delete_File_Not_there());
-        
-        // 5.b) Delete run as CGI
-            test(Delete_with_CGI());
-
-        // 5.c) Delete actual file
-            test(Delete_actual_file());
-        
-        // 5.d) Delete actual directory
-            test(Delete_actual_directory());
-            
-        // 5.e) Delete URI default file & run cgi
-            test(Delete_default_cgi()); */
-       
+            //test(Delete_File_Not_there());    // 5.a) Delete file is not there
+            //test(Delete_with_CGI());          // 5.b) Delete run as CGI
+            //test(Delete_actual_file());          // 5.c) Delete actual file
+            //test(Delete_actual_directory());  // 5.d) Delete actual directory
+            //test(Delete_default_cgi());       // 5.e) Delete URI default file & run cgi
 }

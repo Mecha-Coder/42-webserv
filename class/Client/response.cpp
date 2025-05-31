@@ -3,10 +3,10 @@
 bool readDir(const Str &path, DirItems &items);
 bool readFile(const Str& filename, Str &content);
 
-bool saveMultiPart(Str &bodyPart, const Str &saveHere, Str &filename);
+bool saveBodyPart(Str &bodyPart, const Str &saveHere, Str &filename);
 
 bool deleteFile(const Str& filePath);
-bool deleteFolder(const Str& path);
+bool deleteDir(const Str& path);
 
 void logError(const Str &where, Str action);
 void logAction(const Str &where, Str action);
@@ -49,7 +49,7 @@ bool Client::resDirList()
     if (readDir(_route->_root + _path, items))
     {
         _reply = tmplDirList(_path, items);
-        return (logAction(where, "Respond: 200: Return directory list for" + _path), true);
+        return (logAction(where, "Respond: 200: Return directory list for " + _path), true);
     }
     return resError(_500, "resDirList: Failed directory list for " + _path);
 }
@@ -62,12 +62,12 @@ bool Client::resFetchFile()
 
     Str body;
 
-    if (readFile(_route->_root + _uri, body))
+    if (readFile(_route->_root + _path + _file, body))
     {
         _reply = tmplFetch(_file, body);
-        return (logAction(where, "Respond: 200: Fetch " + _uri), true);
+        return (logAction(where, "Respond: 200: Fetch " + _path + _file), true);
     }
-    return resError(_500, "resFetchFile: Fail to read " + _uri);
+    return resError(_500, "resFetchFile: Fail to read " + _path + _file);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -76,8 +76,8 @@ bool Client::resAddSlash()
 {
     Str where = _host + " | resAddSlash";
 
-    _reply = tmplRedirect(_308, _uri + "/");
-    return (logAction(where, "Respond: 308: Redirect add slash \"/\" to " + _uri), false);
+    _reply = tmplRedirect(_308, _path + "/");
+    return (logAction(where, "Respond: 308: Redirect add slash \"/\" -> " + _path), false);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -111,7 +111,7 @@ bool Client::resSaveFile()
     ) {
         bodyPart = _data.substr(0, pos - 2);
         
-        if (saveMultiPart(bodyPart, _route->_uploadDir, filename))
+        if (saveBodyPart(bodyPart, _route->_root + _route->_uploadDir, filename))
         {
             logAction(where, filename + " saved");
             fileSaved.push_back(filename);
@@ -132,12 +132,12 @@ bool Client::resDeleteFile()
 {
     Str where = _host + " | resDeleteFile";
 
-    if (deleteFile(_route->_root + _uri))
+    if (deleteFile(_route->_root + _path + _file))
     {
-        _reply = tmplDelete(_uri);
-        return (logAction(where, "Respond: 204: Deleted " + _uri), true);
+        _reply = tmplDelete(_path);
+        return (logAction(where, "Respond: 204: Deleted " + _path + _file), true);
     }
-    return resError(_500, "resDeleteFile: Failed to delete " + _uri);
+    return resError(_500, "resDeleteFile: Failed to delete " + _path + _file);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -146,10 +146,10 @@ bool Client::resDeleteDir()
 {
     Str where = _host + " | resDeleteDir";
 
-    if (deleteFolder(_route->_root + _path))
+    if (deleteDir(_route->_root + _path))
     {
         _reply = tmplDelete(_path);
-        return (logAction(where, "Respond: 204: Deleted folder" + _path), true);
+        return (logAction(where, "Respond: 204: Deleted folder " + _path), true);
     }
     return resError(_500, "resDeleteDir: Failed to delete folder " + _path);
 }
@@ -161,24 +161,24 @@ bool Client::resCGI(const Str &msg)
     Str where = _host + " | resCGI";
 
     List path; 
-    path.push_back(_route->_root + _uri);
+    path.push_back(_route->_root + _path + _file);
 
     Header env;
     env["REQUEST_METHOD"] = _method;
     env["CONTENT_LENGTH"] = toStr(_contentLen);
     env["CONTENT_TYPE"]   = _contentType;
-    env["PATH_INFO"]      = _route->_root + _uri;
+    env["PATH_INFO"]      = _route->_root + _path + _file;
 
-    CGIHandler CGI(env, _data, path);
+    CGIHandler handler(env, _data, path);
 
     try
     { 
-        _reply = CGI.Execute();
-        return (logAction(where, msg + ": Executed CGI for " + _uri), true); 
+        _reply = handler.Execute();
+        return (logAction(where, msg + ": Executed CGI for " + _path + _file), true); 
     }
     catch(std::exception &e) 
     { 
-        resError(_500, msg + ": resCGI: " + Str(e.what() + Str(" >> ") + _uri)); 
+        resError(_500, msg + ": resCGI: " + Str(e.what() + Str(" >> ") + _path + _file)); 
     }
     return false;
 }

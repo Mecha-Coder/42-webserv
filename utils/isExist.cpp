@@ -1,6 +1,6 @@
 #include "../include/webserv.hpp"
 
-bool isFolderExist(const Str dir) 
+bool isDirExist(const Str dir) 
 {
     struct stat info;
     
@@ -8,6 +8,8 @@ bool isFolderExist(const Str dir)
         return (info.st_mode & S_IFDIR);
     return false; 
 }
+
+///////////////////////////////////////////////////////////////////////
 
 bool isFileExist(const Str path) 
 {
@@ -18,3 +20,16 @@ bool isFileExist(const Str path)
     } 
     return false;
 }
+
+/////////////////////////////////////////////////////////////////////
+
+/* OK
+int main()
+{
+    std::cout << "Valid file" + toStr(isFileExist("../website/archive/Deriv.pdf")) << std::endl;
+    std::cout << "Invalid file" + toStr(isFileExist("../website/archive/test_folder")) << std::endl;
+
+    std::cout << "Valid folder" + toStr(isDirExist("../website/archive/test_folder")) << std::endl;
+    std::cout << "Invalid folder" + toStr(isDirExist("../website/archive/Deriv.pdf")) << std::endl;
+}
+*/

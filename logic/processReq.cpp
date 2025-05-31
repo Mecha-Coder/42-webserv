@@ -32,7 +32,7 @@ bool routeRule(Client &x)
     if (x.isPath_noExist())
         return x.resError(_404, "Route rule: Folder \"" + x._path + "\" doesn't exist");
     
-    if (!x.isMethod_Illegal())
+    if (x.isMethod_Illegal())
         return x.resError(_405, "Route rule: Method \"" + x._method + "\" is not allowed");
 
     return true;
@@ -51,7 +51,7 @@ bool do_GET(Client &x)
     }
 
     if (x.isFile_noExist()) 
-        return  x.resError(_404, "Do GET: File \"" + x._uri + "\"not found");
+        return  x.resError(_404, "Do GET: File \"" + x._path + x._file + "\" not found");
     
     if (x.isCGI()) 
         return x.resCGI("Do GET");
@@ -66,75 +66,39 @@ bool do_POST(Client &x)
     if (x.isReq_Upload())
         return x.resSaveFile();
         
-    else
-    {
-        if (client._file.empty())
-        {
-            client._file = client.getDefaultFile();
-            if (client._file.empty() || !isValidFile(client._filePath + client._file))
-            {
-                logMsg(where, "Invalid Post Request", 0);
-                client.resError(403); return;
-            }
-        }
-        else
-        {
-            if (!isValidFile(client._filePath + client._file))
-            {
-                logMsg(where, "File \"" + client._path + client._file + "\"not found ", 0);
-                client.resError(404); return;
-            }
-        }
+    if (x.isFile_Empty() && x.noDefaultFile())
+        return x.resError(_403, "Do POST: Invalid Post Request");
+    
+    if (x.isFile_noExist())
+        return x.resError(_404, "Do POST: File \"" + x._path + x._file + "\" not found");
 
-        if (client.isCGI())
-        {
-            logMsg(where, "Run CGI on " + client._path + client._file, 1);
-            client.handleCGI();
-        }
-        else
-        {
-            logMsg(where, "File \"" + client._path + client._file +  "\"not CGI", 0);
-            client.resError(403);
-        }
-    }    
+    if (x.isCGI())
+        return x.resCGI("Do Post");
+    
+    return x.resError(_403, "File \"" + x._path + x._file +  "\" not CGI");  
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-void do_DELETE(Client &client) 
+bool do_DELETE(Client &x) 
 {
-    Str where = client.getHost() + " | DELETE";
-
-    if (client._file.empty())
+    if (x.isFile_Empty())
     {
-        client._file = client.getDefaultFile();
-        if (client._file.empty() || !client.isCGI())
-        {
-            logMsg(where, "Delete folder " + client._path, 1);
-            client.resDeleteDir(); return;
-        }
-        if (!isValidFile(client._filePath + client._file))
-        {
-            logMsg(where, "Is CGI, but file \"" + client._path + client._file + "\"not found", 0);
-            client.resError(403); return;
-        }
+        if (x.noDefaultFile())
+            return x.resDeleteDir();
+        
+        if (x.isFile_noExist() || !x.isCGI())
+            return x.resError(_403, "Do Delete: Invalid Delete Request");
     }
     else
     {
-        if (!isValidFile(client._filePath + client._file))
-        {
-            logMsg(where, "File \"" + client._path + client._file + "\"not found ", 0);
-            client.resError(410); return;
-        }
-        if (!client.isCGI())
-        {
-            logMsg(where, "Delete file \"" + client._path + client._file + "\"", 1);
-            client.resDeleteFile(); return;
-        }
-    }
+        if (x.isFile_noExist())
+            return x.resError(_410, "Do Delete: File \"" + x._path + x._file + "\" not found");
 
-    logMsg(where, "Run CGI on " + client._path + client._file, 1);
-    client.handleCGI();
+        if (!x.isCGI())
+            return x.resDeleteFile();
+    }
+    return x.resCGI("Do Delete");
 }
 
 void processReq(Client &client)
@@ -147,8 +111,5 @@ void processReq(Client &client)
     else if (client._method == "POST")   do_POST(client);
     else if (client._method == "DELETE") do_DELETE(client);
     else
-    {
-        logMsg(where, "Fail to process " + client._path, 0);
-        client.resError(_500);
-    }
+        client.resError(_500, "Process req: Fail to process");
 }

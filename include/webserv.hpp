@@ -17,31 +17,21 @@
 #include "Route.hpp"
 #include "Server.hpp"
 
-typedef std::map<Str, bool> DirItems;
+template <typename T> Str toStr(T value);
 
-/////////////////////////////////////////////////////////////
-// LOGIC
-/////////////////////////////////////////////////////////////
+/************************************************************/
+// TESTING
+/************************************************************/
 
 Server serverA();
 void processReq(Client &client);
 
-/////////////////////////////////////////////////////////////
-// UTILITY FUNCTION
-/////////////////////////////////////////////////////////////
+/************************************************************/
+// UTILS
+/************************************************************/
 
-int     setNoneBlock(const int &fd);
-void    showRawStr(const Str &content);
-void    showRawStr(const Binary &content);
-bool    isFolderExist(const Str dir);
-bool    isValidFile(const Str path);
-void    logMsg(const Str &where, Str action, int state);
-bool    readFile(const Str& filename, Binary &content);
-
-/////////////////////////////////////////////////////////////
-// STATUS CODE
-/////////////////////////////////////////////////////////////
-
-
+int setNoBlock(const int &fd);
+void showHttp(const Str &content);
+bool readFile(const Str& filename, Str &content);
 
 #endif
