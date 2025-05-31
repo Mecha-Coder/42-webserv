@@ -463,6 +463,31 @@ Str req =   "GET /bin/printenv.py HTTP/1.1\r\n"
 return req;
 }
 
+Str Ryan_hello_py()
+{
+std::cout << YELLOW "\n=================================================================\n"
+          << "3.e) Ryan_hello_py\n" 
+          << "=================================================================" RESET << std::endl;
+
+Str req =   "GET /bin/hello.py HTTP/1.1\r\n"
+            "Host: 127.0.0.1:8080\r\n"
+            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:138.0) Gecko/20100101 Firefox/138.0\r\n"
+            "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*;q=0.8\r\n"
+            "Accept-Language: en-US,en;q=0.5\r\n"
+            "Accept-Encoding: gzip, deflate, br, zstd\r\n"
+            "DNT: 1\r\n"
+            "Sec-GPC: 1\r\n"
+            "Connection: close\r\n"
+            "Upgrade-Insecure-Requests: 1\r\n"
+            "Sec-Fetch-Dest: document\r\n"
+            "Sec-Fetch-Mode: navigate\r\n"
+            "Sec-Fetch-Site: none\r\n"
+            "Sec-Fetch-User: ?1\r\n"
+            "Priority: u=0, i\r\n"
+            "\r\n";
+return req;
+}
+
 Str Upload_2_files() 
 {
 std::cout << YELLOW "\n=================================================================\n"
@@ -475,7 +500,7 @@ std::cout << YELLOW "\n=========================================================
 Str req  =  "POST /upload/ HTTP/1.1\r\n"
             "Host: localhost:8080\r\n"
             "Connection: keep-alive\r\n"
-            "Content-Length: 12496\r\n"
+            "Content-Length: 12397\r\n"   // Laptop:12496 Mac:12397 
             "sec-ch-ua-platform: \"Windows\"\r\n"
             "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0\r\n"
             "sec-ch-ua: \"Chromium\";v=\"136\", \"Microsoft Edge\";v=\"136\", \"Not.A/Brand\";v=\"99\"\r\n"
@@ -571,14 +596,19 @@ std::cout << YELLOW "\n=========================================================
           << "=================================================================" RESET << std::endl;
 
 Str req  =  "POST /bin/ HTTP/1.1\r\n"
-            "Host: 127.0.0.1:8080 \r\n"
-            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)\r\n"
-            "Content-Type: application/x-www-form-urlencoded\r\n"
-            "Content-Length: 573\r\n"
-            "Accept: *\r\n"
-            "Connection: keep-alive\r\n"
-            "\r\n"
-            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum";
+    "Host: 127.0.0.1:8080\r\n"
+    "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)\r\n"
+    "Content-Type: text/plain; charset=UTF-8\r\n"
+    "Content-Length: 573\r\n"
+    "Accept: */*\r\n"
+    "Connection: keep-alive\r\n"
+    "\r\n"
+    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the "
+    "industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type "
+    "and scrambled it to make a type specimen book. It has survived not only five centuries, but also the "
+    "leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s "
+    "with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop "
+    "publishing software like Aldus PageMaker including versions of Lorem Ipsum";
 return req;
 }
 
@@ -699,7 +729,8 @@ int main()
             //test(No_Default_no_autoindex());    // 3.b) No default file, autoindex off (403 Forbidden)
             //test(No_Default_autoindex_ON());    // 3.c) Show me your autoindex (200 OK)
             //test(Simple_get_CGI());             // 3.e) Run simple cgi
-        
+            //test(Ryan_hello_py());
+
         // 3.d) file Fetching (200 OK)
             //test(Fetch_default_file());
             //test(Fetch_another_file());
@@ -716,7 +747,7 @@ int main()
     // 5) DELETE Request
             //test(Delete_File_Not_there());    // 5.a) Delete file is not there
             //test(Delete_with_CGI());          // 5.b) Delete run as CGI
-            //test(Delete_actual_file());          // 5.c) Delete actual file
-            //test(Delete_actual_directory());  // 5.d) Delete actual directory
+            // test(Delete_actual_file());          // 5.c) Delete actual file
+            // test(Delete_actual_directory());  // 5.d) Delete actual directory
             //test(Delete_default_cgi());       // 5.e) Delete URI default file & run cgi
 }

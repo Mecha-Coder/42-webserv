@@ -76,6 +76,7 @@ class Client
 		void	reuseFd();
 		void	showData();
 		const Str		&getReply(){return _reply;}
+		size_t	actualBodySize(){return _data.size();}
 
 		/*************************************************/
 		// Request: Append and parse

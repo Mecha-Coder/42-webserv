@@ -168,6 +168,24 @@ bool Client::resCGI(const Str &msg)
     env["CONTENT_LENGTH"] = toStr(_contentLen);
     env["CONTENT_TYPE"]   = _contentType;
     env["PATH_INFO"]      = _route->_root + _path + _file;
+    env.insert(_header.begin(), _header.end());
+
+    std::cout << "Print information pass to CGI handler\n"
+              << "=====================================\n"
+              << "env   :" << std::endl;
+    
+    Header::const_iterator i = env.begin();
+    for (; i != env.end(); i++)
+        std::cout << "\t[" << i->first << "] = [" << i->second << "]" << std::endl;
+
+    std::cout << "path  :\n" << std::endl;
+
+    for (size_t j = 0; j < path.size() ; j++)
+        std::cout << "\t" << path[j] << std::endl;
+    
+    std::cout << "_data :\n["
+              << _data << "]\n\n" << std::endl;
+
 
     CGIHandler handler(env, _data, path);
 
