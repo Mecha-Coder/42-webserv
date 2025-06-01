@@ -6,7 +6,7 @@
 /*   By: rcheong <rcheong@student.42kl.edu.my>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 21:10:22 by rcheong           #+#    #+#             */
-/*   Updated: 2025/05/08 21:10:23 by rcheong          ###   ########.fr       */
+/*   Updated: 2025/05/31 13:58:17 by rcheong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,8 @@ public:
 	void Remove(const std::string& key);
 	static Table& Empty();
 
-private:
-	EToml type;
+// private:
+	enum EToml type;
 	TomlMap map;
 	std::vector<Table> vec;
 	std::string str;
