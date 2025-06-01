@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webserv!!! & 4×2 Ratio Grid</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee+Shade&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #fffefe;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            position: relative;
+        }
+        .container {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            margin-left: 0;
+            margin-bottom: 40px;
+        }
+        .big-text {
+            font-family: 'Bungee Shade', cursive;
+            font-size: 72px;
+            color: #000;
+            line-height: 3;
+        }
+        .logo-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .logo {
+            height: 50px;
+            width: auto;
+        }
+        .caption {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            color: #333;
+            text-align: center;
+        }
+        .display-img {
+            width: 200px;
+            height: auto;
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .bracket-mandatory {
+            position: absolute;
+            top: 200px;
+            left: 50px;
+            width: 80px;
+            background: #e0e0e0;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            border-radius: 6px;
+            padding: 12px 16px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .bracket-bonus {
+            position: absolute;
+            bottom: 200px;
+            left: 50px;
+            width: 80px;
+            background: #e0e0e0;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            border-radius: 6px;
+            padding: 12px 16px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #020202;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #333;
+            font-size: 1.5rem;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 30px;
+            height: auto;
+            width: 90%; /* Allow width to adjust */
+            max-width: 1000px;
+            margin: 40px auto;
+            background: #ffffff;
+            border-radius: 10px;
+            /* box-shadow: 0 4px 16px rgba(0,0,0,0.08); */
+            padding: 40px;
+        }
+        .box {
+            display: run-in; /* Changed to run-in */
+            background-color: #dbdbdb;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 20px; /* Added padding for better visibility */
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+            width: auto; /* Allow width to adjust */
+            height: auto; /* Allow height to adjust */
+            text-align: center;
+            /* Additional properties to maintain some layout */
+            margin: 5px;
+            vertical-align: middle;
+        }
+        @media (max-width: 1200px) {
+            .grid-container {
+                width: 95%;
+                gap: 20px;
+                padding: 30px;
+            }
+        }
+        @media (max-width: 768px) {
+            .grid-container {
+                display: block; /* Change to block layout on mobile */
+            }
+            .box {
+                display: block;
+                width: 100%;
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="big-text">Webserv!!!</div>
+        <div class="logo-group">
+            <img class="logo" src="./photos/a.png" alt="Logo 1">
+            <div class="caption">Github</div>
+        </div>
+        <div class="logo-group">
+            <img class="logo" src="./photos/b.png" alt="Logo 2">
+            <div class="caption">Members</div>
+        </div>
+    </div>
+    <img class="display-img" src="./photos/logo.png" alt="Display Image">
+    <div class="bracket-mandatory">mandatory</div>
+    <div class="grid-container">
+        <div class="box">1</div>
+        <div class="box">2</div>
+        <div class="box">3</div>
+        <div class="box">4</div>
+        <div class="box">5</div>
+        <div class="box">6</div>
+        <div class="box">7</div>
+        <div class="box">8</div>
+    </div>
+    <div class="bracket-bonus">bonus</div>
+</body>
+</html>
