@@ -7,7 +7,7 @@ int getReadyList(const Pair &pair, struct addrinfo **list)
 	std::memset(&hint, 0, sizeof(hint));
     hint.ai_family   = AF_INET;
     hint.ai_socktype = SOCK_STREAM;
-    hint.ai_flags    = AI_PASSIVE;
+    hint.ai_flags    = AI_PASSIVE | AI_NUMERICSERV | AI_NUMERICHOST;
 
 	return (getaddrinfo(pair.first.c_str(), pair.second.c_str(), &hint, list) == 0);
 }
@@ -63,13 +63,14 @@ int create_listenFd(const Pair &pair)
 			getsockname(sockfd, (struct sockaddr *)&check, &addrlen);
 			Str port = toStr(ntohs(check.sin_port));
 			Str IP = inet_ntoa(check.sin_addr);
+			uint32_t ip = ntohl(check.sin_addr.s_addr);
 
-			if (port == pair.second) return (
+			if (port == pair.second && ip != 0xFFFFFFFFUL && ip != 0x00000000UL) return (
 				logAction(where, "Created listen FD=" + toStr(sockfd) + " for " + IP + ":" + port), sockfd);
 			close(sockfd);
 		}
 	}
-    return (logError(where, "Failed to create listen FD"), -1);
+    return (logError(where, "Failed to create listen FD " + pair.first + ":" + pair.second), -1);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -103,25 +104,25 @@ int main()
 	create_listenFd(Pair(std::make_pair("::1", "8080")));
 	create_listenFd(Pair(std::make_pair("localhost", "00080")));
 	create_listenFd(Pair(std::make_pair("127.0.0.1", "1")));
-	create_listenFd(Pair(std::make_pair("168.58.90.5", "50000")));
-	create_listenFd(Pair(std::make_pair("254.10.20.30", "9100")));
-	create_listenFd(Pair(std::make_pair("168.58.90.5", "8090")));
-	create_listenFd(Pair(std::make_pair("180.5.2.11", "8000")));
+	create_listenFd(Pair(std::make_pair("255.255.255.255", "8080")));
+	create_listenFd(Pair(std::make_pair("0.0.0.0", "8000")));
 
 
 	std::cout << YELLOW "\n\nValid host:port\n==========\n" RESET << std::endl;
 	
-	create_listenFd(Pair(std::make_pair("255.255.255.255", "8080")));
-	create_listenFd(Pair(std::make_pair("0.0.0.0", "8000")));
-	create_listenFd(Pair(std::make_pair("127.0.0.1", "10000")));
+	create_listenFd(Pair(std::make_pair("168.58.90.5", "50000")));
+	create_listenFd(Pair(std::make_pair("254.10.20.30", "9100")));
+	create_listenFd(Pair(std::make_pair("168.58.90.5", "8090")));
+	create_listenFd(Pair(std::make_pair("180.5.2.11", "8000")));
 	create_listenFd(Pair(std::make_pair("localhost", "8080")));
-	create_listenFd(Pair(std::make_pair("127.2.2.1", "9000")));
-	create_listenFd(Pair(std::make_pair("127.66.62.61", "23000")));
 	create_listenFd(Pair(std::make_pair("173.5.5.5", "10000")));
 	create_listenFd(Pair(std::make_pair("172.5.5.5", "4000")));
 	create_listenFd(Pair(std::make_pair("172.80.245.90", "5000")));
-
+	create_listenFd(Pair(std::make_pair("127.0.0.1", "10000")));
+	create_listenFd(Pair(std::make_pair("127.2.2.1", "9000")));
+	create_listenFd(Pair(std::make_pair("127.66.62.61", "23000")));
 }
+
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
