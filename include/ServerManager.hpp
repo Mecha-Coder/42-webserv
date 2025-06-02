@@ -24,8 +24,10 @@ class ServerManager
         ServerManager(Servers &serverList);
 
         void showData() const;
-        bool initListenFd();
+        bool initListenFd(Watchlist &watcher);
         bool isListenFd(int fd);
+
+        Server &whichServer(int fd);
 };
 
 #endif

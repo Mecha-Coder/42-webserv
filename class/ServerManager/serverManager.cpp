@@ -17,10 +17,10 @@ void ServerManager::showData() const
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-bool ServerManager::initListenFd()
+bool ServerManager::initListenFd(Watchlist &watcher)
 {
-	IP_Host addr;
 	int listenFd;
+	IP_Host addr;
 	IP_Host::iterator j;
 
 	for (size_t i = 0; i < _serverList.size(); i++)
@@ -34,28 +34,16 @@ bool ServerManager::initListenFd()
 				return  false;
 			
 			_listenMap.insert(std::make_pair(listenFd, &_serverList[i]));
+
+			struct pollfd pfd;
+			pfd.fd = listenFd;
+			pfd.events = POLLIN;
+			pfd.revents = 0;
+			watcher.push_back(pfd);
 		}
 		addr.clear();		
 	}
 	return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-Watchlist ServerManager::getWatchlist()
-{
-	Watchlist watchlist;
-
-	Fd_Server::const_iterator i;
-	for (i = _listenMap.begin() ; i != _listenMap.end(); i++)
-	{
-		struct pollfd pfd;
-		pfd.fd = i->first;
-		pfd.events = POLLIN;
-		pfd.revents = 0;
-		watchlist.push_back(pfd);
-	}
-	return watchlist;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -72,3 +60,14 @@ bool ServerManager::isListenFd(int fd)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Server &ServerManager::whichServer(int fd)
+{
+	Fd_Server::iterator i;
+	for (i = _listenMap.begin() ; i != _listenMap.end(); i++)
+	{
+		if (i->first == fd);
+			break;
+	}
+	return *(i->second);
+}

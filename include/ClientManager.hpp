@@ -9,14 +9,21 @@
 #include "Client.hpp"
 
 typedef std::map<int, Client> Clients;
+typedef std::vector<struct pollfd> Watchlist;
+typedef Watchlist::iterator Watchlist_It;
 
 class ClientManager
 {
     private:
-        Servers     _serverList;
-        Fd_Server   _listenMap;
+        Clients     _clientList;
+        Watchlist   &_watcher;
          
     public:
+        ClientManager(Watchlist &watcher);
+
+        void addClient(int clientFd, Server &server);
+        Client &whichClient(int clientFd);
+        void removeClient(Watchlist_It &i);
 };
 
 #endif
