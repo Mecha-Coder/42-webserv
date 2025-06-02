@@ -51,11 +51,11 @@ private:
 
 	bool skip_space(std::string& line);
 	bool get_next_line(std::string& line);
-	void make_token(Token* t, const std::string& value, Token::e_token type);
-	Token::e_token expect() const;
-	Token::e_token expect_value() const;
+	void MakeToken(Token* t, const std::string& value, Token::e_token type);
+	Token::e_token Expect() const;
+	Token::e_token ExpectValue() const;
 
 	bool tokenize(std::string& line, Token& tk);
-	bool tokenize_value(std::string& line, Token& tk);
-	TokenListResult parse_value(std::string& line);
+	bool TokenizeValue(std::string& line, Token& tk);
+	TokenListResult ParseValue(std::string& line);
 };

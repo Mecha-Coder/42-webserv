@@ -15,7 +15,7 @@ class Lexer {
 
 public:
 	Lexer(std::istream&);
-	TokenListResult parse();
+	TokenListResult Parse();
 
 private:
 	std::istream* in;
@@ -26,21 +26,21 @@ private:
 
 	// utils
 
-	bool skip_space(std::string& line);
+	bool SkipSpace(std::string& line);
 
 	// cursor
 	char next_char();
 	char current();
-	bool getnextline(std::string& line);
-	void make_token(Token* t, std::string value, Token::e_token type);
-	Token::e_token expect();
-	Token::e_token expect_value();
+	bool GetNextLine(std::string& line);
+	void MakeToken(Token* t, std::string value, Token::e_token type);
+	Token::e_token Expect();
+	Token::e_token ExpectValue();
 
 	// new
-	TokenListResult parse_value(std::string& line);
+	TokenListResult ParseValue(std::string& line);
 	// tokenizer
-	bool tokenize(std::string& line, Token& tk);
-	bool tokenize_value(std::string& line, Token& tk);
+	bool Tokenize(std::string& line, Token& tk);
+	bool TokenizeValue(std::string& line, Token& tk);
 	// validation
 	//bool expected(Token::e_token type);
 };

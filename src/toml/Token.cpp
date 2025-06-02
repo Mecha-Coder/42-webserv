@@ -51,14 +51,14 @@ bool TokenParser::get_next_line(std::string& line) {
 	return !in->fail();
 }
 
-void TokenParser::make_token(Token* t, const std::string& value, Token::e_token type) {
+void TokenParser::MakeToken(Token* t, const std::string& value, Token::e_token type) {
 	t->value = value;
 	t->type = type;
 	t->line = nc;
 	t->offset = pos;
 }
 
-Token::e_token TokenParser::expect() const {
+Token::e_token TokenParser::Expect() const {
 	switch (last_token) {
 	case Token::UNINITIALISED:
 		return Token::KEY | Token::COMMENT | Token::NEWLINE | Token::OPENBRACKET;
@@ -86,7 +86,7 @@ Token::e_token TokenParser::expect() const {
 	}
 }
 
-Token::e_token TokenParser::expect_value() const {
+Token::e_token TokenParser::ExpectValue() const {
 	switch (last_token) {
 	case Token::QUOTED:
 	case Token::VALUE:
@@ -111,23 +111,23 @@ bool TokenParser::tokenize(std::string& line, Token& tk) {
 
 	char c = line[pos];
 	switch (c) {
-	case '.': make_token(&tk, ".", Token::DOT); pos++; break;
-	case '[': make_token(&tk, "[", Token::OPENBRACKET); pos++; break;
-	case ']': make_token(&tk, "]", Token::CLOSEBRACKET); pos++; break;
-	case '=': make_token(&tk, "=", Token::ASSIGN); pos++; break;
-	case '\n': make_token(&tk, "\n", Token::NEWLINE); pos++; break;
+	case '.': MakeToken(&tk, ".", Token::DOT); pos++; break;
+	case '[': MakeToken(&tk, "[", Token::OPENBRACKET); pos++; break;
+	case ']': MakeToken(&tk, "]", Token::CLOSEBRACKET); pos++; break;
+	case '=': MakeToken(&tk, "=", Token::ASSIGN); pos++; break;
+	case '\n': MakeToken(&tk, "\n", Token::NEWLINE); pos++; break;
 	case '"':
 	case '\'': {
 		size_t end = line.find(c, pos + 1);
 		if (end == std::string::npos) return false;
-		make_token(&tk, line.substr(pos + 1, end - pos - 1), Token::QUOTED);
+		MakeToken(&tk, line.substr(pos + 1, end - pos - 1), Token::QUOTED);
 		pos = end + 1;
 		break;
 	}
 	case '#': {
 		size_t end = line.find('\n', pos);
 		if (end == std::string::npos) return false;
-		make_token(&tk, line.substr(pos + 1, end), Token::COMMENT);
+		MakeToken(&tk, line.substr(pos + 1, end), Token::COMMENT);
 		pos = end + 1;
 		break;
 	}
@@ -135,7 +135,7 @@ bool TokenParser::tokenize(std::string& line, Token& tk) {
 		if (isalnum(c) || strchr("_-", c)) {
 			size_t end = line.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-", pos);
 			if (end == std::string::npos) return false;
-			make_token(&tk, line.substr(pos, end - pos), Token::KEY);
+			MakeToken(&tk, line.substr(pos, end - pos), Token::KEY);
 			pos = end;
 		} else return false;
 		break;
@@ -143,19 +143,19 @@ bool TokenParser::tokenize(std::string& line, Token& tk) {
 	return true;
 }
 
-bool TokenParser::tokenize_value(std::string& line, Token& tk) {
+bool TokenParser::TokenizeValue(std::string& line, Token& tk) {
 	if (!skip_space(line)) return false;
 
 	char c = line[pos];
 	switch (c) {
-	case '[': make_token(&tk, "[", Token::OPENBRACKET); pos++; break;
-	case ']': make_token(&tk, "]", Token::CLOSEBRACKET); pos++; break;
-	case ',': make_token(&tk, ",", Token::COMMA); pos++; break;
+	case '[': MakeToken(&tk, "[", Token::OPENBRACKET); pos++; break;
+	case ']': MakeToken(&tk, "]", Token::CLOSEBRACKET); pos++; break;
+	case ',': MakeToken(&tk, ",", Token::COMMA); pos++; break;
 	case '"':
 	case '\'': {
 		size_t end = line.find(c, pos + 1);
 		if (end == std::string::npos) return false;
-		make_token(&tk, line.substr(pos + 1, end - pos - 1), Token::QUOTED);
+		MakeToken(&tk, line.substr(pos + 1, end - pos - 1), Token::QUOTED);
 		pos = end + 1;
 		break;
 	}
@@ -163,7 +163,7 @@ bool TokenParser::tokenize_value(std::string& line, Token& tk) {
 		if (isalnum(c) || strchr("_-", c)) {
 			size_t end = line.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-", pos);
 			if (end == std::string::npos) return false;
-			make_token(&tk, line.substr(pos, end - pos), Token::VALUE);
+			MakeToken(&tk, line.substr(pos, end - pos), Token::VALUE);
 			pos = end;
 		} else return false;
 		break;
@@ -171,11 +171,11 @@ bool TokenParser::tokenize_value(std::string& line, Token& tk) {
 	return true;
 }
 
-TokenListResult TokenParser::parse_value(std::string& line) {
+TokenListResult TokenParser::ParseValue(std::string& line) {
 	std::list<Token> tokens;
 	Token tk;
-	while (tokenize_value(line, tk)) {
-		if (!(tk.type & expect_value()))
+	while (TokenizeValue(line, tk)) {
+		if (!(tk.type & ExpectValue()))
 			return ParseError("unexpected token `" + tk.as_str() + "`", nc);
 		last_token = tk.type;
 		tokens.push_back(tk);
@@ -188,18 +188,18 @@ TokenListResult TokenParser::parse() {
 	Token tk;
 	while (get_next_line(line)) {
 		while (tokenize(line, tk)) {
-			if (!(tk.type & expect()))
+			if (!(tk.type & Expect()))
 				return ParseError("unexpected token `" + tk.as_str() + "`", nc);
 			last_token = tk.type;
 			tokens.push_back(tk);
 			if (last_token == Token::ASSIGN) {
-				TokenListResult res = parse_value(line);
+				TokenListResult res = ParseValue(line);
 				if (!res.is_ok()) return res;
 				tokens.splice(tokens.end(), res.ok());
 				break;
 			}
 		}
-		make_token(&tk, "\n", Token::NEWLINE);
+		MakeToken(&tk, "\n", Token::NEWLINE);
 		tokens.push_back(tk);
 	}
 	return TokenListResult(tokens);

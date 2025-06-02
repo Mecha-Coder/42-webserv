@@ -4,6 +4,7 @@
 #include "Parser.hpp"
 #include "Lexer.hpp"
 #include "Token.hpp"
+// #include "Result.hpp"
 #include "../utils/Utils.hpp"
 #include <cstdio>
 #include <fstream>
@@ -39,7 +40,7 @@ void fill_map(TokenMap& mp, Table& t) {
 		if (it->is_array) {
 			last.setType(Table::ARRAY);
 			FOR_EACH(TokenList, it->value, it2) {
-				last.vec.push_back(it2->value);
+				last.vec.push_back(Table(it2->value));
 			}
 			continue;
 		}
@@ -53,7 +54,7 @@ Table* build(Parser& p) {
 
 	fill_map(p.mp, *t);
 
-	FOR_EACH(std::vector<TomlBlock>, p.Table, it) {
+	FOR_EACH(std::vector<TomlBlock>, p.tables, it) {
 		if (it->type == TomlBlock::TABLE) {
 			Table& last = list2map(it->prefix, *t);
 			if (last.type == Table::ARRAY) {
@@ -92,7 +93,7 @@ Table* toml::parse_stream(std::ifstream& in) {
 }
 
 Table* toml::parse_file(std::string& filename) {
-	std::ifstream ifs(filename);
+	std::ifstream ifs(filename.c_str());
 
 	if (!ifs.is_open())
 		return NULL;

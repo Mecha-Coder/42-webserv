@@ -1,6 +1,6 @@
 #include "Lexer.hpp"
 #include "Token.hpp"
-#include <_ctype.h>
+#include <ctype.h>
 #include <cstddef>
 #include <cstdlib>
 #include <cstring>
@@ -17,7 +17,7 @@ Lexer::Lexer(std::istream& in) {
 	pos = 0;
 }
 
-bool Lexer::skip_space(std::string& line) {
+bool Lexer::SkipSpace(std::string& line) {
 	if (pos >= line.size())
 		return false;
 	while (line[pos] == ' ' || line[pos] == '\t')
@@ -27,20 +27,20 @@ bool Lexer::skip_space(std::string& line) {
 	return true;
 }
 
-bool Lexer::tokenize_value(std::string& line, Token& tk) {
-	if (!skip_space(line))
+bool Lexer::TokenizeValue(std::string& line, Token& tk) {
+	if (!SkipSpace(line))
 		return false;
 	switch (line[pos]) {
 	case '[':
-		make_token(&tk, "[", Token::OPENBRACKET);
+		MakeToken(&tk, "[", Token::OPENBRACKET);
 		pos++;
 		break;
 	case ',':
-		make_token(&tk, ",", Token::COMMA);
+		MakeToken(&tk, ",", Token::COMMA);
 		pos++;
 		break;
 	case ']':
-		make_token(&tk, "]", Token::CLOSEBRACKET);
+		MakeToken(&tk, "]", Token::CLOSEBRACKET);
 		pos++;
 		break;
 	case '"':
@@ -48,7 +48,7 @@ bool Lexer::tokenize_value(std::string& line, Token& tk) {
 		size_t size = line.find(line[pos], pos + 1);
 		if (size == std::string::npos)
 			return false;
-		make_token(&tk, line.substr(pos + 1, size - pos - 1), Token::QUOTED);
+		MakeToken(&tk, line.substr(pos + 1, size - pos - 1), Token::QUOTED);
 		pos = size + 1;
 		break;
 	}
@@ -58,7 +58,7 @@ bool Lexer::tokenize_value(std::string& line, Token& tk) {
 				"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_", pos);
 			if (size == std::string::npos)
 				return false;
-			make_token(&tk, line.substr(pos, size - pos), Token::VALUE);
+			MakeToken(&tk, line.substr(pos, size - pos), Token::VALUE);
 			pos = size;
 		} else
 			return false;
@@ -68,35 +68,35 @@ bool Lexer::tokenize_value(std::string& line, Token& tk) {
 	return true;
 }
 
-bool Lexer::tokenize(std::string& line, Token& tk) {
-	if (!skip_space(line))
+bool Lexer::Tokenize(std::string& line, Token& tk) {
+	if (!SkipSpace(line))
 		return false;
 	switch (line[pos]) {
 	case '.':
-		make_token(&tk, ".", Token::DOT);
+		MakeToken(&tk, ".", Token::DOT);
 		pos++;
 		break;
 	case '[':
-		make_token(&tk, "[", Token::OPENBRACKET);
+		MakeToken(&tk, "[", Token::OPENBRACKET);
 		pos++;
 		break;
 	case ']':
-		make_token(&tk, "]", Token::CLOSEBRACKET);
+		MakeToken(&tk, "]", Token::CLOSEBRACKET);
 		pos++;
 		break;
 	case '=':
-		make_token(&tk, "=", Token::ASSIGN);
+		MakeToken(&tk, "=", Token::ASSIGN);
 		pos++;
 		break;
 	case '\n':
-		make_token(&tk, "\n", Token::NEWLINE);
+		MakeToken(&tk, "\n", Token::NEWLINE);
 		pos++;
 	case '"':
 	case '\'': {
 		size_t size = line.find(line[pos], pos + 1);
 		if (size == std::string::npos)
 			return false;
-		make_token(&tk, line.substr(pos + 1, size - pos - 1), Token::QUOTED);
+		MakeToken(&tk, line.substr(pos + 1, size - pos - 1), Token::QUOTED);
 		pos = size + 1;
 		break;
 	}
@@ -104,7 +104,7 @@ bool Lexer::tokenize(std::string& line, Token& tk) {
 		size_t size = line.find('\n', pos);
 		if (size == std::string::npos)
 			return false;
-		make_token(&tk, line.substr(pos + 1, size), Token::COMMENT);
+		MakeToken(&tk, line.substr(pos + 1, size), Token::COMMENT);
 		pos = size + 1;
 		break;
 	}
@@ -114,7 +114,7 @@ bool Lexer::tokenize(std::string& line, Token& tk) {
 				"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_", pos);
 			if (size == std::string::npos)
 				return false;
-			make_token(&tk, line.substr(pos, size - pos), Token::KEY);
+			MakeToken(&tk, line.substr(pos, size - pos), Token::KEY);
 			pos = size;
 		} else
 			return false;
@@ -123,7 +123,7 @@ bool Lexer::tokenize(std::string& line, Token& tk) {
 	return true;
 }
 
-Token::e_token Lexer::expect() {
+Token::e_token Lexer::Expect() {
 	switch (last_token) {
 	case Token::UNINITIALISED:
 		return Token::KEY | Token::COMMENT | Token::NEWLINE | Token::OPENBRACKET;
@@ -151,7 +151,7 @@ Token::e_token Lexer::expect() {
 	}
 }
 
-bool Lexer::getnextline(std::string& line) {
+bool Lexer::GetNextLine(std::string& line) {
 	if (in->eof())
 		return false;
 	std::getline(*in, line);
@@ -162,7 +162,7 @@ bool Lexer::getnextline(std::string& line) {
 	return !in->fail();
 }
 
-Token::e_token Lexer::expect_value() {
+Token::e_token Lexer::ExpectValue() {
 	switch (last_token) {
 	case Token::QUOTED:
 		return Token::NEWLINE | Token::COMMA | Token::COMMENT | Token::CLOSEBRACKET;
@@ -185,11 +185,11 @@ Token::e_token Lexer::expect_value() {
 	}
 }
 
-TokenListResult Lexer::parse_value(std::string& line) {
+TokenListResult Lexer::ParseValue(std::string& line) {
 	Token t;
 	std::list<Token> list;
-	while (tokenize_value(line, t)) {
-		if (!(t.type & expect_value()))
+	while (TokenizeValue(line, t)) {
+		if (!(t.type & ExpectValue()))
 			return ParseError("unexpected token `" + t.as_str() + "`", nc);
 		last_token = t.type;
 		list.push_back(t);
@@ -197,33 +197,33 @@ TokenListResult Lexer::parse_value(std::string& line) {
 	return TokenListResult(list);
 }
 
-TokenListResult Lexer::parse() {
+TokenListResult Lexer::Parse() {
 	std::string line;
 	Token t;
 	std::list<Token> list;
-	while (getnextline(line)) {
-		while (tokenize(line, t)) {
-			if (!(t.type & expect())) {
+	while (GetNextLine(line)) {
+		while (Tokenize(line, t)) {
+			if (!(t.type & Expect())) {
 				return ParseError("unexpected token `" + t.as_str() + "`", nc);
 			}
 			last_token = t.type;
 			list.push_back(t);
 			if (last_token == Token::ASSIGN) {
 				// = [value]
-				TokenListResult res = parse_value(line);
+				TokenListResult res = ParseValue(line);
 				if (!res.is_ok())
 					return res;
 				list.splice(list.end(), res.ok());
 				break;
 			}
 		}
-		make_token(&t, "\n", Token::NEWLINE);
+		MakeToken(&t, "\n", Token::NEWLINE);
 		list.push_back(t);
 	}
 	return TokenListResult(list);
 }
 
-void Lexer::make_token(Token* t, std::string value, Token::e_token type) {
+void Lexer::MakeToken(Token* t, std::string value, Token::e_token type) {
 	t->value = value;
 	t->type = type;
 	t->line = nc;
