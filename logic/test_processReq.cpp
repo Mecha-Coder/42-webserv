@@ -2,7 +2,7 @@
 
 void test(const Str &request)
 {
-    Server server = serverA();
+    Server server = server_4();
     Client client(server);
 
     if (client.appendReq(&request[0], request.size()))
@@ -698,6 +698,7 @@ Str req  =  "DELETE /delete/ HTTP/1.1\r\n"
 return req;
 }
 
+/*
 int main()
 {
     // 1) Validation 
@@ -751,3 +752,4 @@ int main()
             // test(Delete_actual_directory());  // 5.d) Delete actual directory
             //test(Delete_default_cgi());       // 5.e) Delete URI default file & run cgi
 }
+*/

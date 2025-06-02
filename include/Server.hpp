@@ -38,10 +38,10 @@ class Server
 
         Route     *findRoute(const Str uri);
         const Str  myErrorPg(const int &code) const;
-        bool       isMyAddr(const Str &host) const;
         void       giveMyAddr(IP_Host &addrList) const;
         void       showData() const;
 
+        // bool       isMyAddr(const Str &host) const;
 };
 
 #endif

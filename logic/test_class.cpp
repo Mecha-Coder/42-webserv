@@ -1,12 +1,13 @@
 #include "../include/webserv.hpp"
 
-/*
 void testServer_findRoute(Server &server, const Str &route)
 {
 	Route *_route = server.findRoute(route);
 	if (_route) std::cout << route + " is available" << std::endl;
 	else        std::cout << route + " not available" << std::endl;
 }
+
+/////////////////////////////////////////////////////////////////////////////////////
 
 void testServer_myErrorPage(Server &server, int code)
 {
@@ -15,17 +16,23 @@ void testServer_myErrorPage(Server &server, int code)
 	else        	  std::cout << code << " " << path << std::endl;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
+
 void testRoute_isMethodAllow(Route *route, const Str &method)
 {
 	if (route->isMethodAllow(method)) std::cout << method << " allowed" << std::endl;
 	else							  std::cout << method << " not allowed" << std::endl;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
+
 void testRoute_runWithCGI(Route *route, const Str &file)
 {
 	if (route->runWithCGI(file)) std::cout << file + " run CGI" << std::endl;
 	else							  std::cout << file + " not CGI" << std::endl;
 }
+
+////////////////////////////////////////////////////////////////////////////////////////
 
 void testClient_parseReq(Client &client, Str &req)
 {
@@ -37,9 +44,13 @@ void testClient_parseReq(Client &client, Str &req)
 	else std::cout << "Request is incomplete" << std::endl;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
+
+/*
 int main()
-{
-	Server server = serverA();
+{	
+	
+	Server server = server_4();
 
 	server.showData();
 
@@ -54,6 +65,24 @@ int main()
 	testServer_myErrorPage(server, 405);
 	testServer_myErrorPage(server, 404);
 
+	std::cout << YELLOW "\nServer: giveMyAddr()" RESET << std::endl;
+	IP_Host listen;
+	server.giveMyAddr(listen);
+	for (size_t i = 0; i < listen.size(); i++)
+		std::cout << listen[i].first << " - " << listen[i].second << std::endl;
+	
+
+	Servers serverList;
+	serverList.push_back(server_1());
+	serverList.push_back(server_2());
+	serverList.push_back(server_3());
+	serverList.push_back(server_4());
+
+	ServerManager sManager(serverList);
+	//sManager.showData();
+	std::cout << (sManager.initListenFd()? "Passed": "Failed") ;
+
+	
 	Route *route_1 = server.findRoute("/test/");
 	Route *route_2 = server.findRoute("/delete/");
 

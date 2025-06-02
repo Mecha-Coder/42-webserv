@@ -42,6 +42,7 @@ void Server::giveMyAddr(IP_Host &addrList) const
 
 /////////////////////////////////////////////////////////////////////////
 
+/*
 bool Server::isMyAddr(const Str &host) const
 {
     Address::const_iterator i = _listen.begin();
@@ -51,6 +52,7 @@ bool Server::isMyAddr(const Str &host) const
     }
     return false;
 }
+*/
 
 /////////////////////////////////////////////////////////////////////////
 

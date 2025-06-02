@@ -43,6 +43,15 @@ Str Client::tmplErrDefault(Code code)
         "            color: #800080;\n"
         "            text-decoration: underline;\n"
         "        }\n"
+        "        footer {\n"
+        "           background-color: #f2f2f2;\n"
+        "           padding: 20px;\n"
+        "           text-align: center;\n"
+        "           color: #555;\n"
+        "           position: fixed;\n"
+        "           bottom: 0;\n"
+        "           width: 100%;\n"
+        "       }";
         "    </style>\n"
         "</head>\n"
         "<body>\n"
@@ -52,6 +61,7 @@ Str Client::tmplErrDefault(Code code)
         "        " +  errMsg + ".\n"
         "    </div>\n"
         "    <div>Go to <a href=\"/\">Home Page</a></div>\n"
+        "    <footer> &copy. Webserve default error page</footer>"
         "</body>\n"
         "</html>\n";
 

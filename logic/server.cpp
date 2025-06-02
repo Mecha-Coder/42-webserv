@@ -1,13 +1,13 @@
 #include "../include/webserv.hpp"
 
-Server serverA()
+Server server_4()
 {
-    Str root = "/home/jpaul/Desktop/Webserve/test/website";
+    Str root = "/home/jpaul/Desktop/Webserve/main/website/4";
     CGI noCgi;
 
     Address listen;
-    listen.push_back("127.2.2.2:9000");
-    listen.push_back("127.0.199.50:8080");
+    listen.push_back("127.0.0.1:9090");
+    listen.push_back("127.0.0.1:8080");
 
     ErrorPage errorPg;
     errorPg.insert(std::make_pair(404, "/error/404.html"));
@@ -109,9 +109,258 @@ Server serverA()
     routes.push_back(route7);
 
     Server s(
-        "www.example.com",
+        "www.example-4.com",
         root,
         20000,
+        listen,
+        errorPg,
+        routes
+    );
+
+    return s;
+}
+
+Server server_3()
+{
+    Str root = "/home/jpaul/Desktop/Webserve/test/website/3";
+    CGI noCgi;
+
+    Address listen;
+    listen.push_back("127.0.0.1:21000");
+    listen.push_back("127.0.0.1:11000");
+
+    ErrorPage errorPg;
+    errorPg.insert(std::make_pair(404, "/404.html"));
+    errorPg.insert(std::make_pair(403, "/403.html"));
+    errorPg.insert(std::make_pair(500, "/500.html"));
+
+    Method m1; m1.push_back("GET");
+    Route route1(
+        "/",
+        root,
+        "",
+        "main.html",
+        "/upload/",
+        false,
+        m1,
+        noCgi
+    );
+
+    Method m2; m2.push_back("GET");
+    Route route2(
+        "/archive/",
+        root,
+        "",
+        "",
+        "",
+        true,
+        m2,
+        noCgi
+    );
+
+    CGI phpcgi; phpcgi.push_back(".php");
+    Method m3; m3.push_back("GET"); m3.push_back("POST"); m3.push_back("DELETE");
+    Route route3(
+        "/php_cgi/",
+        root,
+        "",
+        "",
+        "",
+        false,
+        m3,
+        phpcgi
+    );
+
+    CGI pycgi; pycgi.push_back(".py");
+    Route route4(
+        "/py_cgi/",
+        root,
+        "",
+        "",
+        "",
+        false,
+        m3,
+        pycgi
+    );
+    
+    Method m5; m5.push_back("GET");
+    Route route5(
+        "/style/",
+        root,
+        "",
+        "",
+        "",
+        false,
+        m5,
+        noCgi
+    );
+
+    Method m6; m6.push_back("GET");
+    Route route6(
+        "/testme/",
+        root,
+        "",
+        "test.txt",
+        "",
+        false,
+        m6,
+        noCgi
+    );
+
+    Method m7; m7.push_back("GET");
+    Route route7 (
+        "/upload/",
+        root,
+        "",
+        "",
+        "",
+        true,
+        m7,
+        noCgi
+    );
+
+    Routes routes;
+    routes.push_back(route1);
+    routes.push_back(route2);
+    routes.push_back(route3);
+    routes.push_back(route4);
+    routes.push_back(route5);
+    routes.push_back(route6);
+    routes.push_back(route7);
+
+    Server s(
+        "www.example-3.com",
+        root,
+        10000,
+        listen,
+        errorPg,
+        routes
+    );
+
+    return s;
+}
+
+Server server_2()
+{
+    Str root = "/home/jpaul/Desktop/Webserve/test/website/2";
+    CGI noCgi;
+
+    Address listen;
+    listen.push_back("127.0.0.1:9000");
+    listen.push_back("127.0.0.1:8000");
+
+    ErrorPage errorPg;
+
+    Method m1; m1.push_back("GET");
+    Route route1(
+        "/",
+        root,
+        "",
+        "main.html",
+        "",
+        false,
+        m1,
+        noCgi
+    );
+
+    Method m2; m2.push_back("GET");
+    Route route2(
+        "/fruits/",
+        root,
+        "",
+        "fruits.html",
+        "",
+        false,
+        m2,
+        noCgi
+    );
+    
+    Method m5; m5.push_back("GET");
+    Route route3(
+        "/script/",
+        root,
+        "",
+        "hello.c",
+        "",
+        false,
+        m5,
+        noCgi
+    );
+
+    Method m6; m6.push_back("GET");
+    Route route4(
+        "/vegetables/",
+        root,
+        "",
+        "veggies.html",
+        "",
+        false,
+        m6,
+        noCgi
+    );
+
+    Method m7; m7.push_back("GET");
+    Route route5 (
+        "/zombie/",
+        root,
+        "",
+        "types.html",
+        "",
+        false,
+        m7,
+        noCgi
+    );
+
+    Routes routes;
+    routes.push_back(route1);
+    routes.push_back(route2);
+    routes.push_back(route3);
+    routes.push_back(route4);
+    routes.push_back(route5);
+
+    Server s(
+        "www.testing.org.my",
+        root,
+        10000,
+        listen,
+        errorPg,
+        routes
+    );
+
+    return s;
+}
+
+Server server_1()
+{
+    Str root = "/home/jpaul/Desktop/Webserve/main/website/1";
+    CGI noCgi;
+
+    Address listen;
+    listen.push_back("127.0.0.1:5000");
+    listen.push_back("127.0.0.1:8060");
+
+    ErrorPage errorPg;
+    errorPg.insert(std::make_pair(404, "/404.html"));
+
+    Method m1; m1.push_back("GET");
+    Route route1(
+        "/",
+        root,
+        "",
+        "main.html",
+        "",
+        false,
+        m1,
+        noCgi
+    );
+
+    Routes routes;
+    routes.push_back(route1);
+
+    Server s(
+        "www.myWebsite.gov",
+        root,
+        10000,
         listen,
         errorPg,
         routes

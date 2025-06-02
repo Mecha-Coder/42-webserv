@@ -12,6 +12,7 @@
 #include <sstream>
 #include <iostream>
 #include <cstring>
+#include <cstdlib>
 
 #include <arpa/inet.h>
 #include <netinet/in.h>
@@ -20,11 +21,14 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <netdb.h>
+#include <poll.h>
 #include <unistd.h>
 
 #include "Client.hpp"
 #include "Route.hpp"
 #include "Server.hpp"
+#include "ServerManager.hpp"
+#include "ClientManager.hpp"
 
 template <typename T> Str toStr(T value);
 
@@ -32,7 +36,10 @@ template <typename T> Str toStr(T value);
 // TESTING
 /************************************************************/
 
-Server	serverA();
+Server	server_1();
+Server	server_2();
+Server	server_3();
+Server	server_4();
 void	processReq(Client &client);
 
 /************************************************************/

@@ -50,7 +50,7 @@ void Route::showData() const
               << "\tRoot      : [" << _root << "]\n"
               << "\tRedirect  : [" << _redirect << "]\n"
               << "\tUpload Dir: [" << _uploadDir << "]\n"
-              << "\tAuto Index: " << (_autoIndex? "NO" : "OFF") << "\n"
+              << "\tAuto Index: " << (_autoIndex? "TRUE" : "FALSE") << "\n"
               << "\tDefau File: [" << _defaultFile << "]\n"
               << "\tMethod    : ";
     
