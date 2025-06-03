@@ -7,6 +7,8 @@
 #define RED     "\033[0;31m"
 #define RESET   "\033[0m"
 
+#define BUFFER_SIZE 70000
+
 #include <fstream>
 #include <cstdio>
 #include <sstream>

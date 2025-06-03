@@ -4,6 +4,8 @@ void test(const Str &request)
 {
     Server server = server_4();
     Client client(server);
+    Str reply;
+    size_t replySize;
 
     if (client.appendReq(&request[0], request.size()))
     {
@@ -13,7 +15,10 @@ void test(const Str &request)
         std::cout << GREEN "\nIN\n===" RESET << std::endl; showHttp(request);
         std::cout << CYAN "OUT\n===" RESET << std::endl;
         processReq(client);
-        showHttp(client.getReply());
+        
+        const char *respond = client.getReply(replySize);
+        reply.append(respond, replySize);
+        showHttp(reply);
     }
 }
 

@@ -28,5 +28,11 @@ void ClientManager::addClient(int clientFd, Server &server)
 
 Client &ClientManager::whichClient(int clientFd)
 {
-    return _clientList[clientFd];
+    Clients::iterator i;
+    for (i = _clientList.begin(); i != _clientList.end(); i++)
+    {
+        if (i->first == clientFd)
+            break;
+    }
+    return i->second;
 }

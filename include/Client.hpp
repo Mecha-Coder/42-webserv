@@ -68,15 +68,17 @@ class Client
 		Str				_host;
 		bool			_keepAlive;
 
-		/*************************************************/
-		// Polling Stage
-		/*************************************************/
-
 		Client(Server &_server_);
-		void	reuseFd();
 		void	showData();
-		const Str		&getReply(){return _reply;}
-		size_t	actualBodySize(){return _data.size();}
+
+		/*************************************************/
+		// Response: Chunk response & check FD reuse
+		/*************************************************/
+		
+		void		reuseFd();
+		bool		trackReply(size_t count);
+		const char *getReply(size_t &remainSize);
+		
 
 		/*************************************************/
 		// Request: Append and parse

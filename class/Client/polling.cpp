@@ -6,6 +6,32 @@ Client::Client(Server &_server_)
 
 /////////////////////////////////////////////////////////////////////
 
+bool Client::trackReply(size_t count)
+{
+    _byteSent += count;
+    if (_reply.size() > _byteSent)
+        return false;
+    if (_reply.size() < _byteSent)
+        logError("outgoing | trackReply", "_byteSend= " + toStr(_byteSent) + " is incorrect");
+    return true;
+}
+
+/////////////////////////////////////////////////////////////////////
+
+const char *Client::getReply(size_t &remainSize)
+{
+    if (_reply.size() - _byteSent <= 0)
+    {
+        logError("outgoing | getReply", "_byteSend= " + toStr(_byteSent) + " is incorrect");
+        return &_reply[0];
+    }
+
+    remainSize = _reply.size() - _byteSent;
+    return &_reply[_byteSent];
+}
+
+/////////////////////////////////////////////////////////////////////
+
 void Client::reuseFd()
 {
     _route = NULL;

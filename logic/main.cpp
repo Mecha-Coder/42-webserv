@@ -2,33 +2,86 @@
 
 void outgoing(Watchlist_It &i, ClientManager &cManager)
 {
+	ssize_t byteSent;
+	size_t	remainSize = 0;
 
+	Client &client      = cManager.whichClient(i->fd);
+	const char *respond = client.getReply(remainSize);
+
+	byteSent = send(i->fd, respond , remainSize, 0);
+
+	if (byteSent > 0)
+	{
+		if (!client.trackReply(byteSent))  return;
+		if (client._keepAlive)
+		{ 
+			client.reuseFd(); 
+			i->events = POLLIN;
+			logAction("outgoing | byteSent > 0", "Done sending and resue FD");
+			return;
+		}
+	}
+	else
+		logError("outgoing | byteSent < 0", "Bad Fd");
+	
+	logAction("outgoing", "remove Client FD= " + toStr(i->fd));
+	cManager.removeClient(i);
 }
 
 void incomingRequest(Watchlist_It &i, ClientManager &cManager)
 {
-	int acceptStatus;
+	ssize_t byteRead;
+	char request[BUFFER_SIZE];
+	Client &client = cManager.whichClient(i->fd);
 	
+	byteRead = recv(i->fd, request, BUFFER_SIZE, 0);
+
+	if (byteRead <= 0)
+	{
+		if (byteRead < 0)	logError("incomingRequest | byteRead < 0", "Remove bad client FD= " + toStr(i->fd));
+		else				logAction("incomingRequest | byteRead = 0", "Client FD= " + toStr(i->fd) + " connection closed");
+
+		cManager.removeClient(i);
+		return;
+	}
+
+	logAction("incomingRequest | byteRead >", "Read " + toStr(byteRead) + " bytes from Client FD= " + toStr(i->fd));
+
+	if (client.appendReq(request, static_cast<size_t>(byteRead)))
+	{
+		processReq(client);
+		i->events = POLLOUT;
+		logAction("incomingRequest", "Request for Client FD= " + toStr(i->fd) + " has been processed");
+	}
 }
 
 void incomingConnect(Watchlist_It &i, ServerManager &sManager, ClientManager &cManager)
 {
-	int newfd;
+	int newFd;
 	Server &server = sManager.whichServer(i->fd);
 
 	while (true)
 	{
-		newfd = -1;
+		newFd = -1;
 
-		if ((newfd = accept(i->fd, NULL, NULL)) < 0)
+		if ((newFd = accept(i->fd, NULL, NULL)) < 0)
 		{
 			if (errno != EAGAIN && errno != EWOULDBLOCK)
 				logError("accept Status < 0", "Failure");
 			break;
 		}
 
+		if (setNoneBlock(newFd) < 0)
+		{
+			close(newFd);
+			logError("incomingConnect", "Fail to set FD= " + toStr(newFd) + " to none-blocking"); 
+		}
 
-		cManager.addClient(newfd, server);
+		else
+		{
+			cManager.addClient(newFd, server);
+			logAction("incomingConnect", "Accepted new connection FD= " + toStr(newFd) + " for Server= " + server._serverName);
+		}
 	}
 }
 

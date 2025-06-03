@@ -53,7 +53,7 @@ bool ServerManager::isListenFd(int fd)
 	Fd_Server::const_iterator i;
 	for (i = _listenMap.begin() ; i != _listenMap.end(); i++)
 	{
-		if (i->first == fd);
+		if (i->first == fd)
 			return true;
 	}
 	return false;
@@ -66,7 +66,7 @@ Server &ServerManager::whichServer(int fd)
 	Fd_Server::iterator i;
 	for (i = _listenMap.begin() ; i != _listenMap.end(); i++)
 	{
-		if (i->first == fd);
+		if (i->first == fd)
 			break;
 	}
 	return *(i->second);
