@@ -9,6 +9,8 @@ void ClientManager::removeClient(Watchlist_It &i)
 {
     _clientList.erase(i->fd);
     i = --(_watcher.erase(i));
+
+    logAction("Client Manager", "Remove clientFd= " + toStr(i->fd));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
@@ -22,6 +24,8 @@ void ClientManager::addClient(int clientFd, Server &server)
 	pfd.events = POLLIN;
 	pfd.revents = 0;
 	_watcher.push_back(pfd);
+
+    logAction("Client Manager", "Added new clientFd= " + toStr(clientFd) + ", link Server= " + server._serverName);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////

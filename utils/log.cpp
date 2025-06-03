@@ -9,7 +9,14 @@ void logError(const Str &where, Str error)
 
 void logAction(const Str &where, Str action)
 {
-    std::cout << CYAN
+    std::cout << GREEN
               << "[" << where << "] : "
               << action << RESET << std::endl;
+}
+
+void logNote(const Str &where, Str note)
+{
+    std::cout << CYAN
+              << "[" << where << "] : "
+              << note << RESET << std::endl;
 }

@@ -2,135 +2,180 @@
 
 void outgoing(Watchlist_It &i, ClientManager &cManager)
 {
+	Str		where;
 	ssize_t byteSent;
-	size_t	remainSize = 0;
+	size_t	remainSize;
 
 	Client &client      = cManager.whichClient(i->fd);
 	const char *respond = client.getReply(remainSize);
 
 	byteSent = send(i->fd, respond , remainSize, 0);
+	where	 = "Outgoing | byteSend = " + toStr(byteSent);
 
-	if (byteSent > 0)
+	if (byteSent <= 0)
+		logError(where, "Remove bad clientFD= " + toStr(i->fd));
+	else
 	{
-		if (!client.trackReply(byteSent))  return;
+		logNote(where, "Write response to " + toStr(i->fd));
+
+		if (!client.trackReply(byteSent))
+			return;
+
+		logNote(where, "Done sending response to  " + toStr(i->fd));
+
 		if (client._keepAlive)
-		{ 
+		{
 			client.reuseFd(); 
 			i->events = POLLIN;
-			logAction("outgoing | byteSent > 0", "Done sending and resue FD");
+			logAction("where", "Reuse clientFd= " + toStr(i->fd));
 			return;
 		}
-	}
-	else
-		logError("outgoing | byteSent < 0", "Bad Fd");
-	
-	logAction("outgoing", "remove Client FD= " + toStr(i->fd));
+		
+		logNote(where, "No reuse. Proceed to close clientFd= " + toStr(i->fd));
+	}	
 	cManager.removeClient(i);
 }
 
 void incomingRequest(Watchlist_It &i, ClientManager &cManager)
 {
-	ssize_t byteRead;
-	char request[BUFFER_SIZE];
 	Client &client = cManager.whichClient(i->fd);
+
+	Str		where;
+	ssize_t	byteRead;
+	char 	request[BUFFER_SIZE];
 	
 	byteRead = recv(i->fd, request, BUFFER_SIZE, 0);
+	where    = "Incoming Request | byteRead = " + toStr(byteRead);
 
-	if (byteRead <= 0)
+	if (byteRead > 0)
 	{
-		if (byteRead < 0)	logError("incomingRequest | byteRead < 0", "Remove bad client FD= " + toStr(i->fd));
-		else				logAction("incomingRequest | byteRead = 0", "Client FD= " + toStr(i->fd) + " connection closed");
+		logNote(where, "Read request for " + toStr(i->fd));
 
-		cManager.removeClient(i);
-		return;
+		if (client.appendReq(request, static_cast<size_t>(byteRead)))
+		{
+			processReq(client);
+			logAction(where, "Request for clientFd= " + toStr(i->fd) + " has been processed");
+			i->events = POLLOUT;
+		}
 	}
-
-	logAction("incomingRequest | byteRead >", "Read " + toStr(byteRead) + " bytes from Client FD= " + toStr(i->fd));
-
-	if (client.appendReq(request, static_cast<size_t>(byteRead)))
+	else
 	{
-		processReq(client);
-		i->events = POLLOUT;
-		logAction("incomingRequest", "Request for Client FD= " + toStr(i->fd) + " has been processed");
+		if (byteRead < 0)
+			logError(where, "Remove bad clientFD= " + toStr(i->fd));
+		else
+			logNote(where, "Connection closed for clientFD= " + toStr(i->fd));
+		cManager.removeClient(i);
 	}
 }
 
-void incomingConnect(Watchlist_It &i, ServerManager &sManager, ClientManager &cManager)
+void incomingConnect(Watchlist_It &i, Server &server, ClientManager &cManager)
 {
 	int newFd;
-	Server &server = sManager.whichServer(i->fd);
+	Str where;
 
 	while (true)
 	{
-		newFd = -1;
+		newFd = accept(i->fd, NULL, NULL);
+		where = "Incoming Connection | Accept Status = " + toStr(newFd); 
 
-		if ((newFd = accept(i->fd, NULL, NULL)) < 0)
+		if (newFd > 0)
 		{
-			if (errno != EAGAIN && errno != EWOULDBLOCK)
-				logError("accept Status < 0", "Failure");
+			if (setNoneBlock(newFd) < 0)
+			{
+				logError(where, "Fail to set FD= " + toStr(newFd) + " to none-blocking");
+				close(newFd);
+				continue;
+			}
+			cManager.addClient(newFd, server);
+		}
+		else
+		{
+			if (errno == EAGAIN || errno == EWOULDBLOCK)
+				logNote(where, "No pending connection");
+			else
+				logError(where, "Accept failed: " + Str(strerror(errno)));
 			break;
 		}
+	}
+}
 
-		if (setNoneBlock(newFd) < 0)
+void checkEvents(Watchlist &watcher, ServerManager &sManager)
+{
+	Str				where;
+	Watchlist_It	i;
+	ClientManager	cManager(watcher);
+
+	for (i = watcher.begin(); i != watcher.end(); i++)
+	{
+		if (i->revents & (POLLERR | POLLHUP | POLLNVAL | POLLRDHUP))
 		{
-			close(newFd);
-			logError("incomingConnect", "Fail to set FD= " + toStr(newFd) + " to none-blocking"); 
+			where = "Check events | Error";
+
+			std::cout << "Error: fd= " << i->fd << " event= " << i->events << " revents= " << i->revents << std::endl;
+
+			if (sManager.isListenFd(i->fd))
+			{
+				logError(where, "Critical: Event error on listenFd= " + toStr(i->fd));
+				exit(EXIT_FAILURE);
+			}
+
+			logError(where, "Event error on clientFd= " + toStr(i->fd));
+			cManager.removeClient(i);
+		}
+
+		else if (i->revents & POLLIN)
+		{
+			std::cout << "POLLIN: fd= " << i->fd << " event= " << i->events << " revents= " << i->revents << std::endl;
+
+			if (sManager.isListenFd(i->fd))
+				incomingConnect(i, sManager.whichServer(i->fd), cManager);
+			else
+				incomingRequest(i, cManager);
+		}
+
+		else if (i->revents & POLLOUT)
+		{
+			std::cout << "POLLOUT: fd= " << i->fd << " event= " << i->events << " revents= " << i->revents << std::endl;
+			outgoing(i, cManager);
+		}
+		
+		else if (i->revents == 0)
+		{
+			std::cout << "No event: fd= " << i->fd << " event= " << i->events << " revents= " << i->revents << std::endl;
 		}
 
 		else
 		{
-			cManager.addClient(newFd, server);
-			logAction("incomingConnect", "Accepted new connection FD= " + toStr(newFd) + " for Server= " + server._serverName);
+			std::cout << "Something else: fd= " << i->fd << " event= " << i->events << " revents= " << i->revents << std::endl; 
+			logNote("Check events", "Detected unknown events"); 
 		}
 	}
 }
 
 void runServer(Watchlist &watcher, ServerManager &sManager)
-{
-	Watchlist_It	i;
-	int 			pollStatus;
-	ClientManager	cManager(watcher);
-
+{	
+	Str		where;
+	int 	pollRet;
+	
 	while (true)
 	{
-		pollStatus = poll(&watcher[0], watcher.size(), -1);
+		pollRet = poll(&watcher[0], watcher.size(), -1);
+		where   = "Polling status= " + toStr(pollRet);	
 		
-		if (pollStatus == 0) continue;
-		if (pollStatus < 0)
+		if (pollRet > 0)
+			checkEvents(watcher, sManager);
+
+		else if (pollRet == 0)
+			logNote(where, "Timeout, no events");
+		
+		else if (pollRet < 0)
 		{
-			if (errno == EINTR)
-			{ logAction("pollStatus < 0" , "Detect interrupt"); continue; }
-			
-			logError("pollStatus < 0", "Critical failure");
-			exit(EXIT_FAILURE);
-		}
-
-		///////////////////////////////////////////////////////////////////////////////////////
-
-		for (i = watcher.begin(); i != watcher.end(); i++)
-		{
-			if (i->revents & (POLLERR | POLLHUP | POLLNVAL | POLLRDHUP))
+			if (errno != EINTR)
 			{
-				if (sManager.isListenFd(i->fd))
-				{
-					logError("Revent check", "Critical failure on listen FD= " + i->fd);
-					exit(EXIT_FAILURE);
-				}
-				cManager.removeClient(i);
-				logError("Revent check", "Failure on Client FD= " + i->fd);
-				continue;
+				logError(where, "Critical: Poll failed: " + Str(strerror(errno)));
+				exit(EXIT_FAILURE);
 			}
-
-			else if (i->revents & POLLIN)
-			{
-				if (sManager.isListenFd(i->fd))
-					incomingConnect(i, sManager, cManager);
-				else
-					incomingRequest(i, cManager);
-			}
-
-			else if (i->revents & POLLOUT)
-				outgoing(i, cManager);
+			logAction(where, strerror(errno));
 		}
 	}
 }
@@ -149,6 +194,6 @@ int main()
 	if (!sManager.initListenFd(watcher))
 		return EXIT_FAILURE;
 
-	std::cout << GREEN "Server is ready to accept request 👍" RESET << std::endl;
+	std::cout << CYAN "Server is ready to accept request 👍" RESET << std::endl;
 	runServer(watcher, sManager);
 }

@@ -15,6 +15,7 @@
 #include <iostream>
 #include <cstring>
 #include <cstdlib>
+#include <cerrno>
 
 #include <arpa/inet.h>
 #include <netinet/in.h>
@@ -53,5 +54,6 @@ void	showHttp(const Str &content);
 bool	readFile(const Str& filename, Str &content);
 void	logError(const Str &where, Str error);
 void	logAction(const Str &where, Str action);
+void    logNote(const Str &where, Str note);
 
 #endif

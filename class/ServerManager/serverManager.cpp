@@ -30,7 +30,8 @@ bool ServerManager::initListenFd(Watchlist &watcher)
 
 		for (j = addr.begin(); j != addr.end(); j++)
 		{ 
-			if ((listenFd = create_listenFd(*j, _serverList[i]._serverName)) == -1)
+			listenFd = create_listenFd(*j, _serverList[i]._serverName);
+			if (listenFd == -1)
 				return  false;
 			
 			_listenMap.insert(std::make_pair(listenFd, &_serverList[i]));
@@ -69,5 +70,7 @@ Server &ServerManager::whichServer(int fd)
 		if (i->first == fd)
 			break;
 	}
+	if (i == _listenMap.end())
+		throw std::out_of_range("ServerManager::whichServer::Fd not found");
 	return *(i->second);
 }
