@@ -68,7 +68,7 @@
         }
         .bracket-bonus {
             position: absolute;
-            bottom: 200px;
+            bottom: 130px;
             left: 50px;
             width: 80px;
             background: #e0e0e0;
@@ -87,8 +87,8 @@
         }
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            grid-template-rows: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
             gap: 30px;
             height: auto;
             width: 90%; /* Allow width to adjust */
@@ -150,15 +150,39 @@
     <img class="display-img" src="./photos/logo.png" alt="Display Image">
     <div class="bracket-mandatory">mandatory</div>
     <div class="grid-container">
-        <div class="box">1</div>
-        <div class="box">2</div>
-        <div class="box">3</div>
-        <div class="box">4</div>
-        <div class="box">5</div>
-        <div class="box">6</div>
-        <div class="box">7</div>
-        <div class="box">8</div>
+        <div class="box" onclick="navigateToPage(1)">directory</div>
+        <div class="box" onclick="navigateToPage(2)">2</div>
+        <div class="box" onclick="navigateToPage(3)">3</div>
+        <div class="box" onclick="navigateToPage(4)">4</div>
+        <div class="box" onclick="navigateToPage(5)">5</div>
+        <div class="box" onclick="navigateToPage(6)">6</div>
+        <div class="box" onclick="navigateToPage(7)">7</div>
+        <div class="box" onclick="navigateToPage(8)">8</div>
+        <div class="box" onclick="navigateToPage(9)">9</div>
     </div>
+
+    <script>
+        function navigateToPage(boxNumber) {
+            // You can customize the page URLs based on the box number
+            const pages = {
+                1: "directory.html",
+                2: "page2.html",
+                3: "page3.html",
+                4: "page4.html",
+                5: "page5.html",
+                6: "page6.html",
+                7: "page7.html",
+                8: "page8.html",
+                9: "page9.html"
+            };
+            
+            // Navigate to the corresponding page
+            window.location.href = pages[boxNumber];
+            
+            // Alternatively, you could use:
+            // window.open(pages[boxNumber], '_blank'); // to open in new tab
+        }
+    </script>
     <div class="bracket-bonus">bonus</div>
 </body>
 </html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combine</title>
+ <link href="https://fonts.googleapis.com/css2?family=Bungee+Shade&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: rgb(255, 255, 255);
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start; /* Align items to the top */
+            justify-content: flex-start; /* Align items to the left */
+        }
+        .container {
+            display: flex;
+            align-items: center;   /* Vertical alignment */
+            gap: 40px;            /* Space between items */
+            margin-left: 0;       /* No left margin */
+        }
+        .big-text {
+            font-family: 'Bungee Shade', cursive;
+            font-size: 72px;      /* Extra large size */
+            color: #000000;
+            line-height: 3;
+        }
+        .logo-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;             /* Space between logo and caption */
+        }
+        .logo {
+            height: 50px;         /* Logo size */
+            width: auto;
+        }
+        .caption {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            color: #333;
+            text-align: center;
+        }
+        .display-img {
+            width: 200px;
+            height: auto;
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Large text -->
+        <div class="big-text">Webserv!!!</div>
+        
+        <!-- Logo 1 with caption -->
+        <div class="logo-group">
+            <img class="logo" src="./photos/a.png" alt="Logo 1">
+            <div class="caption">Github</div>
+        </div>
+        
+        <!-- Logo 2 with caption -->
+        <div class="logo-group">
+            <img class="logo" src="./photos/b.png" alt="Logo 2">
+            <div class="caption">Members</div>
+        </div>
+    </div>
+        <img class="display-img" src="./photos/logo.png" alt="Display Image">
+</body>
+</html>
