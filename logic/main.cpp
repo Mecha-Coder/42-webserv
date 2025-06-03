@@ -1,81 +1,81 @@
 #include "../include/webserv.hpp"
 
-void outgoing(Watchlist_It &i, ClientManager &cManager)
+void outgoing(struct pollfd &watch, ClientManager &cManager, size_t &index)
 {
 	Str		where;
 	ssize_t byteSent;
 	size_t	remainSize;
 
-	Client &client      = cManager.whichClient(i->fd);
+	Client &client      = cManager.whichClient(watch.fd);
 	const char *respond = client.getReply(remainSize);
 
-	byteSent = send(i->fd, respond , remainSize, 0);
+	byteSent = send(watch.fd, respond , remainSize, 0);
 	where	 = "Outgoing | byteSend = " + toStr(byteSent);
 
 	if (byteSent <= 0)
-		logError(where, "Remove bad clientFD= " + toStr(i->fd));
+		logError(where, "Remove bad clientFD= " + toStr(watch.fd));
 	else
 	{
-		logNote(where, "Write response to " + toStr(i->fd));
+		logNote(where, "Write response to " + toStr(watch.fd));
 
 		if (!client.trackReply(byteSent))
 			return;
 
-		logNote(where, "Done sending response to  " + toStr(i->fd));
+		logNote(where, "Done sending response to  " + toStr(watch.fd));
 
 		if (client._keepAlive)
 		{
 			client.reuseFd(); 
-			i->events = POLLIN;
-			logAction("where", "Reuse clientFd= " + toStr(i->fd));
+			watch.events = POLLIN;
+			logAction("where", "Reuse clientFd= " + toStr(watch.fd));
 			return;
 		}
 		
-		logNote(where, "No reuse. Proceed to close clientFd= " + toStr(i->fd));
+		logNote(where, "No reuse. Proceed to close clientFd= " + toStr(watch.fd));
 	}	
-	cManager.removeClient(i);
+	cManager.removeClient(watch.fd, index);
 }
 
-void incomingRequest(Watchlist_It &i, ClientManager &cManager)
+void incomingRequest(struct pollfd &watch, ClientManager &cManager, size_t &index)
 {
-	Client &client = cManager.whichClient(i->fd);
+	Client &client = cManager.whichClient(watch.fd);
 
 	Str		where;
 	ssize_t	byteRead;
 	char 	request[BUFFER_SIZE];
 	
-	byteRead = recv(i->fd, request, BUFFER_SIZE, 0);
+	byteRead = recv(watch.fd , request, BUFFER_SIZE, 0);
 	where    = "Incoming Request | byteRead = " + toStr(byteRead);
 
 	if (byteRead > 0)
 	{
-		logNote(where, "Read request for " + toStr(i->fd));
+		logNote(where, "Read request for " + toStr(watch.fd));
 
 		if (client.appendReq(request, static_cast<size_t>(byteRead)))
 		{
 			processReq(client);
-			logAction(where, "Request for clientFd= " + toStr(i->fd) + " has been processed");
-			i->events = POLLOUT;
+			logAction(where, "Request for clientFd= " + toStr(watch.fd) + " has been processed");
+			watch.events = POLLOUT;
 		}
 	}
 	else
 	{
 		if (byteRead < 0)
-			logError(where, "Remove bad clientFD= " + toStr(i->fd));
+			logError(where, "Remove bad clientFD= " + toStr(watch.fd));
 		else
-			logNote(where, "Connection closed for clientFD= " + toStr(i->fd));
-		cManager.removeClient(i);
+			logNote(where, "Connection closed for clientFD= " + toStr(watch.fd));
+		cManager.removeClient(watch.fd, index);
 	}
 }
 
-void incomingConnect(Watchlist_It &i, Server &server, ClientManager &cManager)
+void incomingConnect(int listenFd, Server &server, ClientManager &cManager)
 {
 	int newFd;
 	Str where;
 
 	while (true)
 	{
-		newFd = accept(i->fd, NULL, NULL);
+		newFd = accept(listenFd, NULL, NULL);
 		where = "Incoming Connection | Accept Status = " + toStr(newFd); 
 
 		if (newFd > 0)
@@ -99,71 +99,72 @@ void incomingConnect(Watchlist_It &i, Server &server, ClientManager &cManager)
 	}
 }
 
-void checkEvents(Watchlist &watcher, ServerManager &sManager)
+void checkEvents(Watchlist &watcher, ServerManager &sManager, ClientManager &cManager)
 {
 	Str				where;
-	Watchlist_It	i;
-	ClientManager	cManager(watcher);
-
-	for (i = watcher.begin(); i != watcher.end(); i++)
+	
+	for (size_t i = 0; i < watcher.size(); i++)
 	{
-		if (i->revents & (POLLERR | POLLHUP | POLLNVAL | POLLRDHUP))
+		if (watcher[i].revents & (POLLERR | POLLHUP | POLLNVAL | POLLRDHUP))
 		{
 			where = "Check events | Error";
 
-			std::cout << "Error: fd= " << i->fd << " event= " << i->events << " revents= " << i->revents << std::endl;
+			std::cout << "Error: fd= " << watcher[i].fd << " event= " << watcher[i].events << " revents= " << watcher[i].revents << std::endl;
 
-			if (sManager.isListenFd(i->fd))
+			if (sManager.isListenFd(watcher[i].fd))
 			{
-				logError(where, "Critical: Event error on listenFd= " + toStr(i->fd));
+				logError(where, "Critical: Event error on listenFd= " + toStr(watcher[i].fd));
 				exit(EXIT_FAILURE);
 			}
 
-			logError(where, "Event error on clientFd= " + toStr(i->fd));
-			cManager.removeClient(i);
+			logError(where, "Event error on clientFd= " + toStr(watcher[i].fd));
+			cManager.removeClient(watcher[i].fd, i);
 		}
 
-		else if (i->revents & POLLIN)
+		else if (watcher[i].revents & POLLIN)
 		{
-			std::cout << "POLLIN: fd= " << i->fd << " event= " << i->events << " revents= " << i->revents << std::endl;
+			std::cout << "POLLIN: fd= " << watcher[i].fd << " event= " << watcher[i].events << " revents= " << watcher[i].revents << std::endl;
 
-			if (sManager.isListenFd(i->fd))
-				incomingConnect(i, sManager.whichServer(i->fd), cManager);
+			if (sManager.isListenFd(watcher[i].fd))
+				incomingConnect(watcher[i].fd, sManager.whichServer(watcher[i].fd), cManager);
 			else
-				incomingRequest(i, cManager);
+				incomingRequest(watcher[i], cManager, i);
 		}
 
-		else if (i->revents & POLLOUT)
+		else if (watcher[i].revents & POLLOUT)
 		{
-			std::cout << "POLLOUT: fd= " << i->fd << " event= " << i->events << " revents= " << i->revents << std::endl;
-			outgoing(i, cManager);
+			std::cout << "POLLOUT: fd= " << watcher[i].fd << " event= " << watcher[i].events << " revents= " << watcher[i].revents << std::endl;
+			outgoing(watcher[i], cManager, i);
 		}
 		
-		else if (i->revents == 0)
+		else if (watcher[i].revents == 0)
 		{
-			std::cout << "No event: fd= " << i->fd << " event= " << i->events << " revents= " << i->revents << std::endl;
+			std::cout << "No event: fd= " << watcher[i].fd << " event= " << watcher[i].events << " revents= " << watcher[i].revents << std::endl;
 		}
 
 		else
 		{
-			std::cout << "Something else: fd= " << i->fd << " event= " << i->events << " revents= " << i->revents << std::endl; 
+			std::cout << "Something else: fd= " << watcher[i].fd << " event= " << watcher[i].events << " revents= " << watcher[i].revents << std::endl; 
 			logNote("Check events", "Detected unknown events"); 
 		}
 	}
+
+	std::cout << GREEN "Complete checking all events" RESET << std::endl;
 }
 
 void runServer(Watchlist &watcher, ServerManager &sManager)
 {	
-	Str		where;
-	int 	pollRet;
-	
+	Str				where;
+	int 			pollRet;
+	ClientManager	cManager(watcher);
+
 	while (true)
 	{
 		pollRet = poll(&watcher[0], watcher.size(), -1);
 		where   = "Polling status= " + toStr(pollRet);	
 		
 		if (pollRet > 0)
-			checkEvents(watcher, sManager);
+			checkEvents(watcher, sManager, cManager);
 
 		else if (pollRet == 0)
 			logNote(where, "Timeout, no events");
