@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Form</title>
+</head>
+<body>
+  <h1>User Information Form</h1>
+  <form action="/submit" method="POST">
+    <label for="name">Name:</label><br>
+    <input type="text" id="name" name="name" required><br><br>
+
+    <label for="occupation">Occupation:</label><br>
+    <input type="text" id="occupation" name="occupation" required><br><br>
+
+    <label for="nationality">Nationality:</label><br>
+    <input type="text" id="nationality" name="nationality" required><br><br>
+
+    <label for="about">About you:</label><br>
+    <textarea id="about" name="about" rows="4" cols="50" required></textarea><br><br>
+
+    <button type="submit">Submit</button>
+  </form>
+</body>
+</html>
