@@ -8,8 +8,8 @@ Server server_1()
     listen.push_back("127.0.0.1:8050");
 
     ErrorPage errorPg;
+    errorPg.insert(std::make_pair(403, "/error/403.html"));
     errorPg.insert(std::make_pair(404, "/error/404.html"));
-    errorPg.insert(std::make_pair(405, "/error/405.html"));
     errorPg.insert(std::make_pair(500, "/error/500.html"));
 
     Str mainRoot = "./website/1";
@@ -103,7 +103,7 @@ Server server_1()
         "",
         true,
         allMETHOD,
-        noCgi
+        allCgi
     );
 
     Route route8 (
@@ -117,6 +117,7 @@ Server server_1()
         noCgi
     );
 
+    CGI cgiPY; cgiPY.push_back(".py");
     Route route9 (
         "/error/",
         mainRoot,
@@ -124,7 +125,19 @@ Server server_1()
         "",
         "",
         false,
-        onlyGET,
+        allMETHOD,
+        cgiPY
+    );
+
+    Method onlyPOST; onlyPOST.push_back("POST");
+    Route route10 (
+        "/dummy/",
+        mainRoot,
+        "",
+        "",
+        "",
+        false,
+        onlyPOST,
         noCgi
     );
 
@@ -139,6 +152,7 @@ Server server_1()
     routes.push_back(route7);
     routes.push_back(route8);
     routes.push_back(route9);
+    routes.push_back(route10);
 
     Server s(
         "www.demoEvalSite.com",
@@ -233,25 +247,12 @@ Server server_2()
         noCgi
     );
 
-    Method onlyPOST; onlyPOST.push_back("POST");
-    Route route6 (
-        "/upload/",
-        mainRoot,
-        "",
-        "",
-        "",
-        false,
-        onlyPOST,
-        noCgi
-    );
-
     Routes routes;
     routes.push_back(route1);
     routes.push_back(route2);
     routes.push_back(route3);
     routes.push_back(route4);
     routes.push_back(route5);
-    routes.push_back(route6);
 
     Server s(
         "www.server_2.com.my",
@@ -294,9 +295,9 @@ Server server_3()
         mainRoot,
         "",
         "main.html",
-        "",
+        "/archive/",
         false,
-        onlyGET,
+        allMETHOD,
         noCgi
     );
 
@@ -305,9 +306,9 @@ Server server_3()
         mainRoot,
         "",
         "",
-        "/archive/",
+        "",
         true,
-        allMETHOD,
+        onlyGET,
         noCgi
     );
 
@@ -318,7 +319,7 @@ Server server_3()
     Server s(
         "www.server_3.com.my",
         mainRoot,
-        10000,
+        100000,
         listen,
         errorPg,
         routes

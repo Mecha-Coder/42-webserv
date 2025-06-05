@@ -17,28 +17,21 @@
     <button class="page" onclick="location.href='/zombie/'">Zombie</button>
     <button class="page" onclick="location.href='/style/'">Style List</button>
 
-    <form action="/noCgi.php" method="POST">
-        <button class="error" type="submit">400 Bad Request</button>
-    </form>
-
-    <form action="/noCgi.php" method="POST">
-        <input type="hidden" name="a" value="b">
-        <input type="hidden" name="c" value="d">
-        <button class="error" type="submit">403 Forbidden</button>
+     <form action="/noCgi.php" method="POST">
+          <input type="hidden" name="a" value="b">
+          <input type="hidden" name="c" value="d">
+          <button class="error" type="submit">403 Method Not Allowed</button>
     </form>
 
     <button class="error" onclick="location.href='/invalidPath/'">404 Not Found</button>
-
-    <button class="error" onclick="location.href='/upload/'">405 Method Not Allowed</button>
-
 
     <form action="/noCgi.php" method="POST">
         <input type="hidden" name="errorCode" value="403">
         <input type="hidden" name="message" value="Forbidden Access">
         <button class="error" type="submit">413 Content Too Large</button>
     </form>
-    
-    <button class="error" onclick="location.href='/cgiCrash.py'">500 Server Error</button>
+
+    <button class="error" onclick="location.href='cgiCrash.py'">500 Server Error</button>
 </div>
 
     <button class="rounded-button" onclick="window.location.href='http://127.0.0.1:4000/';">Back to Dashboard</button>

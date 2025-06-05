@@ -70,7 +70,8 @@
         <div id="status"></div>
     </div>
 
-    <a href="/">Back to Home</a>
+    <p><a href="/archive/">See archive</a></p>
+    <p><a href="/">Back to Home</a></p>
 
     <script>
         const fileInput = document.getElementById('file-input');
@@ -106,7 +107,7 @@
             });
 
             try {
-                const response = await fetch('/upload', {
+                const response = await fetch('/', {
                     method: 'POST',
                     body: formData
                 });
@@ -114,7 +115,9 @@
                 if (!response.ok) throw new Error('Upload failed');
                 
                 const result = await response.json();
-                showStatus(`Upload successful! ${result.message}`, 'success');
+                const jsonText = JSON.stringify(result.files, null, 2);
+
+                showStatus(`${jsonText}`, "success");
                 fileInput.value = ''; // Clear input
                 fileList.innerHTML = ''; // Clear file list
             } catch (error) {

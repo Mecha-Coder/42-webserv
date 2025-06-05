@@ -251,7 +251,7 @@
         <ul class="card‐content">
           <li>Get request</li>
           <li>Directory List (AutoIndex)</li>
-          <li>Upload directory</li>
+          <li>Upload directory ⬆️</li>
         </ul>
       </div>
       <div class="card‐buttons">
@@ -300,7 +300,7 @@
         <ul class="card‐content">
           <li>Upload single or multiple files</li>
           <li>Client body limit &gt; 20 MB</li>
-          <li>Files saved in upload directory</li>
+          <li>Files saved in ⬆️ Archive</li>
         </ul>
       </div>
       <div class="card‐buttons">
@@ -314,7 +314,7 @@
         <div class="card‐title">Destroy</div>
         <ul class="card‐content">
           <li>Delete request</li>
-          <li>Delete files and folders</li>
+          <li>Delete files and folders in ⬆️ Archive</li>
         </ul>
       </div>
       <div class="card‐buttons">
@@ -325,15 +325,19 @@
     <!-- ─── BOX #6: Error Pages ─── -->
     <div class="box">
       <div>
-        <div class="card‐title">Error Pages</div>
+        <div class="card‐title">Custom Error Page</div>
         <ul class="card‐content">
-          <li>400, 403, 404, 405, 410, 413, 500</li>
-          <li>More default error > Go Server 2</li>
+          <li>Error: 403, 404, 500</li>
         </ul>
       </div>
       <div class="card‐buttons">
-        <button onclick="navigateToPage(6)">Default</button>
-        <button onclick="navigateToPage(7)">Custom</button>
+          <form action="/error/test.php" method="POST">
+          <input type="hidden" name="a" value="b">
+          <input type="hidden" name="c" value="d">
+          <button class="error" type="submit">Not CGI</button>
+        </form>
+        <button onclick="location.href='/invalidPath/'">Invalid path</button>
+        <button onclick="location.href='/error/cgiCrash.py'">CGI Crash</button>
       </div>
     </div>
 
@@ -360,14 +364,20 @@
       </div>
     </div>
 
-    <!-- ─── BOX #9: Invalid Request ─── -->
+    <!-- ─── BOX #9: Default Error Page ─── -->
     <div class="box">
       <div>
-        <div class="card‐title">Invalid Request</div>
+        <div class="card‐title">Default Error Page</div>
+        <ul class="card‐content">
+          <li>Error: 400, 405</li>
+          <li>More default error > Go Server 2</li>
+        </ul>
       </div>
       <div class="card‐buttons">
-        <button onclick="navigateToPage(11)">Invalid method</button>
-        <button onclick="navigateToPage(12)">Invalid path</button>
+        <form action="/noCgi.php" method="POST">
+          <button class="error" type="submit">Invalid Header</button>
+        </form>
+        <button onclick="location.href='/dummy/'">Invalid Method</button>
       </div>
     </div>
 
