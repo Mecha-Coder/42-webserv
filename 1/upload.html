@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Upload Files</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
+  <style>
+    /* Modern CSS reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f9f9f9;
+      min-height: 100vh;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #333;
+      padding: 20px;
+    }
+
+    /* Top-left 42 logo */
+    .top-header {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+    }
+    .top-header img.logo-42 {
+      height: 60px;
+      width: auto;
+    }
+
+    /* Centering wrapper */
+    .centering {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 100vh;
+    }
+
+    /* Upload container */
+    .upload-container {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      padding: 3rem 4rem;
+      text-align: center;
+      max-width: 600px;
+      width: 100%;
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: #2c3e50;
+      background: linear-gradient(90deg, #3498db, #2ecc71);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    p.note {
+      font-size: 1rem;
+      color: #7f8c8d;
+      margin-bottom: 1.5rem;
+    }
+
+    input[type="file"] {
+      display: block;
+      margin: 0 auto 1.5rem auto;
+      font-size: 1rem;
+    }
+
+    button {
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      background-color: #0066cc;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #0052a3;
+    }
+
+    #message {
+      margin-top: 1.5rem;
+      font-size: 1rem;
+      color: #e74c3c; /* red by default; will change on success via JS */
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .upload-container {
+        padding: 2rem;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 42 Logo in Top-Left -->
+  <div class="top-header">
+    <img class="logo-42" src="./photos/42_logo.png" alt="42 Logo" />
+  </div>
+
+  <!-- Centered Upload Container -->
+  <div class="centering">
+    <div class="upload-container">
+      <h1>Upload Files</h1>
+      <p class="note">Maximum upload size: 20 MB</p>
+
+      <!-- File input (multiple) -->
+      <input type="file" id="fileInput" multiple />
+
+      <!-- Upload button -->
+      <button id="uploadBtn">Upload</button>
+
+      <!-- Message area -->
+      <div id="message"></div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const fileInput = document.getElementById('fileInput');
+      const uploadBtn = document.getElementById('uploadBtn');
+      const messageDiv = document.getElementById('message');
+
+      uploadBtn.addEventListener('click', async () => {
+        messageDiv.textContent = ''; // clear previous messages
+
+        const files = fileInput.files;
+        if (!files || files.length === 0) {
+          messageDiv.textContent = 'Please select at least one file to upload.';
+          return;
+        }
+
+        // Check total size ≤ 20MB
+        const MAX_BYTES = 20 * 1024 * 1024;
+        let totalSize = 0;
+        for (let i = 0; i < files.length; i++) {
+          totalSize += files[i].size;
+        }
+        if (totalSize > MAX_BYTES) {
+          messageDiv.textContent = 'Total file size exceeds 20 MB.';
+          return;
+        }
+
+        // Build FormData
+        const formData = new FormData();
+        for (let i = 0; i < files.length; i++) {
+          formData.append('files', files[i]);
+        }
+
+        try {
+          const response = await fetch('/upload', {
+            method: 'POST',
+            body: formData
+          });
+
+          if (response.status === 201) {
+            const data = await response.json();
+            if (data.status === 'success' && Array.isArray(data.files)) {
+              messageDiv.style.color = '#27ae60'; // green on success
+              const listItems = data.files.map(
+                (fname) => `<li>${fname}</li>`
+              ).join('');
+              messageDiv.innerHTML = `
+                <p>Upload successful. Files received by server:</p>
+                <ul style="text-align: left; display: inline-block; margin-top: 0.5rem;">
+                  ${listItems}
+                </ul>
+              `;
+            } else {
+              messageDiv.style.color = '#e74c3c';
+              messageDiv.textContent = 'Upload failed: unexpected server response.';
+            }
+          } else {
+            messageDiv.style.color = '#e74c3c';
+            messageDiv.textContent = 'Upload failed. Server responded with status: ' + response.status;
+          }
+        } catch (err) {
+          messageDiv.style.color = '#e74c3c';
+          messageDiv.textContent = 'Upload failed: ' + err.message;
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
