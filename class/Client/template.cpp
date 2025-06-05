@@ -51,7 +51,7 @@ Str Client::tmplErrDefault(Code code)
         "           position: fixed;\n"
         "           bottom: 0;\n"
         "           width: 100%;\n"
-        "       }";
+        "       }"
         "    </style>\n"
         "</head>\n"
         "<body>\n"

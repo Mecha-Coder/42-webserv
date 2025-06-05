@@ -16,6 +16,7 @@
 #include <cstring>
 #include <cstdlib>
 #include <cerrno>
+#include <ctime>
 
 #include <arpa/inet.h>
 #include <netinet/in.h>

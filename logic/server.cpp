@@ -1,8 +1,11 @@
 #include "../include/webserv.hpp"
 
+// #define PREFIX = "/home/jpaul/Desktop/Webserve/main"
+#define PREFIX "/mnt/c/Users/PC/Desktop/Webserve/main"
+
 Server server_4()
 {
-    Str root = "/home/jpaul/Desktop/Webserve/main/website/4";
+    Str root = Str(PREFIX) + "/website/4";
     CGI noCgi;
 
     Address listen;
@@ -34,6 +37,18 @@ Server server_4()
         "",
         true,
         m2,
+        noCgi
+    );
+
+    Method m8; m8.push_back("GET"); m8.push_back("DELETE");
+    Route route8(
+        "/archive/subfolder/",
+        root,
+        "",
+        "",
+        "",
+        true,
+        m8,
         noCgi
     );
 
@@ -107,6 +122,7 @@ Server server_4()
     routes.push_back(route5);
     routes.push_back(route6);
     routes.push_back(route7);
+    routes.push_back(route8);
 
     Server s(
         "www.example-4.com",
@@ -122,7 +138,7 @@ Server server_4()
 
 Server server_3()
 {
-    Str root = "/home/jpaul/Desktop/Webserve/test/website/3";
+    Str root = Str(PREFIX) + "/website/3";
     CGI noCgi;
 
     Address listen;
@@ -242,7 +258,7 @@ Server server_3()
 
 Server server_2()
 {
-    Str root = "/home/jpaul/Desktop/Webserve/test/website/2";
+    Str root = Str(PREFIX) + "/website/2";
     CGI noCgi;
 
     Address listen;
@@ -332,7 +348,7 @@ Server server_2()
 
 Server server_1()
 {
-    Str root = "/home/jpaul/Desktop/Webserve/main/website/1";
+    Str root = Str(PREFIX) + "/website/1";
     CGI noCgi;
 
     Address listen;

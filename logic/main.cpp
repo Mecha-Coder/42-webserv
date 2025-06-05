@@ -21,13 +21,13 @@ void outgoing(struct pollfd &watch, ClientManager &cManager, size_t &index)
 		if (!client.trackReply(byteSent))
 			return;
 
-		logNote(where, "Done sending response to  " + toStr(watch.fd));
+		logNote("Outgoing", "Done sending response to  " + toStr(watch.fd));
 
 		if (client._keepAlive)
 		{
 			client.reuseFd(); 
 			watch.events = POLLIN;
-			logAction("where", "Reuse clientFd= " + toStr(watch.fd));
+			logAction("Outgoing", "Reuse clientFd= " + toStr(watch.fd));
 			return;
 		}
 		
@@ -49,12 +49,12 @@ void incomingRequest(struct pollfd &watch, ClientManager &cManager, size_t &inde
 
 	if (byteRead > 0)
 	{
-		logNote(where, "Read request for " + toStr(watch.fd));
+		logNote(where, "Read request on FD= " + toStr(watch.fd));
 
 		if (client.appendReq(request, static_cast<size_t>(byteRead)))
 		{
 			processReq(client);
-			logAction(where, "Request for clientFd= " + toStr(watch.fd) + " has been processed");
+			logAction("Incoming Request", "Request for clientFd= " + toStr(watch.fd) + " has been processed");
 			watch.events = POLLOUT;
 		}
 	}
@@ -108,23 +108,20 @@ void checkEvents(Watchlist &watcher, ServerManager &sManager, ClientManager &cMa
 		if (watcher[i].revents & (POLLERR | POLLHUP | POLLNVAL | POLLRDHUP))
 		{
 			where = "Check events | Error";
-
-			std::cout << "Error: fd= " << watcher[i].fd << " event= " << watcher[i].events << " revents= " << watcher[i].revents << std::endl;
-
 			if (sManager.isListenFd(watcher[i].fd))
 			{
 				logError(where, "Critical: Event error on listenFd= " + toStr(watcher[i].fd));
 				exit(EXIT_FAILURE);
 			}
-
 			logError(where, "Event error on clientFd= " + toStr(watcher[i].fd));
 			cManager.removeClient(watcher[i].fd, i);
 		}
 
 		else if (watcher[i].revents & POLLIN)
 		{
-			std::cout << "POLLIN: fd= " << watcher[i].fd << " event= " << watcher[i].events << " revents= " << watcher[i].revents << std::endl;
-
+			where = "Check events | POLLIN";
+			logNote(where, "FD= " + toStr(watcher[i].fd));
+			
 			if (sManager.isListenFd(watcher[i].fd))
 				incomingConnect(watcher[i].fd, sManager.whichServer(watcher[i].fd), cManager);
 			else
@@ -133,23 +130,21 @@ void checkEvents(Watchlist &watcher, ServerManager &sManager, ClientManager &cMa
 
 		else if (watcher[i].revents & POLLOUT)
 		{
-			std::cout << "POLLOUT: fd= " << watcher[i].fd << " event= " << watcher[i].events << " revents= " << watcher[i].revents << std::endl;
+			where = "Check events | POLLOUT";
+			logNote(where, "FD= " + toStr(watcher[i].fd));
 			outgoing(watcher[i], cManager, i);
+			
 		}
 		
 		else if (watcher[i].revents == 0)
-		{
-			std::cout << "No event: fd= " << watcher[i].fd << " event= " << watcher[i].events << " revents= " << watcher[i].revents << std::endl;
-		}
-
+			continue;
+		
 		else
-		{
-			std::cout << "Something else: fd= " << watcher[i].fd << " event= " << watcher[i].events << " revents= " << watcher[i].revents << std::endl; 
-			logNote("Check events", "Detected unknown events"); 
-		}
+			logNote("Check events", "Detected unknown events Fd= " + toStr(watcher[i].fd));
+		
+		std::cout << "---------------------------------------------"
+				   << "--------------------------------------------\n" << std::endl;
 	}
-
-	std::cout << GREEN "Complete checking all events" RESET << std::endl;
 }
 
 void runServer(Watchlist &watcher, ServerManager &sManager)
@@ -195,6 +190,8 @@ int main()
 	if (!sManager.initListenFd(watcher))
 		return EXIT_FAILURE;
 
-	std::cout << CYAN "Server is ready to accept request 👍" RESET << std::endl;
+	std::cout << CYAN "Server is ready to accept request 👍" RESET
+		      << "\n---------------------------------------------"
+			<< "--------------------------------------------\n" << std::endl;
 	runServer(watcher, sManager);
 }
