@@ -1,0 +1,79 @@
+body {
+    background-color: #f0f2f5;
+    color: #333;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding-top: 10%;
+}
+h1 {
+    font-size: 3em;
+    margin-bottom: 0.5em;
+}
+p {
+    font-size: 1.2em;
+    color: #666;
+}
+footer {
+    margin-top: 5em;
+    font-size: 0.9em;
+    color: #aaa;
+}
+button {
+    margin-top: 20px;
+    padding: 10px 20px; 
+    font-size: 1em;
+    border-color: rgb(0, 0, 0);
+}
+
+.page {
+    background-color:rgb(127, 217, 255);
+}
+.error {
+
+    background-color:rgb(255, 127, 127);
+} 
+
+.rounded-button {
+    background-color: #4CAF50; /* Green background */
+    border: none;
+    color: white;
+    padding: 12px 24px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 30px; /* Rounded edges */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.rounded-button:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+li {
+    background: #e0ffe0;
+    margin: 10px 0;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 1.2em;
+    color: #1d1d1d;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: background 0.3s;
+}
+li:hover {
+    background: #c8f7c5;
+}
+.button-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 10px;
+}

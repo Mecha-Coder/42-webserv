@@ -1,131 +1,212 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Upload Demo</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 20px;
-        }
-        .upload-container {
-            border: 2px dashed #ccc;
-            padding: 20px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        #file-input {
-            display: none;
-        }
-        .custom-button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        .custom-button:hover {
-            background-color: #45a049;
-        }
-        #file-list {
-            margin-top: 10px;
-        }
-        #status {
-            margin-top: 20px;
-            padding: 10px;
-            border-radius: 4px;
-        }
-        .success {
-            background-color: #dff0d8;
-            color: #3c763d;
-        }
-        .error {
-            background-color: #f2dede;
-            color: #a94442;
-        }
-        a {
-            display: inline-block;
-            margin-top: 20px;
-            color: #0066cc;
-            text-decoration: none;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Upload Files</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
+  <style>
+    /* Modern CSS reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f9f9f9;
+      min-height: 100vh;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #333;
+      padding: 20px;
+    }
+
+    /* Top-left 42 logo */
+    .top-header {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+    }
+    .top-header img.logo-42 {
+      height: 60px;
+      width: auto;
+    }
+
+    /* Centering wrapper */
+    .centering {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 100vh;
+    }
+
+    /* Upload container */
+    .upload-container {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      padding: 3rem 4rem;
+      text-align: center;
+      max-width: 600px;
+      width: 100%;
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: #2c3e50;
+      background: linear-gradient(90deg, #3498db, #2ecc71);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    p.note {
+      font-size: 1rem;
+      color: #7f8c8d;
+      margin-bottom: 1.5rem;
+    }
+
+    input[type="file"] {
+      display: block;
+      margin: 0 auto 1.5rem auto;
+      font-size: 1rem;
+    }
+
+    button {
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      background-color: #0066cc;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #0052a3;
+    }
+
+    #message {
+      margin-top: 1.5rem;
+      font-size: 1rem;
+      color: #e74c3c; /* red by default; will change on success via JS */
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .upload-container {
+        padding: 2rem;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+    }
+
+    .button-group {
+      display: flex;
+      gap: 30px; /* Space between buttons */
+      justify-content: center; /* Optional: center the buttons */
+      margin-top: 15px; /* Space above the group */
+    }
+  </style>
 </head>
 <body>
+  <!-- 42 Logo in Top-Left -->
+  <div class="top-header">
+    <img class="logo-42" src="./photos/42_logo.png" alt="42 Logo" />
+  </div>
+
+  <!-- Centered Upload Container -->
+  <div class="centering">
     <div class="upload-container">
-        <h2>File Upload</h2>
-        <form id="upload-form">
-            <label for="file-input" class="custom-button">
-                Select Files
-            </label>
-            <input type="file" id="file-input" multiple>
-            <div id="file-list"></div>
-            <button type="submit" class="custom-button">Upload Files</button>
-        </form>
-        <div id="status"></div>
+      <h1>Upload Files</h1>
+      <p class="note">Maximum upload size: 20 MB</p>
+
+      <!-- File input (multiple) -->
+      <input type="file" id="fileInput" multiple />
+
+      <!-- Upload button -->
+      <div class="button-group">
+        <button id="uploadBtn">Upload</button>
+        <button onclick="window.location.href='/archive/';">Go archive</button>
     </div>
 
-    <a href="/">Back to Home</a>
+      <!-- Message area -->
+      <div id="message"></div>
+    </div>
+  </div>
 
-    <script>
-        const fileInput = document.getElementById('file-input');
-        const fileList = document.getElementById('file-list');
-        const uploadForm = document.getElementById('upload-form');
-        const statusDiv = document.getElementById('status');
+  <script>
+    (function() {
+      const fileInput = document.getElementById('fileInput');
+      const uploadBtn = document.getElementById('uploadBtn');
+      const messageDiv = document.getElementById('message');
 
-        // Handle file selection
-        fileInput.addEventListener('change', () => {
-            fileList.innerHTML = '';
-            const files = Array.from(fileInput.files);
-            
-            files.forEach(file => {
-                const fileItem = document.createElement('div');
-                fileItem.textContent = `${file.name} (${(file.size/1024).toFixed(2)} KB)`;
-                fileList.appendChild(fileItem);
-            });
-        });
+      uploadBtn.addEventListener('click', async () => {
+        messageDiv.textContent = ''; // clear previous messages
 
-        // Handle form submission
-        uploadForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const files = fileInput.files;
-            if (files.length === 0) {
-                showStatus('Please select files first!', 'error');
-                return;
-            }
-
-            const formData = new FormData();
-            Array.from(files).forEach(file => {
-                formData.append('files', file);
-            });
-
-            try {
-                const response = await fetch('/upload', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (!response.ok) throw new Error('Upload failed');
-                
-                const result = await response.json();
-                showStatus(`Upload successful! ${result.message}`, 'success');
-                fileInput.value = ''; // Clear input
-                fileList.innerHTML = ''; // Clear file list
-            } catch (error) {
-                showStatus(`Error: ${error.message}`, 'error');
-            }
-        });
-
-        function showStatus(message, type) {
-            statusDiv.textContent = message;
-            statusDiv.className = type;
+        const files = fileInput.files;
+        if (!files || files.length === 0) {
+          messageDiv.textContent = 'Please select at least one file to upload.';
+          return;
         }
-    </script>
+
+        // Build FormData
+        const formData = new FormData();
+        for (let i = 0; i < files.length; i++) {
+          formData.append('files', files[i]);
+        }
+
+        try {
+          const response = await fetch('/archive/', {
+            method: 'POST',
+            body: formData
+          });
+
+          if (response.status === 201) {
+            const data = await response.json();
+            if (data.status === 'success' && Array.isArray(data.files)) {
+              messageDiv.style.color = '#27ae60'; // green on success
+              const listItems = data.files.map(
+                (fname) => `<li>${fname}</li>`
+              ).join('');
+              messageDiv.innerHTML = `
+                <p>Upload successful. Files received by server:</p>
+                <ul style="text-align: left; display: inline-block; margin-top: 0.5rem;">
+                  ${listItems}
+                </ul>
+              `;
+            } else {
+              messageDiv.style.color = '#e74c3c';
+              messageDiv.textContent = 'Upload failed: unexpected server response.';
+            }
+          } else {
+            messageDiv.style.color = '#e74c3c';
+            messageDiv.textContent = 'Upload failed. ' + response.status + ': ' + response.statusText;
+          }
+        } catch (err) {
+          messageDiv.style.color = '#e74c3c';
+          messageDiv.textContent = 'Upload failed: ' + err.message;
+        }
+      });
+    })();
+  </script>
 </body>
 </html>

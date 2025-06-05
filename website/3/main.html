@@ -1,27 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Welcome</title>
-  <link rel="stylesheet" href="/style/main.css"> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server 3</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .button-container {
+            margin: 30px 0;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #datetime {
+            margin-top: 30px;
+            font-size: 18px;
+            color: #555;
+        }
+    </style>
 </head>
-
 <body>
-  <header>
-    <h1>Welcome to Our Webserve</h1>
-  </header>
-
-  <p>Options</p>
-  <nav>
-    <a href="/archive">Archive</a>
-    <a href="/redirect">Redirect to Youtube</a>
-    <a href="/private">Forbidden Access</a>
-    <a href="/upload">Upload files</a>
-  </nav>
-
-  <footer>
-    &copy; 2025 Jason-Jazx-Ryan. All rights reserved.
-  </footer>
+    <h1>Server 3</h1>
+    
+    <div class="button-container">
+        <button onclick="window.location.href='page1.html'">Page 1</button>
+        <button onclick="window.location.href='page2.html'">Page 2</button>
+        <button onclick="window.location.href='upload.html'">Upload</button>
+        <button onclick="window.location.href='invalid_path'">Custom Error Page</button>
+    </div>
+    
+    <div id="datetime">Current time: <script>document.write(new Date().toLocaleString());</script></div>
+    
+    <script>
+        // Function to navigate to different pages
+        function navigateTo(page) {
+            window.location.href = '/' + page;
+        }
+    </script>
 </body>
 </html>
