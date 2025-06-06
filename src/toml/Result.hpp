@@ -4,10 +4,10 @@
 #include <iostream>
 #include <ostream>
 
-template <typename T, typename E>
+template <typename SuccessType, typename ErrorType>
 class Result {
 public:
-	Result(T value) {
+	Result(SuccessType value) {
 		fine = true;
 		this->value = value;
 	}
@@ -16,22 +16,22 @@ public:
 		fine = false;
 	}
 
-	Result(E error) {
+	Result(ErrorType error) {
 		fine = false;
 		this->error = error;
 	}
 
-	T& Ok() {
+	SuccessType& Ok() {
 		if (!fine) {
 			std::cerr << "abort: " << std::endl;
-			std::cerr << this->error.as_str() << std::endl;
+			std::cerr << this->error.asStr() << std::endl;
 			abort();
 		}
 		return value;
 	}
-	E Err() {
+	ErrorType Err() {
 		if (fine) {
-			std::cerr << "abort: access Result Err while Result is VALUE" << std::endl;
+			std::cerr << "abort: access Result err while Result is VALUE" << std::endl;
 			abort();
 		}
 		return error;
@@ -43,6 +43,6 @@ public:
 
 private:
 	bool fine;
-	T value;
-	E error;
+	SuccessType value;
+	ErrorType error;
 };
