@@ -1,6 +1,6 @@
 #include "Parser.hpp"
 
-bool is_key(TokenList::iterator& it, TokenList::iterator end) {
+bool isKey(TokenList::iterator& it, TokenList::iterator end) {
 	while (it != end) {
 		switch (it->type) {
 		case Token::KEY:
@@ -20,8 +20,8 @@ bool is_key(TokenList::iterator& it, TokenList::iterator end) {
 	return true;
 }
 
-bool is_array(TokenList::iterator& it, TokenList::iterator end) {
-	if (!it->is(Token::OPENBRACKET))
+bool isArr(TokenList::iterator& it, TokenList::iterator end) {
+	if (!it->Is(Token::OPENBRACKET))
 		return false;
 	it++;
 	while (it != end) {
@@ -34,7 +34,7 @@ bool is_array(TokenList::iterator& it, TokenList::iterator end) {
 				it++;
 			break;
 		case Token::CLOSEBRACKET:
-			return it != end && it->is(Token::CLOSEBRACKET);
+			return it != end && it->Is(Token::CLOSEBRACKET);
 			break;
 		default:
 			return false;
@@ -45,7 +45,7 @@ bool is_array(TokenList::iterator& it, TokenList::iterator end) {
 	return false;
 }
 
-ChekerResult syntax_checker(TokenList& tokens) {
+ChekerResult SyntaxChecker(TokenList& tokens) {
 	TokenList::iterator it = tokens.begin();
 	TokenList::iterator end = tokens.end();
 
@@ -53,22 +53,22 @@ ChekerResult syntax_checker(TokenList& tokens) {
 		switch (it->type) {
 		case Token::OPENBRACKET: {
 			it++; // skip OPENBRACKET
-			bool is_array = it->is(Token::OPENBRACKET);
-			if (is_array)
+			bool isArr = it->Is(Token::OPENBRACKET);
+			if (isArr)
 				it++;
-			if (!(is_key(it, end) && it->is(Token::CLOSEBRACKET)))
+			if (!(isKey(it, end) && it->Is(Token::CLOSEBRACKET)))
 				return ChekerResult(ParseError("Invalid key [1000] ", it->line));
 			;
-			if (is_array)
+			if (isArr)
 				it++;
 			it++;
 			break;
 		}
 		case Token::KEY: {
-			if (!(is_key(it, end) && it->is(Token::ASSIGN)))
+			if (!(isKey(it, end) && it->Is(Token::ASSIGN)))
 				return ChekerResult(ParseError("Invalid key [1001] ", it->line));
 			it++; // skip ASSIGN
-			if (!it->is(Token::VALUE) && !it->is(Token::QUOTED) && !is_array(it, end))
+			if (!it->Is(Token::VALUE) && !it->Is(Token::QUOTED) && !isArr(it, end))
 				return ChekerResult(ParseError("Invalid key [1002] ", it->line));
 			it++; // skip VALUE QOUTED or CLOSEBRACKET
 			break;
@@ -83,9 +83,9 @@ ChekerResult syntax_checker(TokenList& tokens) {
 			return ChekerResult(ParseError("Invalid key [1003] ", it->line));
 			break;
 		}
-		if (it->is(Token::COMMENT))
+		if (it->Is(Token::COMMENT))
 			it++;
-		if (!it->is(Token::NEWLINE) && !it->is(Token::_EOF))
+		if (!it->Is(Token::NEWLINE) && !it->Is(Token::_EOF))
 			return ChekerResult(ParseError("Invalid key [1004] ", it->line));
 		++it;
 	}

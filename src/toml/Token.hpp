@@ -27,8 +27,8 @@ public:
 	int offset;
 
 	Token();
-	bool is(e_token t) const;
-	std::string as_str() const;
+	bool Is(e_token t) const;
+	std::string asStr() const;
 };
 
 inline Token::e_token operator|(Token::e_token t1, Token::e_token t2) {
@@ -40,7 +40,7 @@ typedef Result<std::list<Token>, ParseError> TokenListResult;
 class TokenParser {
 public:
 	TokenParser(std::istream& input);
-	TokenListResult parse();
+	TokenListResult Parse();
 
 private:
 	std::istream* in;
@@ -49,13 +49,13 @@ private:
 	size_t nc;
 	Token::e_token last_token;
 
-	bool skip_space(std::string& line);
-	bool get_next_line(std::string& line);
+	bool SkipSpace(std::string& line);
+	bool GetNextLine(std::string& line);
 	void MakeToken(Token* t, const std::string& value, Token::e_token type);
 	Token::e_token Expect() const;
 	Token::e_token ExpectValue() const;
 
-	bool tokenize(std::string& line, Token& tk);
+	bool Tokenize(std::string& line, Token& tk);
 	bool TokenizeValue(std::string& line, Token& tk);
 	TokenListResult ParseValue(std::string& line);
 };

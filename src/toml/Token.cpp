@@ -5,11 +5,11 @@
 
 Token::Token() : type(UNINITIALISED), line(0), offset(0) {}
 
-bool Token::is(e_token t) const {
+bool Token::Is(e_token t) const {
 	return (type & t) != 0;
 }
 
-std::string Token::as_str() const {
+std::string Token::asStr() const {
 	char buf[128];
 	snprintf(buf, sizeof(buf), "TOKEN %d:%d `%s`", line, offset, value.c_str());
 	std::string s = buf;
@@ -36,13 +36,14 @@ std::string Token::as_str() const {
 TokenParser::TokenParser(std::istream& input)
 	: in(&input), pos(0), nc(0), last_token(Token::UNINITIALISED) {}
 
-bool TokenParser::skip_space(std::string& line) {
+bool TokenParser::SkipSpace(std::string& line) {
 	while (pos < line.size() && (line[pos] == ' ' || line[pos] == '\t')) pos++;
 	return pos < line.size();
 }
 
-bool TokenParser::get_next_line(std::string& line) {
-	if (in->eof()) return false;
+bool TokenParser::GetNextLine(std::string& line) {
+	if (in->eof())
+		return false;
 	std::getline(*in, line);
 	line.push_back('\n');
 	nc++;
@@ -106,8 +107,8 @@ Token::e_token TokenParser::ExpectValue() const {
 	}
 }
 
-bool TokenParser::tokenize(std::string& line, Token& tk) {
-	if (!skip_space(line)) return false;
+bool TokenParser::Tokenize(std::string& line, Token& tk) {
+	if (!SkipSpace(line)) return false;
 
 	char c = line[pos];
 	switch (c) {
@@ -144,7 +145,7 @@ bool TokenParser::tokenize(std::string& line, Token& tk) {
 }
 
 bool TokenParser::TokenizeValue(std::string& line, Token& tk) {
-	if (!skip_space(line)) return false;
+	if (!SkipSpace(line)) return false;
 
 	char c = line[pos];
 	switch (c) {
@@ -176,26 +177,26 @@ TokenListResult TokenParser::ParseValue(std::string& line) {
 	Token tk;
 	while (TokenizeValue(line, tk)) {
 		if (!(tk.type & ExpectValue()))
-			return ParseError("unexpected token `" + tk.as_str() + "`", nc);
+			return ParseError("unexpected token `" + tk.asStr() + "`", nc);
 		last_token = tk.type;
 		tokens.push_back(tk);
 	}
 	return TokenListResult(tokens);
 }
 
-TokenListResult TokenParser::parse() {
+TokenListResult TokenParser::Parse() {
 	std::list<Token> tokens;
 	Token tk;
-	while (get_next_line(line)) {
-		while (tokenize(line, tk)) {
+	while (GetNextLine(line)) {
+		while (Tokenize(line, tk)) {
 			if (!(tk.type & Expect()))
-				return ParseError("unexpected token `" + tk.as_str() + "`", nc);
+				return ParseError("unexpected token `" + tk.asStr() + "`", nc);
 			last_token = tk.type;
 			tokens.push_back(tk);
 			if (last_token == Token::ASSIGN) {
 				TokenListResult res = ParseValue(line);
-				if (!res.is_ok()) return res;
-				tokens.splice(tokens.end(), res.ok());
+				if (!res.isOk()) return res;
+				tokens.splice(tokens.end(), res.Ok());
 				break;
 			}
 		}

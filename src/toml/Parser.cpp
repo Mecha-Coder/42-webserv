@@ -6,10 +6,10 @@
 #include <numeric>
 #include <string>
 
-TokenList til_ignore(TokenList::iterator& cur, Token::e_token until, Token::e_token ignore) {
+TokenList UntilIgnore(TokenList::iterator& cur, Token::e_token until, Token::e_token ignore) {
 	TokenList res;
-	while (!cur->is(until)) {
-		if (!cur->is(ignore)) {
+	while (!cur->Is(until)) {
+		if (!cur->Is(ignore)) {
 			res.push_back(*cur);
 		}
 		cur++;
@@ -17,14 +17,14 @@ TokenList til_ignore(TokenList::iterator& cur, Token::e_token until, Token::e_to
 	return res;
 }
 
-TokenList::iterator til(TokenList::iterator& cur, Token::e_token until) {
-	while (!cur->is(until)) {
+TokenList::iterator Until(TokenList::iterator& cur, Token::e_token until) {
+	while (!cur->Is(until)) {
 		cur++;
 	}
 	return cur;
 }
 
-std::string accum(std::string& acc, Token& t) {
+std::string Accumulate(std::string& acc, Token& t) {
 	return acc + t.value;
 };
 
@@ -35,10 +35,10 @@ Parser::Parser(TokenList tks) {
 	while (cur != tks.end()) {
 		switch (cur->type) {
 		case Token::KEY: {
-			TokenList res = til_ignore(cur, Token::ASSIGN, Token::DOT);
+			TokenList res = UntilIgnore(cur, Token::ASSIGN, Token::DOT);
 			cur++; // skip assign
-			bool is_array = cur->is(Token::OPENBRACKET);
-			TokenList values = til_ignore(cur,
+			bool is_array = cur->Is(Token::OPENBRACKET);
+			TokenList values = UntilIgnore(cur,
 										  Token::NEWLINE | Token::COMMENT,
 										  Token::COMMA | Token::CLOSEBRACKET | Token::OPENBRACKET);
 			lastmp->push_back(TokenPair(res, values, is_array));
@@ -46,14 +46,14 @@ Parser::Parser(TokenList tks) {
 		}
 		case Token::OPENBRACKET: {
 			cur++;
-			bool is_array = cur->is(Token::OPENBRACKET);
+			bool is_array = cur->Is(Token::OPENBRACKET);
 			std::vector<TomlBlock>* tm = &this->tables;
 			TomlBlock::blockType type = TomlBlock::TABLE;
 			if (is_array) {
 				type = TomlBlock::ARRAY;
 				cur++;
 			}
-			TokenList res = til_ignore(cur, Token::CLOSEBRACKET | Token::COMMENT, Token::DOT);
+			TokenList res = UntilIgnore(cur, Token::CLOSEBRACKET | Token::COMMENT, Token::DOT);
 			tm->push_back(TomlBlock(res, TokenMap(), type));
 			lastmp = &tm->back().mp;
 			break;
@@ -65,7 +65,7 @@ Parser::Parser(TokenList tks) {
 	}
 }
 
-void _printKeyValue(TokenMap& mp) {
+void PrintKeyValue(TokenMap& mp) {
 	FOR_EACH(TokenMap, mp, m) {
 		FOR_EACH_CONST(TokenList, m->key, it) {
 			std::cout << it->value << " ";
@@ -84,7 +84,7 @@ void _printKeyValue(TokenMap& mp) {
 	}
 }
 
-void _print_list(TokenList& list) {
+void PrintList(TokenList& list) {
 	TokenList::iterator begin = list.begin();
 	while (begin != list.end()) {
 		std::cout << begin->value << ">";
@@ -93,16 +93,16 @@ void _print_list(TokenList& list) {
 	std::cout << std::endl;
 }
 
-void _print_block(std::vector<TomlBlock>& vec) {
+void PrintBlock(std::vector<TomlBlock>& vec) {
 
 	std::cout << "================================================" << std::endl;
 	FOR_EACH(std::vector<TomlBlock>, vec, block) {
-		_print_list(block->prefix);
-		_printKeyValue(block->mp);
+		PrintList(block->prefix);
+		PrintKeyValue(block->mp);
 	}
 }
 
-void Parser::print() {
-	_printKeyValue(mp);
-	_print_block(tables);
+void Parser::Print() {
+	PrintKeyValue(mp);
+	PrintBlock(tables);
 }

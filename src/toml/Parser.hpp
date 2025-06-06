@@ -48,11 +48,11 @@ public:
 	TokenMap mp;
 	std::vector<TomlBlock> tables;
 	Parser(TokenList);
-	void print();
+	void Print();
 };
 
-TokenList til_ignore(TokenList::iterator& cur, Token::e_token until, Token::e_token ignore);
+TokenList UntilIgnore(TokenList::iterator& cur, Token::e_token until, Token::e_token ignore);
 
-TokenList::iterator til(TokenList::iterator& cur, Token::e_token until);
+TokenList::iterator Until(TokenList::iterator& cur, Token::e_token until);
 typedef Result<toml::Table*, ParseError> ChekerResult;
-ChekerResult syntax_checker(TokenList& tokens);
+ChekerResult SyntaxChecker(TokenList& tokens);

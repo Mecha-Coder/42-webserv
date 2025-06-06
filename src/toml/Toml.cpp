@@ -17,26 +17,26 @@
 using namespace toml;
 
 template <typename Iter>
-Iter next_it(Iter iter) {
+Iter NextIter(Iter iter) {
 	return ++iter;
 }
 
-Table& list2map(TokenList list, Table& t) {
+Table& List2Map(TokenList list, Table& t) {
 	Table* last_t = &t;
 
 	FOR_EACH(TokenList, list, it) {
 		last_t->Create(it->value);
 		last_t = &last_t->Get(it->value);
-		if (next_it(it) != list.end() && last_t->type == Table::ARRAY) {
+		if (NextIter(it) != list.end() && last_t->type == Table::ARRAY) {
 			last_t = &last_t->Get(last_t->vec.size() - 1);
 		}
 	}
 	return *last_t;
 }
 
-void fill_map(TokenMap& mp, Table& t) {
+void FillMap(TokenMap& mp, Table& t) {
 	FOR_EACH(TokenMap, mp, it) {
-		Table& last = list2map(it->key, t);
+		Table& last = List2Map(it->key, t);
 		if (it->is_array) {
 			last.setType(Table::ARRAY);
 			FOR_EACH(TokenList, it->value, it2) {
@@ -49,53 +49,53 @@ void fill_map(TokenMap& mp, Table& t) {
 	}
 }
 
-Table* build(Parser& p) {
+Table* Build(Parser& p) {
 	Table* t = new Table(Table::TABLE);
 
-	fill_map(p.mp, *t);
+	FillMap(p.mp, *t);
 
 	FOR_EACH(std::vector<TomlBlock>, p.tables, it) {
 		if (it->type == TomlBlock::TABLE) {
-			Table& last = list2map(it->prefix, *t);
+			Table& last = List2Map(it->prefix, *t);
 			if (last.type == Table::ARRAY) {
 				last = last.Get(last.vec.size() - 1);
 			}
-			fill_map(it->mp, last);
+			FillMap(it->mp, last);
 			continue;
 		}
 		Table tmp = Table(Table::TABLE);
-		Table& last = list2map(it->prefix, *t);
+		Table& last = List2Map(it->prefix, *t);
 		last.setType(Table::ARRAY);
-		fill_map(it->mp, tmp);
+		FillMap(it->mp, tmp);
 		last.Push(tmp);
 	}
 
 	return t;
 }
 
-Table* toml::parse_stream(std::ifstream& in) {
+Table* toml::ParseStream(std::ifstream& in) {
 	Lexer lexer = Lexer(in);
-	TokenListResult resToken = lexer.parse();
-	if (!resToken.is_ok()) {
-		cerr << resToken.err().as_str() << endl;
+	TokenListResult resToken = lexer.Parse();
+	if (!resToken.isOk()) {
+		cerr << resToken.Err().asStr() << endl;
 		return NULL;
 	}
 
-	TokenList tokens = resToken.ok();
-	ChekerResult res = syntax_checker(tokens);
-	if (!res.is_ok()) {
-		cerr << res.err().as_str() << endl;
+	TokenList tokens = resToken.Ok();
+	ChekerResult res = SyntaxChecker(tokens);
+	if (!res.isOk()) {
+		cerr << res.Err().asStr() << endl;
 		return NULL;
 	}
 	Parser p = Parser(tokens);
 
-	return build(p);
+	return Build(p);
 }
 
-Table* toml::parse_file(std::string& filename) {
+Table* toml::ParseFile(std::string& filename) {
 	std::ifstream ifs(filename.c_str());
 
 	if (!ifs.is_open())
 		return NULL;
-	return parse_stream(ifs);
+	return ParseStream(ifs);
 }

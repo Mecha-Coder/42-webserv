@@ -190,7 +190,7 @@ TokenListResult Lexer::ParseValue(std::string& line) {
 	std::list<Token> list;
 	while (TokenizeValue(line, t)) {
 		if (!(t.type & ExpectValue()))
-			return ParseError("unexpected token `" + t.as_str() + "`", nc);
+			return ParseError("unexpected token `" + t.asStr() + "`", nc);
 		last_token = t.type;
 		list.push_back(t);
 	}
@@ -204,16 +204,16 @@ TokenListResult Lexer::Parse() {
 	while (GetNextLine(line)) {
 		while (Tokenize(line, t)) {
 			if (!(t.type & Expect())) {
-				return ParseError("unexpected token `" + t.as_str() + "`", nc);
+				return ParseError("unexpected token `" + t.asStr() + "`", nc);
 			}
 			last_token = t.type;
 			list.push_back(t);
 			if (last_token == Token::ASSIGN) {
 				// = [value]
 				TokenListResult res = ParseValue(line);
-				if (!res.is_ok())
+				if (!res.isOk())
 					return res;
-				list.splice(list.end(), res.ok());
+				list.splice(list.end(), res.Ok());
 				break;
 			}
 		}
