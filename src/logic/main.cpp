@@ -1,5 +1,10 @@
 #include "../include/webserv.hpp"
 
+// Define POLLRDHUP if not defined (for compatibility)
+#ifndef POLLRDHUP
+#define POLLRDHUP 0
+#endif
+
 void outgoing(struct pollfd &watch, ClientManager &cManager, size_t &index)
 {
 	Str		where;
