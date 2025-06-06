@@ -25,12 +25,9 @@ private:
 	Token::e_token last_token;
 
 	// utils
-
 	bool SkipSpace(std::string& line);
 
 	// cursor
-	char next_char();
-	char current();
 	bool GetNextLine(std::string& line);
 	void MakeToken(Token* t, std::string value, Token::e_token type);
 	Token::e_token Expect();
@@ -41,6 +38,4 @@ private:
 	// tokenizer
 	bool Tokenize(std::string& line, Token& tk);
 	bool TokenizeValue(std::string& line, Token& tk);
-	// validation
-	//bool expected(Token::e_token type);
 };
