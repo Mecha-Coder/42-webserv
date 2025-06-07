@@ -6,20 +6,61 @@
 /*   By: rcheong <rcheong@student.42kl.edu.my>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 21:09:56 by rcheong           #+#    #+#             */
-/*   Updated: 2025/06/07 10:27:02 by rcheong          ###   ########.fr       */
+/*   Updated: 2025/06/07 10:59:45 by rcheong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/CGIHandler.hpp"
 #include <algorithm>
+#include <cctype>
+
+static std::map<std::string, std::string> ConvertHttpHeadersToCgiEnv(const std::map<std::string, std::string>& httpHeaders) {
+    std::map<std::string, std::string> cgiEnv;
+
+    for (std::map<std::string, std::string>::const_iterator it = httpHeaders.begin(); it != httpHeaders.end(); ++it) {
+        const std::string& key = it->first;
+        const std::string& val = it->second;
+
+        // special case: CONTENT_TYPE and CONTENT_LENGTH
+        if (key == "Content-Type") {
+            cgiEnv["CONTENT_TYPE"] = val;
+        } else if (key == "Content-Length") {
+            cgiEnv["CONTENT_LENGTH"] = val;
+        } else {
+            // convert key to uppercase, replace '-' with '_', prefix with HTTP_
+            std::string envKey = "HTTP_";
+            for (size_t i = 0; i < key.size(); ++i) {
+                char c = key[i];
+                if (c == '-')
+                    envKey += '_';
+                else
+                    envKey += std::toupper(static_cast<unsigned char>(c));
+            }
+            cgiEnv[envKey] = val;
+        }
+    }
+
+    return (cgiEnv);
+}
 
 CGIHandler* CGIHandler::Create(const std::map<std::string, std::string>& env,
 	const std::string* body,
 	const std::vector<std::string>& cgiPaths) {
 	CGIHandler* handler = NULL;
 	try {
-		// if (body && body->empty())
-		// 	body = NULL;
+		std::map<std::string, std::string> cgiEnv = ConvertHttpHeadersToCgiEnv(env);
+
+        if (cgiEnv.find("REQUEST_METHOD") == cgiEnv.end()) {
+            cgiEnv["REQUEST_METHOD"] = "GET";
+        }
+        if (cgiEnv.find("SCRIPT_NAME") == cgiEnv.end()) {
+            cgiEnv["SCRIPT_NAME"] = "";
+        }
+        if (cgiEnv.find("QUERY_STRING") == cgiEnv.end()) {
+            cgiEnv["QUERY_STRING"] = "";
+        }
+		if (!body || body->empty())
+			body = NULL;
 		handler = new CGIHandler(env, body, cgiPaths);
 		return (handler);
 	} catch (...) {
@@ -51,22 +92,6 @@ void CGIHandler::resetArgs() {
 		delete[] _argv;
 		_argv = 0;
 	}
-}
-
-/**
- * @brief Convert HTTP headers to CGI-compatible environment variables.
- * @param headers Map of HTTP headers
- * @return Map of environment variable entries (e.g., HTTP_HOST, HTTP_USER_AGENT)
- */
-std::map<std::string, std::string> ConvertHeadersToEnv(const std::map<std::string, std::string>& headers) {
-	std::map<std::string, std::string> env;
-	for (std::map<std::string, std::string>::const_iterator it = headers.begin(); it != headers.end(); ++it) {
-		std::string key = it->first;
-		std::transform(key.begin(), key.end(), key.begin(), ::toupper);
-		std::replace(key.begin(), key.end(), '-', '_');
-		env["HTTP_" + key] = it->second;
-	}
-	return env;
 }
 
 std::string CGIHandler::getCmd() {
@@ -107,37 +132,41 @@ void CGIHandler::setArgs(const std::string& cmd) {
 }
 
 std::string CGIHandler::addContentLength(const std::string& httpResponse) {
-	size_t headerEndPos = httpResponse.find("\r\n\r\n");
-	if (headerEndPos == std::string::npos)
-		return httpResponse;
-	std::string headers = httpResponse.substr(0, headerEndPos);
-	std::string body = httpResponse.substr(headerEndPos + 4);
+    if (httpResponse.empty())
+        return httpResponse;
 
-	std::istringstream headersStream(headers);
-	std::vector<std::string> headerLines;
-	std::string line;
-	while (std::getline(headersStream, line)) {
-		if (!line.empty()) {
-			headerLines.push_back(line);
-		}
-	}
+    size_t headerEndPos = httpResponse.find("\r\n\r\n");
+    if (headerEndPos == std::string::npos)
+        return httpResponse;
 
-	if (headers.find("Content-Length:") != std::string::npos)
-		return httpResponse;
+    std::string headers = httpResponse.substr(0, headerEndPos);
+    std::string body = httpResponse.substr(headerEndPos + 4);
 
-	std::ostringstream oSS;
-	oSS << "Content-Length: " << body.size();
-	headerLines.push_back(oSS.str());
+    if (headers.find("Content-Length:") != std::string::npos)
+        return httpResponse;
 
-	std::ostringstream modifiedHeaders;
-	for (size_t i = 0; i < headerLines.size(); ++i) {
-		modifiedHeaders << headerLines[i];
-		if (i < headerLines.size() - 1) {
-			modifiedHeaders << "\r\n";
-		}
-	}
+    std::istringstream headersStream(headers);
+    std::vector<std::string> headerLines;
+    std::string line;
+    while (std::getline(headersStream, line)) {
+        if (!line.empty()) {
+            headerLines.push_back(line);
+        }
+    }
 
-	return modifiedHeaders.str() + "\r\n\r\n" + body;
+    std::ostringstream oSS;
+    oSS << "Content-Length: " << body.size();
+    headerLines.push_back(oSS.str());
+
+    std::ostringstream modifiedHeaders;
+    for (size_t i = 0; i < headerLines.size(); ++i) {
+        modifiedHeaders << headerLines[i];
+        if (i < headerLines.size() - 1) {
+            modifiedHeaders << "\r\n";
+        }
+    }
+
+    return modifiedHeaders.str() + "\r\n\r\n" + body;
 }
 
 std::string CGIHandler::Execute() {
@@ -180,7 +209,7 @@ std::string CGIHandler::Execute() {
 		std::map<std::string, std::string>::const_iterator mit = _envMap.find("REQUEST_METHOD");
 		if (mit != _envMap.end()) {
 			const std::string& method = mit->second;
-			if ((method == "POST" || method == "PUT") && _requestBody && !_requestBody->empty()) {
+			if ((method == "POST") && _requestBody && !_requestBody->empty()) {
 				write(fdRequest[1], _requestBody->c_str(), _requestBody->size());
 			}
 		}
