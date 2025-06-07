@@ -69,14 +69,14 @@ ServerConfig FillServer(toml::Table& server) {
 	return s;
 }
 
-bool optional_is(toml::Table &Table, const string &key, toml::Table::EToml type) {
+bool ValidIs(toml::Table &Table, const string &key, toml::Table::EToml type) {
 	return Table[key].isType(toml::Table::NONE) || Table[key].isType(type);
 }
 
-bool optional_str_arr(toml::Table &Table, const string &key)
+bool ValidStrArr(toml::Table &Table, const string &key)
 {
 	toml::Table& t = Table[key];
-	if (!optional_is(Table, key, toml::Table::ARRAY))
+	if (!ValidIs(Table, key, toml::Table::ARRAY))
 		return false;
 	for (size_t i = 0; i < t.vec.size(); i++) {
 		if (!t[i].isType(toml::Table::STRING))
@@ -85,7 +85,7 @@ bool optional_str_arr(toml::Table &Table, const string &key)
 	return true;
 }
 
-Config::e_error validate_location(toml::Table &location)
+Config::e_error ValidLocation(toml::Table &location)
 {
 	string location_keys[] = {"prefix", "root", "upload_path", "autoindex", "redirect", "allowed_methods", "index", "cgi_path", "error_page", "_clientMaxBodySize"};
 	FOR_EACH(toml::Table::TomlMap, location.map, it) {
@@ -93,35 +93,35 @@ Config::e_error validate_location(toml::Table &location)
 			return Config::ERROR_UNKNOWN_KEY;
 	}
 
-	if (!optional_is(location, "prefix", toml::Table::STRING))
+	if (!ValidIs(location, "prefix", toml::Table::STRING))
 		return Config::ERROR_INVALID_PORT;
-	else if (!optional_is(location, "root", toml::Table::STRING))
+	else if (!ValidIs(location, "root", toml::Table::STRING))
 		return Config::ERROR_INVALID_ROOT;
-	else if (!optional_is(location, "upload_path", toml::Table::STRING))
+	else if (!ValidIs(location, "upload_path", toml::Table::STRING))
 		return Config::ERROR_INVALID_UPLOAD_PATH;
-	else if (!optional_is(location, "autoindex", toml::Table::STRING))
+	else if (!ValidIs(location, "autoindex", toml::Table::STRING))
 		return Config::ERROR_INVALID_AUTOINDEX;
-	else if (!optional_is(location, "client_max_body_size", toml::Table::STRING))
+	else if (!ValidIs(location, "client_max_body_size", toml::Table::STRING))
 		return Config::ERROR_INVALID_CLIENT_MAX_BODY_SIZE;
-	else if (!optional_str_arr(location, "redirect"))
+	else if (!ValidStrArr(location, "redirect"))
 		return Config::ERROR_INVALID_REDIRECT;
-	else if (!optional_str_arr(location, "cgi_path"))
+	else if (!ValidStrArr(location, "cgi_path"))
 		return Config::ERROR_INVALID_CGI_PATH;
-	else if (!optional_str_arr(location, "index"))
+	else if (!ValidStrArr(location, "index"))
 		return Config::ERROR_INVALID_INDEX;
-	else if (!optional_str_arr(location, "allowed_methods"))
+	else if (!ValidStrArr(location, "allowed_methods"))
 		return Config::ERROR_INVALID_ALLOWED_METHODS;
-	else if (!optional_str_arr(location, "error_page"))
+	else if (!ValidStrArr(location, "error_page"))
 		return Config::ERROR_INVALID_ERROR_PAGE;
 	return Config::ERROR_NONE;
 }
 
-Config::e_error validate_location_list(toml::Table &location) {
+Config::e_error ValidLocationList(toml::Table &location) {
 	Config::e_error error;
 	if (!location.isType(toml::Table::ARRAY))
 		return Config::ERROR_INVALID_LOCATION;
 	for (size_t i = 0; i < location.vec.size(); i++) {
-		error = validate_location(location[i]);
+		error = ValidLocation(location[i]);
 		if (error != Config::ERROR_NONE)
 			return error;
 	}
@@ -136,31 +136,34 @@ Config::e_error ValidServer(toml::Table& server) {
 			return Config::ERROR_UNKNOWN_KEY;
 	}
 
-	if (!optional_is(server, "port", toml::Table::STRING))
+	if (!ValidIs(server, "port", toml::Table::STRING))
 		return Config::ERROR_INVALID_PORT;
-	else if (!optional_is(server, "upload_path", toml::Table::STRING))
+	else if (!ValidIs(server, "upload_path", toml::Table::STRING))
 		return Config::ERROR_INVALID_PORT;
-	else if (!optional_is(server, "host", toml::Table::STRING))
+	else if (!ValidIs(server, "host", toml::Table::STRING))
 		return Config::ERROR_INVALID_HOST;
-	else if (!optional_is(server, "_clientMaxBodySize", toml::Table::STRING))
+	else if (!ValidIs(server, "_clientMaxBodySize", toml::Table::STRING))
 		return Config::ERROR_INVALID_CLIENT_MAX_BODY_SIZE;
-	else if (!optional_str_arr(server, "redirect"))
+	else if (!ValidStrArr(server, "redirect"))
 		return Config::ERROR_INVALID_REDIRECT;
-	else if (!optional_str_arr(server, "index"))
+	else if (!ValidStrArr(server, "index"))
 		return Config::ERROR_INVALID_INDEX;
-	else if (!optional_str_arr(server, "server_name"))
+	else if (!ValidStrArr(server, "server_name"))
 		return Config::ERROR_INVALID_SERVER_NAME;
-	else if (!optional_str_arr(server, "allowed_methods"))
+	else if (!ValidStrArr(server, "allowed_methods"))
 		return Config::ERROR_INVALID_ALLOWED_METHODS;
-	else if (!optional_is(server, "root", toml::Table::STRING))
+	else if (!ValidIs(server, "root", toml::Table::STRING))
 		return Config::ERROR_INVALID_ROOT;
-	else if (!optional_str_arr(server, "error_page"))
+	else if (!ValidStrArr(server, "error_page"))
 		return Config::ERROR_INVALID_ERROR_PAGE;
-	else if ((error = validate_location_list(server["location"])) != Config::ERROR_NONE)
+	else if ((error = ValidLocationList(server["location"])) != Config::ERROR_NONE)
 			return error;
 	return Config::ERROR_NONE;
 }
 
+/**
+ * @brief Validation before parse
+ */
 Config::e_error Config::PreValidate(toml::Table& config) {
 	
 	toml::Table& t = config["server"];
@@ -175,6 +178,9 @@ Config::e_error Config::PreValidate(toml::Table& config) {
 	return Config::ERROR_NONE;
 }
 
+/**
+ * @brief Validation post-parsing
+ */
 Config::e_error Config::PostValidate() {
 	if (_servers.empty())
 		return Config::ERROR_INVALID_SERVER;
@@ -211,16 +217,14 @@ Config::Config(toml::Table& config) {
 	}
 }
 
-Config::~Config() {
-
-}
+Config::~Config() {}
 
 const vector<ServerConfig> &Config::getServers() const {
     return _servers;
 }
 
 void Config::Print() {
-	cout << "\n<==================== Config ====================>" << endl;
+	cout << "\nConfig" << endl;
 
 	for (size_t i = 0; i < _servers.size(); i++)
 		_servers[i].Print();
@@ -280,6 +284,4 @@ void Config::Print() {
 			break;
 
 	}
-
-	cout << "\n<==================== END Config ====================>\n" << endl;
 }
