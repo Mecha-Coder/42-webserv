@@ -6,7 +6,7 @@
 /*   By: rcheong <rcheong@student.42kl.edu.my>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 21:09:56 by rcheong           #+#    #+#             */
-/*   Updated: 2025/05/27 16:18:15 by rcheong          ###   ########.fr       */
+/*   Updated: 2025/06/07 10:27:02 by rcheong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ CGIHandler* CGIHandler::Create(const std::map<std::string, std::string>& env,
 	const std::vector<std::string>& cgiPaths) {
 	CGIHandler* handler = NULL;
 	try {
+		// if (body && body->empty())
+		// 	body = NULL;
 		handler = new CGIHandler(env, body, cgiPaths);
 		return (handler);
 	} catch (...) {
@@ -175,9 +177,24 @@ std::string CGIHandler::Execute() {
 	} else {
 		// parent
 		close(fdRequest[0]);
-		if (_requestBody && !_requestBody->empty()) {
-			write(fdRequest[1], _requestBody->c_str(), _requestBody->size());
+		std::map<std::string, std::string>::const_iterator mit = _envMap.find("REQUEST_METHOD");
+		if (mit != _envMap.end()) {
+			const std::string& method = mit->second;
+			if ((method == "POST" || method == "PUT") && _requestBody && !_requestBody->empty()) {
+				write(fdRequest[1], _requestBody->c_str(), _requestBody->size());
+			}
 		}
+
+		// if (_requestBody && !_requestBody->empty()) {
+		// 	ssize_t written = write(fdRequest[1], _requestBody->c_str(), _requestBody->size());
+		// 	if (written < 0) {
+		// 		close(fdRequest[1]);
+		// 		kill(pid, SIGKILL);
+		// 		waitpid(pid, 0, 0);
+		// 		throw std::runtime_error("write() to CGI stdin failed");
+		// 	}
+		// }
+		
 		close(fdRequest[1]);
 		close(fdResponse[1]);
 
