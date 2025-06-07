@@ -2,7 +2,7 @@
 # DECLARATION
 #==============================================================
 
-NAME = webserve
+NAME = webserv
 CC   = c++
 FLAG = -Wall -Wextra -Werror -Wshadow -std=c++98
 

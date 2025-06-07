@@ -2,8 +2,55 @@
 
 int create_listenFd(const Pair &pair, const Str &website);
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+ServerManager::ServerManager()
+{
+	Address listen;
+    listen.push_back("127.0.0.1:8080");
+
+    ErrorPage errorPg;
+
+    Str mainRoot = "./src/default";
+    CGI noCgi;
+    
+    CGI allCgi;
+
+    Method onlyGET; 
+        onlyGET.push_back("GET");
+
+    //------------------------------------------------------------
+
+    Route route1 (
+        "/",
+        mainRoot,
+        "",
+        "index.html",
+        "",
+        false,
+        onlyGET,
+        noCgi
+    );
+
+    Routes routes;
+    routes.push_back(route1);
+
+	_serverList.push_back(  Server (
+        "www.webservDefault.my",
+        mainRoot,
+        100000,
+        listen,
+        errorPg,
+        routes
+    ));
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ServerManager::ServerManager(Servers &serverList)
 : _serverList(serverList) {}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void ServerManager::showData() const
 {

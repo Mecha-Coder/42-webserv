@@ -178,13 +178,16 @@ void runServer(Watchlist &watcher, ServerManager &sManager)
 
 int main()
 {
+	/*
 	Servers serverList;
 	serverList.push_back(server_1());
 	serverList.push_back(server_2());
 	serverList.push_back(server_3());
+	*/
 
 	Watchlist 		watcher;
-	ServerManager	sManager(serverList);
+	//ServerManager	sManager(serverList);
+	ServerManager	sManager;
 	
 	if (!sManager.initListenFd(watcher))
 		return EXIT_FAILURE;

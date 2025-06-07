@@ -21,6 +21,7 @@ class ServerManager
         Fd_Server   _listenMap;
          
     public:
+        ServerManager();
         ServerManager(Servers &serverList);
 
         void showData() const;
