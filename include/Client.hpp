@@ -106,9 +106,10 @@ class Client
 
             Header env;
             env["REQUEST_METHOD"] = this->_method;
-            env["CONTENT_LENGTH"] = this->_contentLen;
-            env["CONTENT_TYPE"] = this->_contentType;
+            env.insert(header.begin(), header.end());
             env["PATH_INFO"] = this->_filePath + this->_file;
+
+            std::cout << "In client> " << path[0] << std::endl;
 
             CGIHandler obj(env, &this->data, path);
 

@@ -8,7 +8,7 @@ void test(const Str &request)
     std::cout << GREEN "\nIN\n===" RESET << std::endl; showRawStr(request);
     std::cout << CYAN "OUT\n===" RESET << std::endl;
     processReq(client);
-    showRawStr(client.respond());
+    //showRawStr(client.respond());
 }
 
 Str Missing_Path_and_Version() 

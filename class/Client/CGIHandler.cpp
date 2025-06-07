@@ -6,7 +6,7 @@
 /*   By: rcheong <rcheong@student.42kl.edu.my>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 21:09:56 by rcheong           #+#    #+#             */
-/*   Updated: 2025/06/07 10:59:45 by rcheong          ###   ########.fr       */
+/*   Updated: 2025/06/07 15:30:03 by rcheong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,10 +113,15 @@ std::string CGIHandler::getCmd() {
 	if (!allowed)
 		throw std::runtime_error("Script not allowed by configuration");
 
-	std::string fullPath = pathInfo[0] == '/' ? "." + pathInfo : pathInfo;
+	std::string fullPath = pathInfo;
 
+	std::cout << "In CGIHandler> " << fullPath.c_str() << std::endl;
+	
 	if (access(fullPath.c_str(), X_OK) != 0)
+	{
+		std::cerr << "Error catch: " << strerror(errno) << std::endl;
 		throw std::runtime_error("Script does not exist or is not executable: " + fullPath);
+	}
 
 	return fullPath;
 }
@@ -199,6 +204,13 @@ std::string CGIHandler::Execute() {
 		close(fdResponse[1]);
 		close(fdRequest[0]);
 		close(fdRequest[1]);
+
+		std::cout << "Arguments to execve:\n";
+		std::cout << _argv[0] << std::endl;
+		std::cout << _argv << std::endl;
+		std::cout << _env.Data() << std::endl;
+
+		
 
 		execve(_argv[0], _argv, _env.Data());
 		perror("execve");

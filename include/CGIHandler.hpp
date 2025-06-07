@@ -6,7 +6,7 @@
 /*   By: rcheong <rcheong@student.42kl.edu.my>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 21:09:50 by rcheong           #+#    #+#             */
-/*   Updated: 2025/06/07 10:46:26 by rcheong          ###   ########.fr       */
+/*   Updated: 2025/06/07 15:21:19 by rcheong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 #include <unistd.h>
 #include <poll.h>
 #include <signal.h>
+#include <cerrno>
 #include "ScopedEnvArray.hpp"
 #include <cstdio>
 
