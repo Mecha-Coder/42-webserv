@@ -37,23 +37,23 @@ Parser::Parser(TokenList tks) {
 		case Token::KEY: {
 			TokenList res = UntilIgnore(cur, Token::ASSIGN, Token::DOT);
 			cur++; // skip assign
-			bool is_array = cur->Is(Token::OPENBRACKET);
+			bool is_array = cur->Is(Token::OPAREN);
 			TokenList values = UntilIgnore(cur,
 										  Token::NEWLINE | Token::COMMENT,
-										  Token::COMMA | Token::CLOSEBRACKET | Token::OPENBRACKET);
+										  Token::COMMA | Token::CPAREN | Token::OPAREN);
 			lastmp->push_back(TokenPair(res, values, is_array));
 			break;
 		}
-		case Token::OPENBRACKET: {
+		case Token::OPAREN: {
 			cur++;
-			bool is_array = cur->Is(Token::OPENBRACKET);
+			bool is_array = cur->Is(Token::OPAREN);
 			std::vector<TomlBlock>* tm = &this->tables;
 			TomlBlock::blockType type = TomlBlock::TABLE;
 			if (is_array) {
 				type = TomlBlock::ARRAY;
 				cur++;
 			}
-			TokenList res = UntilIgnore(cur, Token::CLOSEBRACKET | Token::COMMENT, Token::DOT);
+			TokenList res = UntilIgnore(cur, Token::CPAREN | Token::COMMENT, Token::DOT);
 			tm->push_back(TomlBlock(res, TokenMap(), type));
 			lastmp = &tm->back().mp;
 			break;

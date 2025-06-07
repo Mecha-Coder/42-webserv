@@ -32,7 +32,7 @@ bool Lexer::TokenizeValue(std::string& line, Token& tk) {
 		return false;
 	switch (line[pos]) {
 	case '[':
-		MakeToken(&tk, "[", Token::OPENBRACKET);
+		MakeToken(&tk, "[", Token::OPAREN);
 		pos++;
 		break;
 	case ',':
@@ -40,7 +40,7 @@ bool Lexer::TokenizeValue(std::string& line, Token& tk) {
 		pos++;
 		break;
 	case ']':
-		MakeToken(&tk, "]", Token::CLOSEBRACKET);
+		MakeToken(&tk, "]", Token::CPAREN);
 		pos++;
 		break;
 	case '"':
@@ -48,7 +48,7 @@ bool Lexer::TokenizeValue(std::string& line, Token& tk) {
 		size_t size = line.find(line[pos], pos + 1);
 		if (size == std::string::npos)
 			return false;
-		MakeToken(&tk, line.substr(pos + 1, size - pos - 1), Token::QUOTED);
+		MakeToken(&tk, line.substr(pos + 1, size - pos - 1), Token::QUOTE);
 		pos = size + 1;
 		break;
 	}
@@ -77,11 +77,11 @@ bool Lexer::Tokenize(std::string& line, Token& tk) {
 		pos++;
 		break;
 	case '[':
-		MakeToken(&tk, "[", Token::OPENBRACKET);
+		MakeToken(&tk, "[", Token::OPAREN);
 		pos++;
 		break;
 	case ']':
-		MakeToken(&tk, "]", Token::CLOSEBRACKET);
+		MakeToken(&tk, "]", Token::CPAREN);
 		pos++;
 		break;
 	case '=':
@@ -96,7 +96,7 @@ bool Lexer::Tokenize(std::string& line, Token& tk) {
 		size_t size = line.find(line[pos], pos + 1);
 		if (size == std::string::npos)
 			return false;
-		MakeToken(&tk, line.substr(pos + 1, size - pos - 1), Token::QUOTED);
+		MakeToken(&tk, line.substr(pos + 1, size - pos - 1), Token::QUOTE);
 		pos = size + 1;
 		break;
 	}
@@ -126,25 +126,25 @@ bool Lexer::Tokenize(std::string& line, Token& tk) {
 Token::e_token Lexer::Expect() {
 	switch (last_token) {
 	case Token::UNINITIALISED:
-		return Token::KEY | Token::COMMENT | Token::NEWLINE | Token::OPENBRACKET;
+		return Token::KEY | Token::COMMENT | Token::NEWLINE | Token::OPAREN;
 	case Token::KEY:
-		return Token::ASSIGN | Token::DOT | Token::CLOSEBRACKET;
+		return Token::ASSIGN | Token::DOT | Token::CPAREN;
 	case Token::ASSIGN:
-		return Token::QUOTED | Token::KEY | Token::OPENBRACKET;
-	case Token::QUOTED:
+		return Token::QUOTE | Token::KEY | Token::OPAREN;
+	case Token::QUOTE:
 		return Token::NEWLINE | Token::COMMA;
 	case Token::DOT:
 		return Token::KEY;
-	case Token::OPENBRACKET:
-		return Token::KEY | Token::QUOTED | Token::OPENBRACKET;
-	case Token::CLOSEBRACKET:
-		return Token::NEWLINE | Token::CLOSEBRACKET | Token::COMMENT;
+	case Token::OPAREN:
+		return Token::KEY | Token::QUOTE | Token::OPAREN;
+	case Token::CPAREN:
+		return Token::NEWLINE | Token::CPAREN | Token::COMMENT;
 	case Token::COMMENT:
 		return Token::NEWLINE;
 	case Token::VALUE:
 		return Token::NEWLINE | Token::COMMA;
 	case Token::COMMA:
-		return Token::VALUE | Token::QUOTED;
+		return Token::VALUE | Token::QUOTE;
 	case Token::_EOF:
 	case Token::NEWLINE:
 		abort();
@@ -164,20 +164,20 @@ bool Lexer::GetNextLine(std::string& line) {
 
 Token::e_token Lexer::ExpectValue() {
 	switch (last_token) {
-	case Token::QUOTED:
-		return Token::NEWLINE | Token::COMMA | Token::COMMENT | Token::CLOSEBRACKET;
-	case Token::OPENBRACKET:
-		return Token::KEY | Token::QUOTED;
-	case Token::CLOSEBRACKET:
+	case Token::QUOTE:
+		return Token::NEWLINE | Token::COMMA | Token::COMMENT | Token::CPAREN;
+	case Token::OPAREN:
+		return Token::KEY | Token::QUOTE;
+	case Token::CPAREN:
 		return Token::NEWLINE | Token::COMMENT;
 	case Token::COMMENT:
 		return Token::NEWLINE;
 	case Token::VALUE:
 		return Token::NEWLINE | Token::COMMA | Token::COMMENT;
 	case Token::COMMA:
-		return Token::VALUE | Token::QUOTED;
+		return Token::VALUE | Token::QUOTE;
 	case Token::ASSIGN:
-		return Token::OPENBRACKET | Token::QUOTED | Token::VALUE;
+		return Token::OPAREN | Token::QUOTE | Token::VALUE;
 	case Token::_EOF:
 		abort();
 	default:

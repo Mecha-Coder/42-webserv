@@ -8,7 +8,7 @@ bool isKey(TokenList::iterator& it, TokenList::iterator end) {
 			if (it->type == Token::DOT)
 				it++;
 			break;
-		case Token::CLOSEBRACKET:
+		case Token::CPAREN:
 		case Token::ASSIGN:
 			return true;
 			break;
@@ -21,27 +21,27 @@ bool isKey(TokenList::iterator& it, TokenList::iterator end) {
 }
 
 bool isArr(TokenList::iterator& it, TokenList::iterator end) {
-	if (!it->Is(Token::OPENBRACKET))
+	if (!it->Is(Token::OPAREN))
 		return false;
 	it++;
 	while (it != end) {
 		switch (it->type) {
 		case Token::VALUE:
-		case Token::QUOTED:
+		case Token::QUOTE:
 		case Token::KEY:
 			it++;
 			if (it->type == Token::COMMA)
 				it++;
 			break;
-		case Token::CLOSEBRACKET:
-			return it != end && it->Is(Token::CLOSEBRACKET);
+		case Token::CPAREN:
+			return it != end && it->Is(Token::CPAREN);
 			break;
 		default:
 			return false;
 			break;
 		}
 	}
-	abort(); // should never reach here
+	abort();
 	return false;
 }
 
@@ -51,12 +51,12 @@ ChekerResult SyntaxChecker(TokenList& tokens) {
 
 	while (it != end) {
 		switch (it->type) {
-		case Token::OPENBRACKET: {
-			it++; // skip OPENBRACKET
-			bool isArr = it->Is(Token::OPENBRACKET);
+		case Token::OPAREN: {
+			it++; // skip OPAREN
+			bool isArr = it->Is(Token::OPAREN);
 			if (isArr)
 				it++;
-			if (!(isKey(it, end) && it->Is(Token::CLOSEBRACKET)))
+			if (!(isKey(it, end) && it->Is(Token::CPAREN)))
 				return ChekerResult(ParseError("Invalid key [1000] ", it->line));
 			;
 			if (isArr)
@@ -68,9 +68,9 @@ ChekerResult SyntaxChecker(TokenList& tokens) {
 			if (!(isKey(it, end) && it->Is(Token::ASSIGN)))
 				return ChekerResult(ParseError("Invalid key [1001] ", it->line));
 			it++; // skip ASSIGN
-			if (!it->Is(Token::VALUE) && !it->Is(Token::QUOTED) && !isArr(it, end))
+			if (!it->Is(Token::VALUE) && !it->Is(Token::QUOTE) && !isArr(it, end))
 				return ChekerResult(ParseError("Invalid key [1002] ", it->line));
-			it++; // skip VALUE QOUTED or CLOSEBRACKET
+			it++; // skip VALUE QOUTED or CPAREN
 			break;
 		}
 		case Token::NEWLINE:

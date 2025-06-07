@@ -17,11 +17,11 @@ std::string Token::asStr() const {
 	switch (type) {
 	case KEY:			s += "[KEY]"; break;
 	case VALUE:			s += "[VALUE]"; break;
-	case QUOTED:		s += "[QUOTED]"; break;
+	case QUOTE:			s += "[QUOTE]"; break;
 	case ASSIGN:		s += "[ASSIGN]"; break;
 	case DOT:			s += "[DOT]"; break;
-	case OPENBRACKET:	s += "[OPENBRACKET]"; break;
-	case CLOSEBRACKET:	s += "[CLOSEBRACKET]"; break;
+	case OPAREN:		s += "[OPAREN]"; break;
+	case CPAREN:		s += "[CPAREN]"; break;
 	case NEWLINE:		s += "[NEWLINE]"; break;
 	case COMMENT:		s += "[COMMENT]"; break;
 	case COMMA:			s += "[COMMA]"; break;
@@ -62,24 +62,24 @@ void TokenParser::MakeToken(Token* t, const std::string& value, Token::e_token t
 Token::e_token TokenParser::Expect() const {
 	switch (last_token) {
 	case Token::UNINITIALISED:
-		return Token::KEY | Token::COMMENT | Token::NEWLINE | Token::OPENBRACKET;
+		return Token::KEY | Token::COMMENT | Token::NEWLINE | Token::OPAREN;
 	case Token::KEY:
-		return Token::ASSIGN | Token::DOT | Token::CLOSEBRACKET;
+		return Token::ASSIGN | Token::DOT | Token::CPAREN;
 	case Token::ASSIGN:
-		return Token::QUOTED | Token::KEY | Token::OPENBRACKET;
-	case Token::QUOTED:
+		return Token::QUOTE | Token::KEY | Token::OPAREN;
+	case Token::QUOTE:
 	case Token::VALUE:
 		return Token::NEWLINE | Token::COMMA;
 	case Token::DOT:
 		return Token::KEY;
-	case Token::OPENBRACKET:
-		return Token::KEY | Token::QUOTED | Token::OPENBRACKET;
-	case Token::CLOSEBRACKET:
-		return Token::NEWLINE | Token::CLOSEBRACKET | Token::COMMENT;
+	case Token::OPAREN:
+		return Token::KEY | Token::QUOTE | Token::OPAREN;
+	case Token::CPAREN:
+		return Token::NEWLINE | Token::CPAREN | Token::COMMENT;
 	case Token::COMMENT:
 		return Token::NEWLINE;
 	case Token::COMMA:
-		return Token::VALUE | Token::QUOTED;
+		return Token::VALUE | Token::QUOTE;
 	case Token::_EOF:
 	case Token::NEWLINE:
 	default:
@@ -89,19 +89,19 @@ Token::e_token TokenParser::Expect() const {
 
 Token::e_token TokenParser::ExpectValue() const {
 	switch (last_token) {
-	case Token::QUOTED:
+	case Token::QUOTE:
 	case Token::VALUE:
-		return Token::NEWLINE | Token::COMMA | Token::COMMENT | Token::CLOSEBRACKET;
-	case Token::OPENBRACKET:
-		return Token::KEY | Token::QUOTED;
-	case Token::CLOSEBRACKET:
+		return Token::NEWLINE | Token::COMMA | Token::COMMENT | Token::CPAREN;
+	case Token::OPAREN:
+		return Token::KEY | Token::QUOTE;
+	case Token::CPAREN:
 		return Token::NEWLINE | Token::COMMENT;
 	case Token::COMMENT:
 		return Token::NEWLINE;
 	case Token::COMMA:
-		return Token::VALUE | Token::QUOTED;
+		return Token::VALUE | Token::QUOTE;
 	case Token::ASSIGN:
-		return Token::OPENBRACKET | Token::QUOTED | Token::VALUE;
+		return Token::OPAREN | Token::QUOTE | Token::VALUE;
 	default:
 		return (Token::e_token)0;
 	}
@@ -113,15 +113,15 @@ bool TokenParser::Tokenize(std::string& line, Token& tk) {
 	char c = line[pos];
 	switch (c) {
 	case '.': MakeToken(&tk, ".", Token::DOT); pos++; break;
-	case '[': MakeToken(&tk, "[", Token::OPENBRACKET); pos++; break;
-	case ']': MakeToken(&tk, "]", Token::CLOSEBRACKET); pos++; break;
+	case '[': MakeToken(&tk, "[", Token::OPAREN); pos++; break;
+	case ']': MakeToken(&tk, "]", Token::CPAREN); pos++; break;
 	case '=': MakeToken(&tk, "=", Token::ASSIGN); pos++; break;
 	case '\n': MakeToken(&tk, "\n", Token::NEWLINE); pos++; break;
 	case '"':
 	case '\'': {
 		size_t end = line.find(c, pos + 1);
 		if (end == std::string::npos) return false;
-		MakeToken(&tk, line.substr(pos + 1, end - pos - 1), Token::QUOTED);
+		MakeToken(&tk, line.substr(pos + 1, end - pos - 1), Token::QUOTE);
 		pos = end + 1;
 		break;
 	}
@@ -149,14 +149,14 @@ bool TokenParser::TokenizeValue(std::string& line, Token& tk) {
 
 	char c = line[pos];
 	switch (c) {
-	case '[': MakeToken(&tk, "[", Token::OPENBRACKET); pos++; break;
-	case ']': MakeToken(&tk, "]", Token::CLOSEBRACKET); pos++; break;
+	case '[': MakeToken(&tk, "[", Token::OPAREN); pos++; break;
+	case ']': MakeToken(&tk, "]", Token::CPAREN); pos++; break;
 	case ',': MakeToken(&tk, ",", Token::COMMA); pos++; break;
 	case '"':
 	case '\'': {
 		size_t end = line.find(c, pos + 1);
 		if (end == std::string::npos) return false;
-		MakeToken(&tk, line.substr(pos + 1, end - pos - 1), Token::QUOTED);
+		MakeToken(&tk, line.substr(pos + 1, end - pos - 1), Token::QUOTE);
 		pos = end + 1;
 		break;
 	}
