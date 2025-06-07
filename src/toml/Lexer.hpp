@@ -9,7 +9,7 @@
 #include <string>
 
 typedef Result<Token*, ParseError> ParseResult;
-typedef Result<std::list<Token>, ParseError> TokenListResult;
+// typedef Result<std::list<Token>, ParseError> TokenListResult;
 
 class Lexer {
 

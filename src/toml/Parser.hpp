@@ -9,11 +9,9 @@
 #include <string>
 #include <vector>
 
-// clang-format off
 typedef std::list<Token> TokenList;
 struct TokenPair;
 typedef std::vector<TokenPair> TokenMap;
-// clang-format on
 
 struct TokenPair {
 	TokenList key;

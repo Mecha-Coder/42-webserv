@@ -35,7 +35,7 @@ inline Token::e_token operator|(Token::e_token t1, Token::e_token t2) {
 	return (Token::e_token)((int)t1 | (int)t2);
 }
 
-typedef Result<std::list<Token>, ParseError> TokenListResult;
+typedef Result<TokenList, ParseError> TokenListResult;
 
 class TokenParser {
 public:
