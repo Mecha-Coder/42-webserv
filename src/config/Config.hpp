@@ -1,76 +1,132 @@
 #pragma once
 
-#include "Toml.hpp"
+#include "../toml/Toml.hpp"
 #include "../utils/Utils.hpp"
 #include <string>
 #include <vector>
 #include <iostream>
 
-typedef std::vector<std::string> string_vector;
+using namespace std;
 
+typedef vector<string> StrVec;
 struct LocationConfig {
-    std::string prefix;
-    std::string root;
-    std::string autoindex;
-    std::string upload_path;
-    string_vector cgi_path;
-    std::string client_max_body_size;
-    string_vector error_page;
-    string_vector redirect;
-    string_vector index;
-    string_vector allowed_methods;
+	string prefix;
+	string root;
+	string autoindex;
+	string upload_path;
+	vector<string> cgi_path;
+	string client_max_body_size;
+	vector<string> error_page;
+	vector<string> redirect;
+	vector<string> index;
+    vector<string> allowed_methods;
 
-    void print(int indent = 0) const;
+	void print(int indent = 0) {
+		string s(indent, ' ');
+		cout << s << "\t\tprefix: " << prefix << endl;
+		cout << s << "\t\troot: " << root << endl;
+		cout << s << "\t\tindex: ";
+		FOR_EACH(vector<string>, index, it) {
+			cout << "\t\t" << *it << ", ";
+		}
+		cout << endl;
+		cout << s << "\t\tcgi_path: ";
+		FOR_EACH(vector<string>, cgi_path, it) {
+			cout << "\t\t" << *it << ", ";
+		}
+		cout << endl;
+		cout << s << "\t\tautoindex: " << autoindex << endl;
+		cout << s << "\t\tupload_path: " << upload_path << endl;
+		cout << s << "\t\tclient_max_body_size: " << client_max_body_size << endl;
+	}
 };
 
 struct ServerConfig {
-    unsigned short port;
-    std::string host;
-    std::string root;
-    std::string client_max_body_size;
-    std::string upload_path;
-    string_vector redirect;
-    string_vector server_name;
-    string_vector error_page;
-    string_vector allowed_methods;
-    string_vector index;
-    std::vector<LocationConfig> locations;
 
-    void print() const;
+	unsigned short port;
+	string host;
+	string root;
+	string client_max_body_size;
+	string upload_path;
+	vector<string> redirect;
+	vector<string> server_name;
+	vector<string> error_page;
+    vector<string> allowed_methods;
+    vector<string> index;
+
+	vector<LocationConfig> locations;
+
+	void print() {
+
+		cout << "\t==== ServerConfig ====" << endl;
+		cout << "\tlisten: " << port << endl;
+		cout << "\thost: " << host << endl;
+		cout << "\tupload_path: " << upload_path << endl;
+		cout << "\tserver_name: ";
+		FOR_EACH(StrVec, server_name, it) {
+			cout << "\t" << *it << " ";
+		}
+		cout << endl;
+		cout << "\troot: " << root << endl;
+		cout << "\terror_page: ";
+		for (size_t i = 0; i < error_page.size(); i++) {
+			cout << error_page[i] << " | " ;
+		}
+		cout << endl;
+		cout << "\tclient_max_body_size: " << client_max_body_size << endl;
+		for (size_t i = 0; i < locations.size(); i++) {
+			cout << "\t\t" << "==== LocationConfig ====" << endl;
+			cout << "\t\tlocation " << i << ":" << endl;
+			locations[i].print(1);
+			cout << "\t\t" << "==== END LocationConfig ====\n" << endl;
+		}
+		cout << "\t==== END ServerConfig ====" << endl;
+	}
 };
 
 class Config {
-public:
-    enum e_error {
-        ERROR_NONE,
-        ERROR_UNKNOWN_KEY,
-        ERROR_INVALID_SERVER,
-        ERROR_INVALID_PORT,
-        ERROR_INVALID_HOST,
-        ERROR_INVALID_SERVER_NAME,
-        ERROR_INVALID_INDEX,
-        ERROR_INVALID_ALLOWED_METHODS,
-        ERROR_INVALID_ROOT,
-        ERROR_INVALID_ERROR_PAGE,
-        ERROR_INVALID_CLIENT_MAX_BODY_SIZE,
-        ERROR_INVALID_LOCATION,
-        ERROR_INVALID_PREFIX,
-        ERROR_INVALID_REDIRECT,
-        ERROR_INVALID_CGI_PATH,
-        ERROR_INVALID_AUTOINDEX,
-        ERROR_INVALID_UPLOAD_PATH
-    };
 
-    Config(toml::Table& config);
+
+public:
+	Config(toml::Table& config);
     ~Config();
 
-    const std::vector<ServerConfig>& getServers() const;
-    void print() const;
+	enum e_error {
+		ERROR_NONE,
+		ERROR_UNKNOWN_KEY,
+		ERROR_INVALID_SERVER,
+		ERROR_INVALID_PORT,
+		ERROR_INVALID_HOST,
+		ERROR_INVALID_SERVER_NAME,
+		ERROR_INVALID_INDEX,
+		ERROR_INVALID_ALLOWED_METHODS,
+		ERROR_INVALID_ROOT,
+		ERROR_INVALID_ERROR_PAGE,
+		ERROR_INVALID_CLIENT_MAX_BODY_SIZE,
+		ERROR_INVALID_LOCATION,
+		ERROR_INVALID_PREFIX,
+		ERROR_INVALID_REDIRECT,
+		ERROR_INVALID_CGI_PATH,
+		ERROR_INVALID_AUTOINDEX,
+		ERROR_INVALID_UPLOAD_PATH,
 
-    e_error error;
+	};
+	e_error error;
+    const vector<ServerConfig>& getServers() const;
+
+	void print(); // todo: remove this
 
 private:
-    std::vector<ServerConfig> _servers;
-    e_error pre_validate(toml::Table& config);
-    e_error post_validate();
+
+	void parse_config_file(string config_file);
+
+
+	enum e_state {
+		OK,
+		INVALID_KEY,
+		INVALID_VALUE,
+	};
+	vector<ServerConfig> _servers;
+	e_error pre_validate(toml::Table &config);
+	e_error post_validate();
 };

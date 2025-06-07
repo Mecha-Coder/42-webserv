@@ -3,210 +3,283 @@
 #include <iostream>
 #include <algorithm>
 #include <cstdlib>
-#include "Table.hpp"
+#include "../toml/Table.hpp"
 #include "Config.hpp"
 
-using std::string;
-using std::vector;
-using std::map;
-using std::cout;
-using std::endl;
-
-namespace {
-
-const char* get_error_message(Config::e_error error) {
-    static const map<Config::e_error, const char*> messages = {
-        {Config::ERROR_NONE, "ERROR_NONE"},
-        {Config::ERROR_INVALID_SERVER, "ERROR_INVALID_SERVER"},
-        {Config::ERROR_INVALID_PORT, "ERROR_INVALID_PORT"},
-        {Config::ERROR_INVALID_HOST, "ERROR_INVALID_HOST"},
-        {Config::ERROR_UNKNOWN_KEY, "ERROR_UNKNOWN_KEY"},
-        {Config::ERROR_INVALID_INDEX, "ERROR_INVALID_INDEX"},
-        {Config::ERROR_INVALID_SERVER_NAME, "ERROR_INVALID_SERVER_NAME"},
-        {Config::ERROR_INVALID_ALLOWED_METHODS, "ERROR_INVALID_ALLOWED_METHODS"},
-        {Config::ERROR_INVALID_ROOT, "ERROR_INVALID_ROOT"},
-        {Config::ERROR_INVALID_ERROR_PAGE, "ERROR_INVALID_ERROR_PAGE"},
-        {Config::ERROR_INVALID_CLIENT_MAX_BODY_SIZE, "ERROR_INVALID_CLIENT_MAX_BODY_SIZE"},
-        {Config::ERROR_INVALID_LOCATION, "ERROR_INVALID_LOCATION"},
-        {Config::ERROR_INVALID_CGI_PATH, "ERROR_INVALID_CGI_PATH"},
-        {Config::ERROR_INVALID_AUTOINDEX, "ERROR_INVALID_AUTOINDEX"},
-        {Config::ERROR_INVALID_UPLOAD_PATH, "ERROR_INVALID_UPLOAD_PATH"},
-        {Config::ERROR_INVALID_REDIRECT, "ERROR_INVALID_REDIRECT"},
-        {Config::ERROR_INVALID_PREFIX, "ERROR_INVALID_PREFIX"}
-    };
-    map<Config::e_error, const char*>::const_iterator it = messages.find(error);
-    return (it != messages.end()) ? it->second : "ERROR_UNKNOWN";
-}
-
-bool key_exists(const toml::Table &t, const string &key) {
-    return t.mp.find(key) != t.mp.end();
-}
-
-bool optional_is(const toml::Table &t, const string &key, toml::Table::e_toml type) {
-    return !key_exists(t, key) || t.at(key).is_type(type);
-}
-
-bool optional_str_array(const toml::Table &t, const string &key) {
-    if (!optional_is(t, key, toml::Table::ARRAY)) return false;
-    const toml::Table& arr = t.at(key);
-    for (size_t i = 0; i < arr.vec.size(); ++i)
-        if (!arr.vec[i].is_type(toml::Table::STRING)) return false;
-    return true;
-}
-
-void fill_string_array(const toml::Table &t, const string &key, vector<string> &target, const vector<string> &fallback) {
-    if (!key_exists(t, key) || t.at(key).is_type(toml::Table::NONE)) {
-        target = fallback;
+void fill_array(toml::Table& t, string key, vector<string>& v, ServerConfig& s) {
+    if (t[key].isType(toml::Table::NONE))
+    {
+        v = s.allowed_methods;
         return;
     }
-    const toml::Table &arr = t.at(key);
-    for (size_t i = 0; i < arr.vec.size(); ++i)
-        target.push_back(arr.vec[i].as_str(""));
-}
-
-LocationConfig fill_location(const toml::Table &t, const ServerConfig &defaults) {
-    LocationConfig loc;
-    loc.prefix = t.at("prefix").as_str("/");
-    loc.root = t.at("root").as_str(defaults.root);
-    loc.autoindex = t.at("autoindex").as_str("off");
-    loc.upload_path = t.at("upload_path").as_str(defaults.upload_path);
-    loc.client_max_body_size = t.at("_clientMaxBodySize").as_str(defaults.client_max_body_size);
-
-    fill_string_array(t, "index", loc.index, defaults.index);
-    fill_string_array(t, "allowed_methods", loc.allowed_methods, defaults.allowed_methods);
-    fill_string_array(t, "error_page", loc.error_page, defaults.error_page);
-    fill_string_array(t, "redirect", loc.redirect, defaults.redirect);
-    fill_string_array(t, "cgi_path", loc.cgi_path, vector<string>());
-
-    return loc;
-}
-
-ServerConfig fill_server(const toml::Table &t) {
-    ServerConfig s;
-    s.port = t.at("port").as_int(80);
-    s.host = t.at("host").as_str("127.0.0.1");
-    s.root = t.at("root").as_str("www");
-    s.upload_path = t.at("upload_path").as_str("www/upload");
-    s.client_max_body_size = t.at("_clientMaxBodySize").as_str("1m");
-
-    fill_string_array(t, "index", s.index, vector<string>());
-    fill_string_array(t, "server_name", s.server_name, vector<string>());
-    fill_string_array(t, "allowed_methods", s.allowed_methods, vector<string>());
-    fill_string_array(t, "error_page", s.error_page, vector<string>());
-    fill_string_array(t, "redirect", s.redirect, vector<string>());
-
-    if (key_exists(t, "location") && t.at("location").is_type(toml::Table::ARRAY)) {
-        const toml::Table &arr = t.at("location");
-        for (size_t i = 0; i < arr.vec.size(); ++i)
-            s.locations.push_back(fill_location(arr.vec[i], s));
+    FOR_EACH(vector<toml::Table>, t[key].vec, it) {
+        v.push_back(it->asStr(""));
     }
-    return s;
 }
 
-Config::e_error validate_location(const toml::Table &t) {
-    static const string allowed[] = {"prefix", "root", "upload_path", "autoindex", "redirect", "allowed_methods", "index", "cgi_path", "error_page", "_clientMaxBodySize"};
-    for (map<string, toml::Table>::const_iterator it = t.mp.begin(); it != t.mp.end(); ++it)
-        if (std::find(allowed, allowed + sizeof(allowed) / sizeof(*allowed), it->first) == allowed + sizeof(allowed) / sizeof(*allowed))
-            return Config::ERROR_UNKNOWN_KEY;
+LocationConfig fill_location(toml::Table& location, ServerConfig& s) {
+	(void)location;
+	LocationConfig l;
 
-    if (!optional_is(t, "prefix", toml::Table::STRING)) return Config::ERROR_INVALID_PREFIX;
-    if (!optional_is(t, "root", toml::Table::STRING)) return Config::ERROR_INVALID_ROOT;
-    if (!optional_is(t, "upload_path", toml::Table::STRING)) return Config::ERROR_INVALID_UPLOAD_PATH;
-    if (!optional_is(t, "autoindex", toml::Table::STRING)) return Config::ERROR_INVALID_AUTOINDEX;
-    if (!optional_is(t, "_clientMaxBodySize", toml::Table::STRING)) return Config::ERROR_INVALID_CLIENT_MAX_BODY_SIZE;
-    if (!optional_str_array(t, "redirect")) return Config::ERROR_INVALID_REDIRECT;
-    if (!optional_str_array(t, "cgi_path")) return Config::ERROR_INVALID_CGI_PATH;
-    if (!optional_str_array(t, "index")) return Config::ERROR_INVALID_INDEX;
-    if (!optional_str_array(t, "allowed_methods")) return Config::ERROR_INVALID_ALLOWED_METHODS;
-    if (!optional_str_array(t, "error_page")) return Config::ERROR_INVALID_ERROR_PAGE;
+	l.prefix = location["prefix"].asStr("/");
+	l.root = location["root"].asStr("s.root");
 
-    return Config::ERROR_NONE;
+    fill_array(location, "index", l.index, s);
+    fill_array(location, "allowed_methods", l.allowed_methods, s);
+    fill_array(location, "error_page", l.error_page, s);
+    fill_array(location, "redirect", l.redirect, s);
+    fill_array(location, "cgi_path", l.cgi_path, s);
+
+	l.autoindex = location["autoindex"].asStr("off");
+	l.upload_path = location["upload_path"].asStr(s.upload_path);
+	l.client_max_body_size = location["_clientMaxBodySize"].asStr(s.client_max_body_size);
+	return l;
 }
 
-Config::e_error Config::pre_validate(toml::Table &config) {
-    if (!key_exists(config, "server") || !config["server"].is_type(toml::Table::ARRAY))
-        return Config::ERROR_INVALID_SERVER;
+ServerConfig fill_server(toml::Table& server) {
+	ServerConfig s;
+	s.port = server["port"].asInt(s.port);
+	s.host = server["host"].asStr("127.0.0.1");
+	s.upload_path = server["upload_path"].asStr("www/upload");
+	s.root = server["root"].asStr("www");
+	s.client_max_body_size = server["_clientMaxBodySize"].asStr("1m");
 
-    const toml::Table &arr = config["server"];
-    for (size_t i = 0; i < arr.vec.size(); ++i) {
-        Config::e_error err = validate_server(arr.vec[i]);
-        if (err != Config::ERROR_NONE)
-            return err;
+    FOR_EACH(vector<toml::Table>, server["index"].vec, it) {
+        s.index.push_back(it->asStr("default.com"));
     }
-    return Config::ERROR_NONE;
+
+	FOR_EACH(vector<toml::Table>, server["redirect"].vec, it) {
+		s.redirect.push_back(it->asStr(""));
+	}
+
+	FOR_EACH(vector<toml::Table>, server["server_name"].vec, it) {
+		s.server_name.push_back(it->asStr());
+	}
+    FOR_EACH(vector<toml::Table>, server["allowed_methods"].vec, it) {
+        s.allowed_methods.push_back(it->asStr(""));
+    }
+    FOR_EACH(vector<toml::Table>, server["error_page"].vec, it) {
+        s.error_page.push_back(it->asStr(""));
+    }
+
+	toml::Table& t = server["location"];
+	for (size_t i = 0; i < t.vec.size(); i++) {
+		s.locations.push_back(fill_location(t[i], s));
+	}
+	return s;
 }
 
-Config::e_error Config::validate_server(const toml::Table &t) {
-    static const string allowed[] = {"port", "host", "index", "server_name", "allowed_methods", "root", "error_page", "_clientMaxBodySize", "location", "upload_path", "redirect"};
-    for (map<string, toml::Table>::const_iterator it = t.mp.begin(); it != t.mp.end(); ++it)
-        if (std::find(allowed, allowed + sizeof(allowed) / sizeof(*allowed), it->first) == allowed + sizeof(allowed) / sizeof(*allowed))
-            return Config::ERROR_UNKNOWN_KEY;
+bool optional_is(toml::Table &Table, const string &key, toml::Table::EToml type) {
+	return Table[key].isType(toml::Table::NONE) || Table[key].isType(type);
+}
 
-    if (!optional_is(t, "port", toml::Table::STRING)) return Config::ERROR_INVALID_PORT;
-    if (!optional_is(t, "upload_path", toml::Table::STRING)) return Config::ERROR_INVALID_UPLOAD_PATH;
-    if (!optional_is(t, "host", toml::Table::STRING)) return Config::ERROR_INVALID_HOST;
-    if (!optional_is(t, "_clientMaxBodySize", toml::Table::STRING)) return Config::ERROR_INVALID_CLIENT_MAX_BODY_SIZE;
-    if (!optional_str_array(t, "redirect")) return Config::ERROR_INVALID_REDIRECT;
-    if (!optional_str_array(t, "index")) return Config::ERROR_INVALID_INDEX;
-    if (!optional_str_array(t, "server_name")) return Config::ERROR_INVALID_SERVER_NAME;
-    if (!optional_str_array(t, "allowed_methods")) return Config::ERROR_INVALID_ALLOWED_METHODS;
-    if (!optional_is(t, "root", toml::Table::STRING)) return Config::ERROR_INVALID_ROOT;
-    if (!optional_str_array(t, "error_page")) return Config::ERROR_INVALID_ERROR_PAGE;
+bool optional_str_arr(toml::Table &Table, const string &key)
+{
+	toml::Table& t = Table[key];
+	if (!optional_is(Table, key, toml::Table::ARRAY))
+		return false;
+	for (size_t i = 0; i < t.vec.size(); i++) {
+		if (!t[i].isType(toml::Table::STRING))
+			return false;
+	}
+	return true;
+}
 
-    if (key_exists(t, "location") && t.at("location").is_type(toml::Table::ARRAY)) {
-        const toml::Table &arr = t.at("location");
-        for (size_t i = 0; i < arr.vec.size(); ++i) {
-            Config::e_error err = validate_location(arr.vec[i]);
-            if (err != Config::ERROR_NONE) return err;
-        }
-    }
-    return Config::ERROR_NONE;
+Config::e_error validate_location(toml::Table &location)
+{
+	string location_keys[] = {"prefix", "root", "upload_path", "autoindex", "redirect", "allowed_methods", "index", "cgi_path", "error_page", "_clientMaxBodySize"};
+	FOR_EACH(toml::Table::TomlMap, location.map, it) {
+		if (find(begin(location_keys), end(location_keys), it->first) == end(location_keys))
+			return Config::ERROR_UNKNOWN_KEY;
+	}
+
+	if (!optional_is(location, "prefix", toml::Table::STRING))
+		return Config::ERROR_INVALID_PORT;
+	else if (!optional_is(location, "root", toml::Table::STRING))
+		return Config::ERROR_INVALID_ROOT;
+	else if (!optional_is(location, "upload_path", toml::Table::STRING))
+		return Config::ERROR_INVALID_UPLOAD_PATH;
+	else if (!optional_is(location, "autoindex", toml::Table::STRING))
+		return Config::ERROR_INVALID_AUTOINDEX;
+	else if (!optional_is(location, "client_max_body_size", toml::Table::STRING))
+		return Config::ERROR_INVALID_CLIENT_MAX_BODY_SIZE;
+	else if (!optional_str_arr(location, "redirect"))
+		return Config::ERROR_INVALID_REDIRECT;
+	else if (!optional_str_arr(location, "cgi_path"))
+		return Config::ERROR_INVALID_CGI_PATH;
+	else if (!optional_str_arr(location, "index"))
+		return Config::ERROR_INVALID_INDEX;
+	else if (!optional_str_arr(location, "allowed_methods"))
+		return Config::ERROR_INVALID_ALLOWED_METHODS;
+	else if (!optional_str_arr(location, "error_page"))
+		return Config::ERROR_INVALID_ERROR_PAGE;
+	return Config::ERROR_NONE;
+}
+
+Config::e_error validate_location_list(toml::Table &location) {
+	Config::e_error error;
+	if (!location.isType(toml::Table::ARRAY))
+		return Config::ERROR_INVALID_LOCATION;
+	for (size_t i = 0; i < location.vec.size(); i++) {
+		error = validate_location(location[i]);
+		if (error != Config::ERROR_NONE)
+			return error;
+	}
+	return Config::ERROR_NONE;
+}
+
+Config::e_error validate_server(toml::Table& server) {
+	Config::e_error error;
+	string server_keys[] = {"port", "host", "index", "server_name", "allowed_methods", "root", "error_page", "_clientMaxBodySize", "location", "upload_path", "redirect"};
+	FOR_EACH(toml::Table::TomlMap, server.map, it) {
+		if (find(begin(server_keys), end(server_keys), it->first) == end(server_keys))
+			return Config::ERROR_UNKNOWN_KEY;
+	}
+
+	if (!optional_is(server, "port", toml::Table::STRING))
+		return Config::ERROR_INVALID_PORT;
+	else if (!optional_is(server, "upload_path", toml::Table::STRING))
+		return Config::ERROR_INVALID_PORT;
+	else if (!optional_is(server, "host", toml::Table::STRING))
+		return Config::ERROR_INVALID_HOST;
+	else if (!optional_is(server, "_clientMaxBodySize", toml::Table::STRING))
+		return Config::ERROR_INVALID_CLIENT_MAX_BODY_SIZE;
+	else if (!optional_str_arr(server, "redirect"))
+		return Config::ERROR_INVALID_REDIRECT;
+	else if (!optional_str_arr(server, "index"))
+		return Config::ERROR_INVALID_INDEX;
+	else if (!optional_str_arr(server, "server_name"))
+		return Config::ERROR_INVALID_SERVER_NAME;
+	else if (!optional_str_arr(server, "allowed_methods"))
+		return Config::ERROR_INVALID_ALLOWED_METHODS;
+	else if (!optional_is(server, "root", toml::Table::STRING))
+		return Config::ERROR_INVALID_ROOT;
+	else if (!optional_str_arr(server, "error_page"))
+		return Config::ERROR_INVALID_ERROR_PAGE;
+	else if ((error = validate_location_list(server["location"])) != Config::ERROR_NONE)
+			return error;
+	return Config::ERROR_NONE;
+}
+
+Config::e_error Config::pre_validate(toml::Table& config) {
+	
+	toml::Table& t = config["server"];
+	if (t.isType(toml::Table::NONE) || !t.isType(toml::Table::ARRAY))
+		return Config::ERROR_INVALID_SERVER;
+
+	for (size_t i = 0; i < t.vec.size(); i++) {
+		if ((error = validate_server(t[i])) != Config::ERROR_NONE)
+			return error;
+	}
+
+	return Config::ERROR_NONE;
 }
 
 Config::e_error Config::post_validate() {
-    if (_servers.empty())
-        return Config::ERROR_INVALID_SERVER;
-    for (size_t i = 0; i < _servers.size(); ++i) {
-        if (_servers[i].port < 0 || _servers[i].port > 65535)
-            return Config::ERROR_INVALID_PORT;
-        const vector<string> &err_pages = _servers[i].error_page;
-        if (err_pages.size() < 2 && !err_pages.empty())
-            return Config::ERROR_INVALID_ERROR_PAGE;
-        for (size_t j = 0; j + 1 < err_pages.size(); j++) {
-            int code = atoi(err_pages[j].c_str());
-            if (code < 100 || code > 599)
-                return Config::ERROR_INVALID_ERROR_PAGE;
-        }
-    }
-    return Config::ERROR_NONE;
+	if (_servers.empty())
+		return Config::ERROR_INVALID_SERVER;
+	for (size_t i = 0; i < _servers.size(); i++) {
+		if (_servers[i].port < 0 || _servers[i].port > 65535 )
+			return Config::ERROR_INVALID_PORT;
+		if (_servers[i].error_page.size() < 2 && !_servers[i].error_page.empty())
+			return Config::ERROR_INVALID_ERROR_PAGE;
+		for (size_t j = 0; j < _servers[i].error_page.size() - 1; j++) {
+			int code = atoi(_servers[i].error_page[j].c_str());
+			if (code < 100 || code > 599)
+				return Config::ERROR_INVALID_ERROR_PAGE;
+		}
+	}
+	return Config::ERROR_NONE;
 }
 
-Config::Config(toml::Table &config) {
-    error = pre_validate(config);
-    if (error != ERROR_NONE) fatal("Invalid Config file");
-    const toml::Table &servers = config["server"];
-    for (size_t i = 0; i < servers.vec.size(); ++i)
-        _servers.push_back(fill_server(servers.vec[i]));
-    error = post_validate();
-    if (error != ERROR_NONE) fatal("Invalid Config file");
+Config::Config(toml::Table& config) {
+	if ((error = pre_validate(config) )!= Config::ERROR_NONE)
+	{
+		print();
+		cout << "ERROR: Invalid configuration file" << endl;
+		exit(1);
+	}
+	toml::Table& t = config["server"];
+	for (size_t i = 0; i < t.vec.size(); i++) {
+		_servers.push_back(fill_server(t[i]));
+	}
+	error = post_validate();
+	if (error != Config::ERROR_NONE) {
+		print();
+		cout << "ERROR: Invalid configuration file" << endl;
+		exit(1);
+	}
 }
 
-void Config::fatal(const char *msg) {
-    print();
-    cout << "ERROR: " << msg << endl;
-    exit(1);
+Config::~Config() {
+
 }
 
-void Config::print() {
-    cout << "\n<==================== Config ====================>" << endl;
-    for (size_t i = 0; i < _servers.size(); i++)
-        _servers[i].print();
-    cout << get_error_message(error) << endl;
-    cout << "\n<==================== END Config ====================>\n" << endl;
-}
-
-const vector<ServerConfig>& Config::getServers() const {
+const vector<ServerConfig> &Config::getServers() const {
     return _servers;
 }
 
+void Config::print() {
+	cout << "\n<==================== Config ====================>" << endl;
+
+	for (size_t i = 0; i < _servers.size(); i++)
+		_servers[i].print();
+	
+	switch (error) {
+		case ERROR_NONE:
+			cout << "ERROR_NONE" << endl;
+			break;
+		case ERROR_INVALID_SERVER:
+			cout << "ERROR_INVALID_SERVER" << endl;
+			break;
+		case ERROR_INVALID_PORT:
+			cout << "ERROR_INVALID_PORT" << endl;
+			break;
+		case ERROR_INVALID_HOST:
+			cout << "ERROR_INVALID_HOST" << endl;
+			break;
+		case ERROR_UNKNOWN_KEY:
+			cout << "ERROR_UNKNOWN" << endl;
+			break;
+		case ERROR_INVALID_INDEX:
+			cout << "ERROR_INVALID_INDEX" << endl;
+			break;
+		case ERROR_INVALID_SERVER_NAME:
+			cout << "ERROR_INVALID_SERVER_NAME" << endl;
+			break;
+		case ERROR_INVALID_ALLOWED_METHODS:
+			cout << "ERROR_INVALID_ALLOWED_METHODS" << endl;
+			break;
+
+		case ERROR_INVALID_ROOT:
+			cout << "ERROR_INVALID_ROOT" << endl;
+			break;
+		case ERROR_INVALID_ERROR_PAGE:
+			cout << "ERROR_INVALID_ERROR_PAGE" << endl;
+			break;
+		case ERROR_INVALID_CLIENT_MAX_BODY_SIZE:
+			cout << "ERROR_INVALID_CLIENT_MAX_BODY_SIZE" << endl;
+			break;
+		case ERROR_INVALID_LOCATION:
+			cout << "ERROR_INVALID_LOCATION" << endl;
+			break;
+		case ERROR_INVALID_CGI_PATH:
+			cout << "ERROR_INVALID_CGI_PATH" << endl;
+			break;
+		case ERROR_INVALID_AUTOINDEX:
+			cout << "ERROR_INVALID_AUTOINDEX" << endl;
+			break;
+		case ERROR_INVALID_UPLOAD_PATH:
+			cout << "ERROR_INVALID_UPLOAD_PATH" << endl;
+			break;
+		case ERROR_INVALID_REDIRECT:
+			cout << "ERROR_INVALID_REDIRECT" << endl;
+			break;
+		case ERROR_INVALID_PREFIX:
+			cout << "ERROR_INVALID_PREFIX" << endl;
+			break;
+
+	}
+
+	cout << "\n<==================== END Config ====================>\n" << endl;
 }
