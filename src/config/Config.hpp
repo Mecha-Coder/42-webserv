@@ -21,7 +21,7 @@ struct LocationConfig {
 	vector<string> index;
     vector<string> allowed_methods;
 
-	void print(int indent = 0) {
+	void Print(int indent = 0) {
 		string s(indent, ' ');
 		cout << s << "\t\tprefix: " << prefix << endl;
 		cout << s << "\t\troot: " << root << endl;
@@ -56,7 +56,7 @@ struct ServerConfig {
 
 	vector<LocationConfig> locations;
 
-	void print() {
+	void Print() {
 
 		cout << "\t==== ServerConfig ====" << endl;
 		cout << "\tlisten: " << port << endl;
@@ -77,7 +77,7 @@ struct ServerConfig {
 		for (size_t i = 0; i < locations.size(); i++) {
 			cout << "\t\t" << "==== LocationConfig ====" << endl;
 			cout << "\t\tlocation " << i << ":" << endl;
-			locations[i].print(1);
+			locations[i].Print(1);
 			cout << "\t\t" << "==== END LocationConfig ====\n" << endl;
 		}
 		cout << "\t==== END ServerConfig ====" << endl;
@@ -114,19 +114,16 @@ public:
 	e_error error;
     const vector<ServerConfig>& getServers() const;
 
-	void print(); // todo: remove this
+	void Print();
 
 private:
 
-	void parse_config_file(string config_file);
-
-
-	enum e_state {
+    enum e_state {
 		OK,
 		INVALID_KEY,
 		INVALID_VALUE,
 	};
 	vector<ServerConfig> _servers;
-	e_error pre_validate(toml::Table &config);
-	e_error post_validate();
+	e_error PreValidate(toml::Table &config);
+	e_error PostValidate();
 };

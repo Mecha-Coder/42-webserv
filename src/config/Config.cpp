@@ -6,7 +6,7 @@
 #include "../toml/Table.hpp"
 #include "Config.hpp"
 
-void fill_array(toml::Table& t, string key, vector<string>& v, ServerConfig& s) {
+void FillArr(toml::Table& t, string key, vector<string>& v, ServerConfig& s) {
     if (t[key].isType(toml::Table::NONE))
     {
         v = s.allowed_methods;
@@ -17,18 +17,18 @@ void fill_array(toml::Table& t, string key, vector<string>& v, ServerConfig& s) 
     }
 }
 
-LocationConfig fill_location(toml::Table& location, ServerConfig& s) {
+LocationConfig FillLocation(toml::Table& location, ServerConfig& s) {
 	(void)location;
 	LocationConfig l;
 
 	l.prefix = location["prefix"].asStr("/");
 	l.root = location["root"].asStr("s.root");
 
-    fill_array(location, "index", l.index, s);
-    fill_array(location, "allowed_methods", l.allowed_methods, s);
-    fill_array(location, "error_page", l.error_page, s);
-    fill_array(location, "redirect", l.redirect, s);
-    fill_array(location, "cgi_path", l.cgi_path, s);
+    FillArr(location, "index", l.index, s);
+    FillArr(location, "allowed_methods", l.allowed_methods, s);
+    FillArr(location, "error_page", l.error_page, s);
+    FillArr(location, "redirect", l.redirect, s);
+    FillArr(location, "cgi_path", l.cgi_path, s);
 
 	l.autoindex = location["autoindex"].asStr("off");
 	l.upload_path = location["upload_path"].asStr(s.upload_path);
@@ -36,7 +36,7 @@ LocationConfig fill_location(toml::Table& location, ServerConfig& s) {
 	return l;
 }
 
-ServerConfig fill_server(toml::Table& server) {
+ServerConfig FillServer(toml::Table& server) {
 	ServerConfig s;
 	s.port = server["port"].asInt(s.port);
 	s.host = server["host"].asStr("127.0.0.1");
@@ -64,7 +64,7 @@ ServerConfig fill_server(toml::Table& server) {
 
 	toml::Table& t = server["location"];
 	for (size_t i = 0; i < t.vec.size(); i++) {
-		s.locations.push_back(fill_location(t[i], s));
+		s.locations.push_back(FillLocation(t[i], s));
 	}
 	return s;
 }
@@ -128,7 +128,7 @@ Config::e_error validate_location_list(toml::Table &location) {
 	return Config::ERROR_NONE;
 }
 
-Config::e_error validate_server(toml::Table& server) {
+Config::e_error ValidServer(toml::Table& server) {
 	Config::e_error error;
 	string server_keys[] = {"port", "host", "index", "server_name", "allowed_methods", "root", "error_page", "_clientMaxBodySize", "location", "upload_path", "redirect"};
 	FOR_EACH(toml::Table::TomlMap, server.map, it) {
@@ -161,21 +161,21 @@ Config::e_error validate_server(toml::Table& server) {
 	return Config::ERROR_NONE;
 }
 
-Config::e_error Config::pre_validate(toml::Table& config) {
+Config::e_error Config::PreValidate(toml::Table& config) {
 	
 	toml::Table& t = config["server"];
 	if (t.isType(toml::Table::NONE) || !t.isType(toml::Table::ARRAY))
 		return Config::ERROR_INVALID_SERVER;
 
 	for (size_t i = 0; i < t.vec.size(); i++) {
-		if ((error = validate_server(t[i])) != Config::ERROR_NONE)
+		if ((error = ValidServer(t[i])) != Config::ERROR_NONE)
 			return error;
 	}
 
 	return Config::ERROR_NONE;
 }
 
-Config::e_error Config::post_validate() {
+Config::e_error Config::PostValidate() {
 	if (_servers.empty())
 		return Config::ERROR_INVALID_SERVER;
 	for (size_t i = 0; i < _servers.size(); i++) {
@@ -193,19 +193,19 @@ Config::e_error Config::post_validate() {
 }
 
 Config::Config(toml::Table& config) {
-	if ((error = pre_validate(config) )!= Config::ERROR_NONE)
+	if ((error = PreValidate(config) )!= Config::ERROR_NONE)
 	{
-		print();
+		Print();
 		cout << "ERROR: Invalid configuration file" << endl;
 		exit(1);
 	}
 	toml::Table& t = config["server"];
 	for (size_t i = 0; i < t.vec.size(); i++) {
-		_servers.push_back(fill_server(t[i]));
+		_servers.push_back(FillServer(t[i]));
 	}
-	error = post_validate();
+	error = PostValidate();
 	if (error != Config::ERROR_NONE) {
-		print();
+		Print();
 		cout << "ERROR: Invalid configuration file" << endl;
 		exit(1);
 	}
@@ -219,11 +219,11 @@ const vector<ServerConfig> &Config::getServers() const {
     return _servers;
 }
 
-void Config::print() {
+void Config::Print() {
 	cout << "\n<==================== Config ====================>" << endl;
 
 	for (size_t i = 0; i < _servers.size(); i++)
-		_servers[i].print();
+		_servers[i].Print();
 	
 	switch (error) {
 		case ERROR_NONE:
