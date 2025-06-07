@@ -8,7 +8,7 @@ void test(const Str &request)
     std::cout << GREEN "\nIN\n===" RESET << std::endl; showRawStr(request);
     std::cout << CYAN "OUT\n===" RESET << std::endl;
     processReq(client);
-    //showRawStr(client.respond());
+    showRawStr(client.respond());
 }
 
 Str Missing_Path_and_Version() 
@@ -705,11 +705,11 @@ int main()
             test(Fetch_default_file());
             test(Fetch_another_file());
             //test(Fetch_large_image());
-        
+    */
         // 3.e) Run simple cgi
             test(Simple_get_CGI());
     
-
+    /*
     // 4) POST Request
         // 4.a) Path support upload
             test(Upload_2_files());
@@ -722,10 +722,10 @@ int main()
  
         // 4.d) No upload support: not a cgi
             test(Post_Not_CGI());
-   */ 
+        
         // 4.e) No upload support: is a cgi
             test(CGI_Post_show_body_default_file());
-      /*
+      
      
     // 5) DELETE Request
         // 5.a) Delete file is not there

@@ -109,15 +109,11 @@ class Client
             env.insert(header.begin(), header.end());
             env["PATH_INFO"] = this->_filePath + this->_file;
 
-            std::cout << "In client> " << path[0] << std::endl;
-
             CGIHandler obj(env, &this->data, path);
 
             try 
             {
                 Str result = obj.Execute();
-
-                std::cout << "CGI Result: \n=======\n" << result << std::endl;
                 this->reply.insert(this->reply.end(), result.begin(), result.end());
             }
             catch(std::exception &e)
