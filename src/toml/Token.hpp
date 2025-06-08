@@ -1,4 +1,5 @@
 #include "Result.hpp"
+#include "Parser.hpp"
 #include "ParseError.hpp"
 #include <istream>
 #include <list>
@@ -12,8 +13,8 @@ public:
 		ASSIGN			= 1 << 2,
 		QUOTE			= 1 << 3,
 		DOT				= 1 << 4,
-		OPAREN		= 1 << 5,
-		CPAREN	= 1 << 6,
+		OPAREN			= 1 << 5,
+		CPAREN			= 1 << 6,
 		NEWLINE			= 1 << 7,
 		COMMA			= 1 << 8,
 		COMMENT			= 1 << 9,

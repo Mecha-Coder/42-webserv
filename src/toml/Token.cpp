@@ -2,6 +2,7 @@
 #include <cctype>
 #include <cstdlib>
 #include <string.h>
+#include <cstdio>
 
 Token::Token() : type(UNINITIALISED), line(0), offset(0) {}
 
