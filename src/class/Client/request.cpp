@@ -2,6 +2,10 @@
 
 size_t strToSizeT(const Str &s);
 
+bool not_space(int ch) {
+    return !std::isspace(ch);
+}
+
 ///////////////////////////////////////////////////////////////////////////////////
 
 void Client::parseLine(Str line)
@@ -14,19 +18,26 @@ void Client::parseLine(Str line)
 
 void Client::parseHead(Str info)
 {
-    Str key, value;
-    std::istringstream iss(info);
-    iss >> key >> value;
+    Str temp, key, value;
+    size_t pos = info.find(": ");
 
-    if (!key.empty())
-        key.erase(key.size() - 1);
+    if (pos != info.npos)
+    {
+        temp = info.substr(0, pos);
+        value = info.substr(pos + 2);
 
-    _header[key] = value;
+		value.erase(value.begin(), std::find_if(value.begin(), value.end(), not_space));
 
-    if (key == "Content-Length")  _contentLen = strToSizeT(value);
-    if (key == "Content-Type")    _contentType = value;
-    if (key == "Host")            _host = value;
-    if (key == "Connection" && value == "keep-alive") _keepAlive = true;
+		std::istringstream iss(temp);
+    	iss >> key;
+
+        _header[key] = value;
+
+        if (key == "Content-Length")  _contentLen = strToSizeT(value);
+        if (key == "Content-Type")    _contentType = value;
+        if (key == "Host")            _host = value;
+        if (key == "Connection" && value == "keep-alive") _keepAlive = true;
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////

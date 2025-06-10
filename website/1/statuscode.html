@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HTTP Status Code Notes</title>
+  <style>
+    /* Base layout & padding for logo */
+    body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f6f8;
+  color: #333;
+  margin: 0;
+  padding: 100px 2rem 2rem;
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+.main-container {
+  max-width: 800px;
+  width: 100%;
+}
+
+    /* 42 logo in top-left */
+    .top-header {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 10;
+    }
+    .top-header img.logo-42 {
+      height: 60px;
+      width: auto;
+      display: block;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 2rem;
+    }
+
+    .section {
+      margin-bottom: 2rem;
+      border-left: 6px solid #3498db;
+      background: #fff;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+    .section.error { border-color: #e74c3c; }
+    .section.success { border-color: #2ecc71; }
+
+    h2 {
+      margin-bottom: 1rem;
+      font-size: 1.4rem;
+      color: #34495e;
+    }
+
+    ul {
+      list-style-type: none;
+      padding-left: 0;
+    }
+    li {
+      padding: 0.3rem 0;
+      border-bottom: 1px solid #eee;
+    }
+    li:last-child {
+      border-bottom: none;
+    }
+
+    code {
+      font-weight: bold;
+      color: #555;
+      background: #eaeaea;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 42 Logo in Top-Left -->
+  <div class="top-header">
+    <img class="logo-42" src="./photos/42_logo.png" alt="42 Logo" />
+  </div>
+
+  <div class="main-container">
+  <h1>HTTP Status Code Notes</h1>
+
+  <div class="section error">
+    <h2>Error Codes</h2>
+    <ul>
+      <li><code>400</code>: Malform request</li>
+      <li><code>400</code>: Invalid Header</li>
+      <li><code>403</code>: No default / autoIndex</li>
+      <li><code>403</code>: Invalid POST – Not CGI</li>
+      <li><code>404</code>: Resource not found</li>
+      <li><code>405</code>: Invalid Method</li>
+      <li><code>410</code>: Delete Invalid Resource</li>
+      <li><code>413</code>: Client body exceed limit</li>
+      <li><code>500</code>: No permission – read / delete</li>
+      <li><code>500</code>: CGI Hang</li>
+      <li><code>500</code>: CGI Crash</li>
+    </ul>
+  </div>
+
+  <div class="section success">
+    <h2>Success Codes</h2>
+    <ul>
+      <li><code>200</code>: Get resource</li>
+      <li><code>201</code>: Create resource</li>
+      <li><code>204</code>: Delete resource</li>
+      <li><code>301</code>: Normal redirect</li>
+      <li><code>308</code>: Redirect to add “/” at end of URI</li>
+    </ul>
+  </div>
+</div>
+
+</body>
+</html>

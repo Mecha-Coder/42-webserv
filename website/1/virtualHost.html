@@ -76,7 +76,8 @@
     <strong>We test using Option 2. Here are the test cases:</strong>
     <pre>
 curl --resolve example.com:4000:127.0.0.1 http://example.com:4000/
-curl --resolve example.com:4000:127.0.0.1 http://test.com:/
+curl --resolve test.com:4000:127.0.0.1 http://test.com:4000/
+curl --resolve unknown.com:4000:127.0.0.1 http://unknown.com:4000/
     </pre>
   </div>
 

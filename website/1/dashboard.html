@@ -366,7 +366,7 @@
         </ul>
       </div>
       <div class="card‐buttons">
-          <form action="/error/test.php" method="POST">
+        <form action="/error/test.php" method="POST">
           <input type="hidden" name="a" value="b">
           <input type="hidden" name="c" value="d">
           <button class="error" type="submit">Not CGI</button>
@@ -390,6 +390,41 @@
           <button class="error" type="submit">Invalid Header</button>
         </form>
         <button onclick="location.href='/dummy/'">Invalid Method</button>
+      </div>
+    </div>
+
+    <div class="box">
+      <div>
+        <div class="card‐title">Testing With Telnet</div>
+        <ul class="card‐content">
+          <li>Test robustness of HTTP parsing & validation</li>
+          <li>Simulate Connection: closed</li>
+        </ul>
+      </div>
+      <div class="card‐buttons">
+        <button onclick="window.location.href='/telnet.html';">Click</button>
+      </div>
+    </div>
+
+    <div class="box">
+      <div>
+        <div class="card‐title">Testing With Telnet</div>
+        <ul class="card‐content">
+          <li>Test robustness of HTTP parsing & validation</li>
+          <li>Simulate Connection: closed</li>
+        </ul>
+      </div>
+      <div class="card‐buttons">
+        <button onclick="window.location.href='/telnet.html';">Click</button>
+      </div>
+    </div>
+
+    <div class="box">
+      <div>
+        <div class="card‐title">Testing Reference</div>
+      </div>
+      <div class="card‐buttons">
+        <button onclick="window.location.href='/statuscode.html';">Status Code</button>
       </div>
     </div>
 

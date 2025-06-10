@@ -27,7 +27,7 @@ bool routeRule(Client &x)
         return x.resRedirect();
     
     if (x.isMethod_Illegal())
-        return x.resError(_405, "Route rule: Method \"" + x._method + "\" is not allowed");
+        return x.resError(_405, "Route rule: Method \"" + x._method + "\" not allowed in " + x._uri);
 
     return true;
 }

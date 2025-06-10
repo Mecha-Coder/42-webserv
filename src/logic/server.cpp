@@ -97,6 +97,17 @@ Server server_1()
         false
     );
 
+    List onlyDEL;  onlyDEL.push_back("DELETE");
+    Route route7 (
+        onlyDEL,
+        noCgi,
+        "/dummy",
+        "",
+        "",
+        false,
+        false
+    );
+
 
     Routes routes;
     routes.push_back(route1);
@@ -105,10 +116,11 @@ Server server_1()
     routes.push_back(route4);
     routes.push_back(route5);
     routes.push_back(route6);
+    routes.push_back(route7);
     std::sort(routes.begin(), routes.end(), comparePathLen);
 
     Server s(
-        "demoEvalSite.com",
+        "demo.eval.com",
         listen,
         errorPg,
         routes,
@@ -173,11 +185,22 @@ Server server_2()
         false
     );
 
+    Route route5 (
+        onlyGET,
+        noCgi,
+        "/style",
+        "",
+        "",
+        false,
+        true
+    );
+
     Routes routes;
     routes.push_back(route1);
     routes.push_back(route2);
     routes.push_back(route3);
     routes.push_back(route4);
+    routes.push_back(route5);
     std::sort(routes.begin(), routes.end(), comparePathLen);
 
     Server s(
@@ -226,7 +249,7 @@ Server server_3()
     );
 
     Route route2 (
-        onlyGET,
+        allMETHOD,
         noCgi,
         "/archive",
         "",
@@ -279,7 +302,7 @@ Server server_4()
     routes.push_back(route1);
 
     Server s(
-        "virtualhost_1.com",
+        "example.com",
         listen,
         errorPg,
         routes,
@@ -317,7 +340,7 @@ Server server_5()
     routes.push_back(route1);
 
     Server s(
-        "virtualhost_2.com",
+        "test.com",
         listen,
         errorPg,
         routes,
