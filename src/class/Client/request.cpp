@@ -6,29 +6,8 @@ size_t strToSizeT(const Str &s);
 
 void Client::parseLine(Str line)
 {
-    size_t pos, slash, dot;
-
-    for (int i = 0; (pos = line.find(" ")) != line.npos; i++)
-    {
-        if (i == 0)
-            _method = line.substr(0, pos);
-        if (i == 1)
-        {
-            _uri = line.substr(0, pos);
-
-            slash = _uri.rfind("/");
-            dot   = _uri.rfind(".");
-
-            if (dot != _uri.npos && dot > slash)
-            {
-                _file = _uri.substr(slash + 1);
-                _path = _uri.substr(0, slash + 1);
-            }
-            else _path = _uri;
-        }
-        line.erase(0, pos + 1);
-    }
-    _version = line;
+    std::istringstream iss(line);
+    iss >> _method >> _uri >> _version;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -36,38 +15,53 @@ void Client::parseLine(Str line)
 void Client::parseHead(Str info)
 {
     Str key, value;
-    size_t pos = info.find(": ");
+    std::istringstream iss(info);
+    iss >> key >> value;
 
-    if (pos != info.npos)
-    {
-        key = info.substr(0, pos);
-        value = info.substr(pos + 2);
-        _header[key] = value;
+    if (!key.empty())
+        key.erase(key.size() - 1);
 
-        if (key == "Content-Length")  _contentLen = strToSizeT(value);
-        if (key == "Content-Type")    _contentType = value;
-        if (key == "Host")            _host = value;
-        if (key == "Connection" && value == "keep-alive") _keepAlive = true;
-    }
+    _header[key] = value;
+
+    if (key == "Content-Length")  _contentLen = strToSizeT(value);
+    if (key == "Content-Type")    _contentType = value;
+    if (key == "Host")            _host = value;
+    if (key == "Connection" && value == "keep-alive") _keepAlive = true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-bool Client::appendReq(const char *request, size_t byteRead)
+void Client::getServerData(ServerManager &sManager)
+{
+    if (_server == NULL)
+    {
+        _server = sManager.whichServer(_host);
+        if (_server == NULL) 
+            logError("Parse HTTP header", "Host not matching any server");
+    }
+    if (_server)_route = _server->findRoute(_uri);
+    if (_route)   _fullPath = _server->_root + _uri;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////
+
+bool Client::appendReq(const char *request, size_t byteRead, ServerManager &sManager)
 {
     Str     info;
     size_t  pos;
     
     _data.append(request, byteRead);
-    
+
     if (_header.empty() && _method.empty())
-    {
+    {   
+        showHttp(_data);
         if ((pos = _data.find("\r\n\r\n")) == std::string::npos)
             return false;
        
         info = _data.substr(0, pos + 2);
         _data.erase(0, pos + 4);
-    
+        
         int i = 0;
         while ((pos = info.find("\r\n")) != info.npos)
         {
@@ -77,9 +71,7 @@ bool Client::appendReq(const char *request, size_t byteRead)
             info.erase(0, pos + 2);
             i++;
         }
-         _route = _server.findRoute(_path);
+        getServerData(sManager);
     }
     return (_data.size() >= _contentLen);
 }
-
-

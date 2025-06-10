@@ -20,17 +20,11 @@ bool validateRequest(Client &x)
 
 bool routeRule(Client &x)
 {
-    if (x.isPath_noSlash()) 
-        return x.resAddSlash();
-
-    if (x.isPath_noRoute())
-        return x.resError(_404, "Route rule: No route for " + x._path);
+    if (x.isURI_noRoute())
+        return x.resError(_404, "Route rule: No route for " + x._uri);
     
     if (x.isRedirect_True()) 
         return x.resRedirect();
-    
-    if (x.isPath_noExist())
-        return x.resError(_404, "Route rule: Folder \"" + x._path + "\" doesn't exist");
     
     if (x.isMethod_Illegal())
         return x.resError(_405, "Route rule: Method \"" + x._method + "\" is not allowed");
@@ -42,16 +36,24 @@ bool routeRule(Client &x)
 
 bool do_GET(Client &x) 
 {
-    if (x.isFile_Empty() && x.noDefaultFile()) 
+    int type = x.getResourceType();
+
+    if (type == -1) 
+        return  x.resError(_404, "Do GET: Resource \"" + x._uri + "\" not found");
+
+    if (type == TYPE_FOLDER) 
     {
-        if (x.isAutoIndex_On())
-            return x.resDirList();
+        if (x.isURI_noSlash()) 
+            return x.resAddSlash();
+        
+        if (x.noDefaultFile())
+        {
+            if (x.isAutoIndex_On())
+                return x.resDirList();
 
-        return x.resError(_403, "Do GET: No default file or autoindex for " + x._path);
+            return x.resError(_403, "Do GET: No default file or autoindex for " + x._uri);
+        }
     }
-
-    if (x.isFile_noExist()) 
-        return  x.resError(_404, "Do GET: File \"" + x._path + x._file + "\" not found");
     
     if (x.isCGI()) 
         return x.resCGI("Do GET");
@@ -63,42 +65,43 @@ bool do_GET(Client &x)
 
 bool do_POST(Client &x) 
 {
-    if (x.isReq_Upload())
-        return x.resSaveFile();
+    int type = x.getResourceType();
+
+    if (type == -1)
+        return x.resError(_404, "Do POST: Resource \"" + x._uri + "\" not found");
+
+    if (type == TYPE_FOLDER)
+    {
+        if (x.isURI_noSlash()) 
+            return x.resAddSlash();
+
+        if (x.isReq_Upload())
+            return x.resSaveFile();
         
-    if (x.isFile_Empty() && x.noDefaultFile())
-        return x.resError(_403, "Do POST: Invalid Post Request");
-    
-    if (x.isFile_noExist())
-        return x.resError(_404, "Do POST: File \"" + x._path + x._file + "\" not found");
+        if (x.noDefaultFile())
+            return x.resError(_403, "Do POST: Invalid Post Request");
+    }
 
     if (x.isCGI())
         return x.resCGI("Do Post");
     
-    return x.resError(_403, "File \"" + x._path + x._file +  "\" not CGI");  
+    return x.resError(_403, "File \"" + x._uri +  "\" not CGI");  
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 bool do_DELETE(Client &x) 
 {
-    if (x.isFile_Empty())
-    {
-        if (x.noDefaultFile())
-            return x.resDeleteDir();
-        
-        if (x.isFile_noExist() || !x.isCGI())
-            return x.resError(_403, "Do Delete: Invalid Delete Request");
-    }
-    else
-    {
-        if (x.isFile_noExist())
-            return x.resError(_410, "Do Delete: File \"" + x._path + x._file + "\" not found");
 
-        if (!x.isCGI())
-            return x.resDeleteFile();
-    }
-    return x.resCGI("Do Delete");
+    int type = x.getResourceType();
+
+    if (type == -1)
+        return x.resError(_410, "Do Delete: Resource \"" + x._uri + "\" not found");
+
+    if (type == TYPE_FOLDER)
+        return x.resDeleteDir();
+    
+    return x.resDeleteFile();
 }
 
 void processReq(Client &client)

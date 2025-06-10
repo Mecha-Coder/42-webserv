@@ -20,7 +20,7 @@ class ClientManager
     public:
         ClientManager(Watchlist &watcher);
 
-        void addClient(int clientFd, Server &server);
+        void addClient(int clientFd);
         Client &whichClient(int clientFd);
         void removeClient(int clientFd, size_t &index);
 };

@@ -1,6 +1,7 @@
 #ifndef CLIENT_HPP
 #define CLIENT_HPP
 
+#include "constant.hpp"
 #include <filesystem>
 #include <iostream>
 #include <sstream>
@@ -13,38 +14,21 @@
 #include <dirent.h> 
 #include <unistd.h>
 
-#include "Server.hpp"
+#include "ServerManager.hpp"
 #include "CGIHandler.hpp"
 
 template <typename T> Str toStr(T value);
 
-typedef enum t_code
-{
-    _200 = 200, 
-    _201 = 201, 
-    _204 = 204, 
-    _301 = 301, 
-    _308 = 308,
-    
-    _400 = 400,
-    _403 = 403,
-    _404 = 404, 
-    _405 = 405, 
-    _410 = 410, 
-    _413 = 413,
-    _500 = 500 
-}   Code;
-
 typedef std::string Str;
-typedef std::map<Str, bool> DirItems;
 typedef std::vector<Str> List;
+typedef std::map<Str, bool> DirItems;
 typedef std::map<Str, Str> Header;
 
 class Client
 {
 	private:
 		// Server data ---------------------------------------
-		Server			&_server;
+		Server			*_server;
 		Route			*_route;
 
 		// Request data -------------------------------------
@@ -63,13 +47,11 @@ class Client
 		// Request data - quick access to data --------------
 		Str				_method;
 		Str				_uri;
-		Str				_path;
-		Str				_file;
 		Str				_host;
+		Str				_fullPath;
 		bool			_keepAlive;
 
-		Client(Server &_server_);
-		void	showData();
+		Client();
 
 		/*************************************************/
 		// Response: Chunk response & check FD reuse
@@ -84,9 +66,11 @@ class Client
 		// Request: Append and parse
 		/*************************************************/
 
-		bool	appendReq(const char *request, size_t byteRead);
+		bool	appendReq(const char *request, size_t byteRead, ServerManager &sManager);
 		void	parseHead(Str info);
 		void	parseLine(Str line);
+		void 	getServerData(ServerManager &sManager);
+
 
 		/*************************************************/
 		// Checker
@@ -96,18 +80,18 @@ class Client
 		bool isContentHeader_Invalid() const;
 		bool isBody_ExceedLimit() const;
 
+		bool isURI_noRoute() const;
 		bool isRedirect_True() const;
-		bool isPath_noSlash() const;
-		bool isPath_noRoute() const;
-		bool isPath_noExist() const;
 		bool isMethod_Illegal() const;
-	
+
 		bool isAutoIndex_On() const;
 		bool isReq_Upload() const;
-		bool isFile_Empty() const;
-		bool isFile_noExist() const;
+
+		int	 getResourceType() const;
 		bool noDefaultFile();
+		bool isURI_noSlash() const;
 		bool isCGI() const;
+	
 
 		/*************************************************/
 		// Response

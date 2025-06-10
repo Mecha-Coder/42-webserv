@@ -1,6 +1,6 @@
 #include "../include/webserv.hpp"
 
-int getReadyList(const Pair &pair, struct addrinfo **list)
+int getReadyList(const Str &port, struct addrinfo **list)
 {
 	struct addrinfo hint;
 	
@@ -9,7 +9,7 @@ int getReadyList(const Pair &pair, struct addrinfo **list)
     hint.ai_socktype = SOCK_STREAM;
     hint.ai_flags    = AI_PASSIVE | AI_NUMERICSERV | AI_NUMERICHOST;
 
-	return (getaddrinfo(pair.first.c_str(), pair.second.c_str(), &hint, list) == 0);
+	return (getaddrinfo(IP, port.c_str(), &hint, list) == 0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -29,16 +29,28 @@ int bindToPort(int sockfd, struct addrinfo *addr)
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
-int create_listenFd(const Pair &pair, const Str &website)
+bool checkSockCreation(int sockfd, const Str &port)
 {
-	Str where = "Create listenFd | " + website;
-
-	int sockfd = -1;
 	struct sockaddr_in check;
 	socklen_t addrlen = sizeof(check);
+
+	getsockname(sockfd, (struct sockaddr *)&check, &addrlen);
+	Str _port = toStr(ntohs(check.sin_port));
+	uint32_t _ip = ntohl(check.sin_addr.s_addr);
+
+	return ((_port == port) && (_ip != 0xFFFFFFFFUL) && (_ip != 0x00000000UL));
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+int create_listenFd(const Str &port)
+{
+	int sockfd = -1;
     struct addrinfo *list = NULL, *addr = NULL;
 
-	if (getReadyList(pair, &list)) 
+	Str where = Str(IP) + ":" + port;
+
+	if (getReadyList(port, &list)) 
 	{
 		for (addr = list; addr != NULL; addr = addr->ai_next)
     	{
@@ -57,20 +69,15 @@ int create_listenFd(const Pair &pair, const Str &website)
        		break;
     	}
 		freeaddrinfo(list);
-
+		
 		if (addr)
 		{
-			getsockname(sockfd, (struct sockaddr *)&check, &addrlen);
-			Str port = toStr(ntohs(check.sin_port));
-			Str IP = inet_ntoa(check.sin_addr);
-			uint32_t ip = ntohl(check.sin_addr.s_addr);
-
-			if (port == pair.second && ip != 0xFFFFFFFFUL && ip != 0x00000000UL) return (
-				logAction(where, "Created listen FD=" + toStr(sockfd) + " for " + IP + ":" + port), sockfd);
+			if (checkSockCreation(sockfd,port)) 
+				return (logAction(where, "Created listen FD=" + toStr(sockfd)), sockfd);
 			close(sockfd);
 		}
 	}
-    return (logError(where, "Failed to create listen FD " + pair.first + ":" + pair.second), -1);
+    return (logError(where, "Failed to create listen FD "), -1);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

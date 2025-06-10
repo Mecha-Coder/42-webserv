@@ -4,40 +4,36 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <map>
+#include "constant.hpp"
 
 typedef std::string Str;
-typedef std::vector<Str> Method;
-typedef std::vector<Str> CGI;
+typedef std::vector<Str> List;
 
 class Route
 {
     private:
-        Method  _methods;
-        CGI     _cgi; 
+        List    _methods;
+        List    _cgi; 
         
     public:
-        const Str     _uri;
-        const Str     _root;
-        const Str     _redirect;
-        const Str     _uploadDir;
-        const bool    _autoIndex;
-        Str           _defaultFile;
+        Str   _path;
+        Str   _redirect;
+        Str   _defaultFile;
+        bool  _uploadDir;
+        bool  _autoIndex;
 
         Route (
-            const Str &uri,
-            const Str &root,
+            const List &methods,
+            const List &cgi,
+            const Str &path,
             const Str &redirect,
             const Str &defaultFile,
-            const Str &uploadDir,
-            const bool &autoIndex,
-            const Method &methods,
-            const CGI &cgi
+            const bool &uploadDir,
+            const bool &autoIndex
         );
         
-        bool    isMethodAllow(const Str &method) const;
-        bool    runWithCGI(const Str &file) const;
-        void    showData() const;
+        bool    methodAllow(const Str &method) const;
+        bool    runCGI(const Str &uri) const;
 };
 
 #endif

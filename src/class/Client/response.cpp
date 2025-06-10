@@ -29,7 +29,8 @@ bool Client::resError(Code code, const Str &msg)
 
     Str path, body;
     
-    path = _server.myErrorPg(code);
+    if (_server)
+        path = _server->myErrorPg(code);
     if (!path.empty() && readFile(path, body))
     {
         _reply = tmplErrCustom(code, body);
@@ -46,12 +47,12 @@ bool Client::resDirList()
     
     DirItems items;
 
-    if (readDir(_route->_root + _path, items))
+    if (readDir(_fullPath, items))
     {
-        _reply = tmplDirList(_path, items);
-        return (logAction(where, "Respond: 200: Return directory list for " + _path), true);
+        _reply = tmplDirList(_uri, items);
+        return (logAction(where, "Respond: 200: Return directory list for " + _uri), true);
     }
-    return resError(_500, "resDirList: Failed directory list for " + _path);
+    return resError(_500, "resDirList: Failed directory list for " + _uri);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -61,13 +62,14 @@ bool Client::resFetchFile()
     Str where = _host + " | resFetchFile";
 
     Str body;
+    Str filename = _fullPath.substr(_fullPath.rfind("/") + 1);
 
-    if (readFile(_route->_root + _path + _file, body))
+    if (readFile(_fullPath, body))
     {
-        _reply = tmplFetch(_file, body);
-        return (logAction(where, "Respond: 200: Fetch " + _path + _file), true);
+        _reply = tmplFetch(filename, body);
+        return (logAction(where, "Respond: 200: Fetch " + _uri), true);
     }
-    return resError(_500, "resFetchFile: Fail to read " + _path + _file);
+    return resError(_500, "resFetchFile: Fail to read " + _uri);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -76,8 +78,8 @@ bool Client::resAddSlash()
 {
     Str where = _host + " | resAddSlash";
 
-    _reply = tmplRedirect(_308, _path + "/");
-    return (logAction(where, "Respond: 308: Redirect add slash \"/\" -> " + _path), false);
+    _reply = tmplRedirect(_308, _uri + "/");
+    return (logAction(where, "Respond: 308: Redirect add slash \"/\" -> " + _uri), false);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -111,7 +113,7 @@ bool Client::resSaveFile()
     ) {
         bodyPart = _data.substr(0, pos - 2);
         
-        if (saveBodyPart(bodyPart, _route->_root + _route->_uploadDir, filename))
+        if (saveBodyPart(bodyPart, _fullPath, filename))
         {
             logAction(where, filename + " saved");
             fileSaved.push_back(filename);
@@ -132,12 +134,12 @@ bool Client::resDeleteFile()
 {
     Str where = _host + " | resDeleteFile";
 
-    if (deleteFile(_route->_root + _path + _file))
+    if (deleteFile(_fullPath))
     {
-        _reply = tmplDelete(_path);
-        return (logAction(where, "Respond: 204: Deleted " + _path + _file), true);
+        _reply = tmplDelete(_uri);
+        return (logAction(where, "Respond: 204: Deleted " + _uri), true);
     }
-    return resError(_500, "resDeleteFile: Failed to delete " + _path + _file);
+    return resError(_500, "resDeleteFile: Failed to delete " + _uri);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -146,12 +148,12 @@ bool Client::resDeleteDir()
 {
     Str where = _host + " | resDeleteDir";
 
-    if (deleteDir(_route->_root + _path))
+    if (deleteDir(_fullPath))
     {
-        _reply = tmplDelete(_path);
-        return (logAction(where, "Respond: 204: Deleted folder " + _path), true);
+        _reply = tmplDelete(_uri);
+        return (logAction(where, "Respond: 204: Deleted folder " + _uri), true);
     }
-    return resError(_500, "resDeleteDir: Failed to delete folder " + _path);
+    return resError(_500, "resDeleteDir: Failed to delete folder " + _uri);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -161,42 +163,23 @@ bool Client::resCGI(const Str &msg)
     Str where = _host + " | resCGI";
 
     List path; 
-    path.push_back(_route->_root + _path + _file);
+    path.push_back(_fullPath);
 
     Header env;
     env["REQUEST_METHOD"] = _method;
-    env["CONTENT_LENGTH"] = toStr(_contentLen);
-    env["CONTENT_TYPE"]   = _contentType;
-    env["PATH_INFO"]      = _route->_root + _path + _file;
+    env["PATH_INFO"]      = _fullPath;
     env.insert(_header.begin(), _header.end());
 
-    std::cout << "Print information pass to CGI handler\n"
-              << "=====================================\n"
-              << "env   :" << std::endl;
-    
-    Header::const_iterator i = env.begin();
-    for (; i != env.end(); i++)
-        std::cout << "\t[" << i->first << "] = [" << i->second << "]" << std::endl;
-
-    std::cout << "path  :\n" << std::endl;
-
-    for (size_t j = 0; j < path.size() ; j++)
-        std::cout << "\t" << path[j] << std::endl;
-    
-    std::cout << "_data :\n["
-              << _data << "]\n\n" << std::endl;
-
-
-    CGIHandler handler(env, _data, path);
+    CGIHandler handler(env, &_data, path);
 
     try
     { 
         _reply = handler.Execute();
-        return (logAction(where, msg + ": Executed CGI for " + _path + _file), true); 
+        return (logAction(where, msg + ": Executed CGI for " + _uri), true); 
     }
     catch(std::exception &e) 
     { 
-        resError(_500, msg + ": resCGI: " + Str(e.what() + Str(" >> ") + _path + _file)); 
+        resError(_500, msg + ": resCGI: " + Str(e.what() + Str(" >> ") + _uri)); 
     }
     return false;
 }

@@ -10,25 +10,24 @@
 #include <poll.h>
 #include "Server.hpp"
 
+typedef std::vector<int> Fd;
 typedef std::vector<Server> Servers;
-typedef std::map<int , Server*> Fd_Server;
 typedef std::vector<struct pollfd> Watchlist;
 
 class ServerManager
 {
     private:
-        Servers     _serverList;
-        Fd_Server   _listenMap;
+        Servers _serverList;
+        Fd      _listenFds;
          
     public:
         ServerManager();
         ServerManager(Servers &serverList);
 
-        void showData() const;
         bool initListenFd(Watchlist &watcher);
         bool isListenFd(int fd);
 
-        Server &whichServer(int fd);
+        Server *whichServer(const Str &host);
 };
 
 #endif

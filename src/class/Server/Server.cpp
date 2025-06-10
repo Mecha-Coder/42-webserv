@@ -1,92 +1,94 @@
 #include "../../include/Server.hpp"
 
-Server::Server (
-    const Str &serverName,
-    const Str &mainRoot,
-    const size_t &clientBodySize,
-    const Address &listen,
+/////////////////////////////////////////////////////////////////////////
+
+Server::Server(
+    const Str       &serverName,
+    const List      &listen,
     const ErrorPage &errorPage,
-    const Routes &routes 
-)
-: _listen(listen), _errorPage(errorPage), _routes(routes),
-_serverName(serverName), _mainRoot(mainRoot), _clientBodySize(clientBodySize) {}
+    const Routes    &routes,
+    const Str       &root,
+    const size_t    &clientBody
+) : 
+    _serverName(serverName), 
+    _listen(listen),
+    _errorPage(errorPage),
+    _routes(routes),
+    _root(root), 
+    _clientBody(clientBody) 
+{}
 
 /////////////////////////////////////////////////////////////////////////
 
-Route *Server::findRoute(const Str uri)
+Route *Server::findRoute(const Str &uri)
 {
-    Routes::iterator i = _routes.begin();
-    for( ; i != _routes.end(); i++)
+    Routes::iterator i;
+
+    for( i = _routes.begin(); i != _routes.end(); i++)
     {
-        if (i->_uri == uri) return &(*i);
+        if (i->_path.size() > uri.size())
+            continue;
+        
+        if (uri.compare(0, i->_path.size(), i->_path) == 0)
+            return &(*i);
     }
     return NULL;
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void Server::giveMyAddr(IP_Host &addrList) const
+void Server::giveListenPort(Ports &portList) const
 {
-    size_t pos;
-    Str IP, Port;
+    List::const_iterator i;
 
-    Address::const_iterator i = _listen.begin();
-    for (; i != _listen.end() ; i++)
-    {
-        pos  = i->find(":");
-        IP   = i->substr(0, pos);
-        Port = i->substr(pos + 1);
-        addrList.push_back(std::make_pair(IP, Port));
-    }
+    for (i = _listen.begin(); i != _listen.end() ; i++)
+        portList.insert(*i);
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-/*
-bool Server::isMyAddr(const Str &host) const
+bool Server::matchHost(const Str &host) const
 {
-    Address::const_iterator i = _listen.begin();
-    for (; i != _listen.end() ; i++)
+    List::const_iterator i;
+    for (i = _listen.begin(); i != _listen.end(); i++)
     {
-        if (*i == host) return true;
+        std::cout << "Compare " << (_serverName + ":" + *i) << " against " << host << std::endl;
+        if ((_serverName + ":" + *i) == host)
+            return true;
+
+        std::cout << "Compare " << (Str(IP) + ":" + *i) << " against " << host << std::endl;
+        if ((Str(IP) + ":" + *i) == host)
+            return true;
     }
     return false;
 }
-*/
+
+/////////////////////////////////////////////////////////////////////////
+
+bool Server::matchPort(const Str &port) const
+{
+    List::const_iterator i;
+    for (i = _listen.begin(); i != _listen.end(); i++)
+    {
+        std::cout << "Compare " << *i << " against " << port << std::endl;
+        if (*i == port)
+            return true;
+    }
+    return false;
+}
 
 /////////////////////////////////////////////////////////////////////////
 
 const Str Server::myErrorPg(const int &code) const
 {
     ErrorPage::const_iterator i = _errorPage.begin();
+
     for (; i != _errorPage.end(); i++)
     {
         if (i->first == code)
-            return (_mainRoot + i->second);
+            return (_root + i->second);
     }
     return "";
 }
 
 /////////////////////////////////////////////////////////////////////////
-
-void Server::showData() const
-{
-    std::cout << "Server data for " << _serverName << std::endl;
-    std::cout << "=====================================\n"
-              << "Main Root    : [" << _mainRoot << "]\n"
-              << "Cliet Max    : [" << _clientBodySize << "]\n"
-              << "Listen       : " << std::endl;
-    
-    for (size_t i = 0; i < _listen.size(); i++)
-        std::cout << "\t" << _listen[i] << std::endl;
-    
-    std::cout << "\nError Pg : " << std::endl;
-    
-    ErrorPage::const_iterator j = _errorPage.begin();
-    for (; j != this->_errorPage.end(); j++)
-        std::cout << "\t" << j->first << ", " << j->second << std::endl;
-    std::cout << std::endl;
-
-    for (size_t k = 0; k < _routes.size(); k++)
-        _routes[k].showData();
-}

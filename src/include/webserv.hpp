@@ -1,14 +1,6 @@
 #ifndef WEBSERV_HPP
 #define WEBSERV_HPP
 
-#define YELLOW  "\033[33m"
-#define CYAN    "\033[0;36m"
-#define GREEN   "\033[0;32m"
-#define RED     "\033[0;31m"
-#define RESET   "\033[0m"
-
-#define BUFFER_SIZE 70000
-
 #include <fstream>
 #include <cstdio>
 #include <sstream>
@@ -17,6 +9,7 @@
 #include <cstdlib>
 #include <cerrno>
 #include <ctime>
+#include <algorithm>
 
 #include <arpa/inet.h>
 #include <netinet/in.h>
@@ -28,6 +21,7 @@
 #include <poll.h>
 #include <unistd.h>
 
+#include "constant.hpp"
 #include "Client.hpp"
 #include "Route.hpp"
 #include "Server.hpp"
@@ -43,6 +37,8 @@ template <typename T> Str toStr(T value);
 Server	server_1();
 Server	server_2();
 Server	server_3();
+Server	server_4();
+Server	server_5();
 void	processReq(Client &client);
 
 /************************************************************/

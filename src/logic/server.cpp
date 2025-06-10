@@ -1,28 +1,36 @@
 #include "../include/webserv.hpp"
 
+/////////////////////////////////////////////////////////////////////////
+
+bool comparePathLen(const Route& a, const Route& b) 
+{
+    return a._path.size() > b._path.size();
+}
+
+/////////////////////////////////////////////////////////////////////////
+
 Server server_1()
 {
-    Address listen;
-    listen.push_back("127.0.0.1:4000");
-    listen.push_back("127.0.0.1:21000");
-    listen.push_back("127.0.0.1:8050");
+    List listen;
+    listen.push_back("4000");
+    listen.push_back("21000");
+    listen.push_back("8050");
 
     ErrorPage errorPg;
     errorPg.insert(std::make_pair(403, "/error/403.html"));
     errorPg.insert(std::make_pair(404, "/error/404.html"));
     errorPg.insert(std::make_pair(500, "/error/500.html"));
 
-    Str mainRoot = "./website/1";
-    CGI noCgi;
+    List noCgi;
     
-    CGI allCgi;
+    List allCgi;
         allCgi.push_back(".py");
         allCgi.push_back(".php");
 
-    Method onlyGET; 
+    List onlyGET; 
         onlyGET.push_back("GET");
     
-    Method allMETHOD;
+    List allMETHOD;
         allMETHOD.push_back("GET");
         allMETHOD.push_back("POST");
         allMETHOD.push_back("DELETE");
@@ -30,115 +38,63 @@ Server server_1()
     //------------------------------------------------------------
 
     Route route1 (
+        onlyGET,
+        noCgi,
         "/",
-        mainRoot,
         "",
         "dashboard.html",
-        "",
         false,
-        onlyGET,
-        noCgi
+        false
     );
 
     Route route2 (
-        "/archive/",
-        mainRoot,
-        "",
-        "",
-        "/archive/",
-        true,
         allMETHOD,
-        noCgi
+        noCgi,
+        "/archive",
+        "",
+        "",
+        true,
+        true
     );
 
     Route route3 (
-        "/archive/subfolder/",
-        mainRoot,
-        "",
-        "",
-        "",
-        true,
         onlyGET,
-        noCgi
+        noCgi,
+        "/youtube",
+        "https://www.youtube.com/@42berlin",
+        "",
+        false,
+        false
     );
 
     Route route4 (
-        "/youtube/",
-        mainRoot,
-        "https://www.youtube.com/@42berlin",
-        "",
+        onlyGET,
+        noCgi,
+        "/google",
+        "https://maps.app.goo.gl/sqEeteD86CXqLisr6",
         "",
         false,
-        onlyGET,
-        noCgi
+        false
     );
 
     Route route5 (
-        "/google/",
-        mainRoot,
-        "https://maps.app.goo.gl/sqEeteD86CXqLisr6",
-        "",
-        "",
-        false,
         onlyGET,
-        noCgi
-    );
-    
-    Route route6 (
-        "/internal/",
-        mainRoot,
+        noCgi,
+        "/internal",
         "/hello.html",
         "",
-        "",
         false,
-        onlyGET,
-        noCgi
+        false
     );
 
-    Route route7 (
-        "/script/",
-        mainRoot,
-        "",
+    Route route6 (
+        allMETHOD,
+        allCgi,
+        "/script",
         "",
         "",
         true,
-        allMETHOD,
-        allCgi
-    );
-
-    Route route8 (
-        "/photos/",
-        mainRoot,
-        "",
-        "",
-        "",
-        false,
-        onlyGET,
-        noCgi
-    );
-
-    CGI cgiPY; cgiPY.push_back(".py");
-    Route route9 (
-        "/error/",
-        mainRoot,
-        "",
-        "",
-        "",
-        false,
-        allMETHOD,
-        cgiPY
-    );
-
-    Method onlyPOST; onlyPOST.push_back("POST");
-    Route route10 (
-        "/dummy/",
-        mainRoot,
-        "",
-        "",
-        "",
-        false,
-        onlyPOST,
-        noCgi
+        false
     );
 
 
@@ -149,18 +105,15 @@ Server server_1()
     routes.push_back(route4);
     routes.push_back(route5);
     routes.push_back(route6);
-    routes.push_back(route7);
-    routes.push_back(route8);
-    routes.push_back(route9);
-    routes.push_back(route10);
+    std::sort(routes.begin(), routes.end(), comparePathLen);
 
     Server s(
-        "www.demoEvalSite.com",
-        mainRoot,
-        20000000,
+        "demoEvalSite.com",
         listen,
         errorPg,
-        routes
+        routes,
+        "./website/1",
+        20000000
     );
 
     return s;
@@ -168,83 +121,56 @@ Server server_1()
 
 Server server_2()
 {
-    Address listen;
-    listen.push_back("127.0.0.1:6900");
+    List listen;
+    listen.push_back("6900");
 
     ErrorPage errorPg;
 
-    Str mainRoot = "./website/2";
-    CGI noCgi;
+    List noCgi;
 
-    CGI onlyPython;
-        onlyPython.push_back(".py");
-    
-    CGI allCgi;
-        allCgi.push_back(".py");
-        allCgi.push_back(".php");
-
-    Method onlyGET; 
+    List onlyGET; 
         onlyGET.push_back("GET");
-    
-    Method allMETHOD;
-        allMETHOD.push_back("GET");
-        allMETHOD.push_back("POST");
 
     //------------------------------------------------------------
 
     Route route1 (
+        onlyGET,
+        noCgi,
         "/",
-        mainRoot,
         "",
         "main.html",
-        "",
         false,
-        allMETHOD,
-        onlyPython
+        false
     );
 
     Route route2 (
-        "/fruit/",
-        mainRoot,
+        onlyGET,
+        noCgi,
+        "/fruit",
         "",
         "fruit.html",
-        "",
         false,
-        onlyGET,
-        noCgi
+        false
     );
 
     Route route3 (
-        "/vegetable/",
-        mainRoot,
+        onlyGET,
+        noCgi,
+        "/vegetable",
         "",
         "veggies.html",
-        "",
         false,
-        onlyGET,
-        noCgi
+        false
     );
 
     Route route4 (
-        "/zombie/",
-        mainRoot,
+        onlyGET,
+        noCgi,
+        "/zombie",
         "",
         "types.html",
-        "",
         false,
-        onlyGET,
-        noCgi
-    );
-
-    Route route5 (
-        "/style/",
-        mainRoot,
-        "",
-        "",
-        "",
-        true,
-        onlyGET,
-        noCgi
+        false
     );
 
     Routes routes;
@@ -252,38 +178,37 @@ Server server_2()
     routes.push_back(route2);
     routes.push_back(route3);
     routes.push_back(route4);
-    routes.push_back(route5);
+    std::sort(routes.begin(), routes.end(), comparePathLen);
 
     Server s(
-        "www.server_2.com.my",
-        mainRoot,
-        10,
+        "server_2.com",
         listen,
         errorPg,
-        routes
+        routes,
+        "./website/2",
+        10
     );
     return s;
 }
 
 Server server_3()
 {
-    Address listen;
-    listen.push_back("127.0.0.1:9000");
+    List listen;
+    listen.push_back("9000");
 
     ErrorPage errorPg;
     errorPg.insert(std::make_pair(404, "/404.html"));
 
-    Str mainRoot = "./website/3";
-    CGI noCgi;
+    List noCgi;
     
-    CGI allCgi;
+    List allCgi;
         allCgi.push_back(".py");
         allCgi.push_back(".php");
 
-    Method onlyGET; 
+    List onlyGET; 
         onlyGET.push_back("GET");
     
-    Method allMETHOD;
+    List allMETHOD;
         allMETHOD.push_back("GET");
         allMETHOD.push_back("POST");
         allMETHOD.push_back("DELETE");
@@ -291,38 +216,113 @@ Server server_3()
     //------------------------------------------------------------
 
     Route route1 (
+        onlyGET,
+        noCgi,
         "/",
-        mainRoot,
         "",
         "main.html",
-        "/archive/",
         false,
-        allMETHOD,
-        noCgi
+        false
     );
 
     Route route2 (
-        "/archive/",
-        mainRoot,
-        "",
+        onlyGET,
+        noCgi,
+        "/archive",
         "",
         "",
         true,
-        onlyGET,
-        noCgi
+        true
     );
 
     Routes routes;
     routes.push_back(route1);
     routes.push_back(route2);
+    std::sort(routes.begin(), routes.end(), comparePathLen);
 
     Server s(
-        "www.server_3.com.my",
-        mainRoot,
-        100000,
+        "server_3.com",
         listen,
         errorPg,
-        routes
+        routes,
+        "./website/3",
+        100000
+    );
+    return s;
+}
+
+Server server_4()
+{
+    List listen;
+    listen.push_back("4000");
+
+    ErrorPage errorPg;
+
+    List noCgi;
+
+    List onlyGET; 
+        onlyGET.push_back("GET");
+
+    //------------------------------------------------------------
+
+    Route route1 (
+        onlyGET,
+        noCgi,
+        "/",
+        "",
+        "virtual_1.html",
+        false,
+        false
+    );
+
+    Routes routes;
+    routes.push_back(route1);
+
+    Server s(
+        "virtualhost_1.com",
+        listen,
+        errorPg,
+        routes,
+        "./website/virtualHost/1",
+        100000
+    );
+    return s;
+}
+
+Server server_5()
+{
+    List listen;
+    listen.push_back("4000");
+    
+    ErrorPage errorPg;
+
+    List noCgi;
+
+    List onlyGET; 
+        onlyGET.push_back("GET");
+
+    //------------------------------------------------------------
+
+    Route route1 (
+        onlyGET,
+        noCgi,
+        "/",
+        "",
+        "virtual_2.html",
+        false,
+        false
+    );
+
+    Routes routes;
+    routes.push_back(route1);
+
+    Server s(
+        "virtualhost_2.com",
+        listen,
+        errorPg,
+        routes,
+        "./website/virtualHost/2",
+        100000
     );
     return s;
 }

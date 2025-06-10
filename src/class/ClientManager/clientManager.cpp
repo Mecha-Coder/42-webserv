@@ -16,9 +16,9 @@ void ClientManager::removeClient(int clientFd, size_t &index)
 
 //////////////////////////////////////////////////////////////////////////////////////
 
-void ClientManager::addClient(int clientFd, Server &server)
+void ClientManager::addClient(int clientFd)
 {
-    _clientList.insert(std::make_pair(clientFd, Client(server)));
+    _clientList.insert(std::make_pair(clientFd, Client()));
 
     struct pollfd pfd;
 	pfd.fd = clientFd;
@@ -26,7 +26,7 @@ void ClientManager::addClient(int clientFd, Server &server)
 	pfd.revents = 0;
 	_watcher.push_back(pfd);
 
-    logAction("Client Manager", "Added new clientFd= " + toStr(clientFd) + ", link Server= " + server._serverName);
+    logAction("Client Manager", "Added new clientFd= " + toStr(clientFd));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////

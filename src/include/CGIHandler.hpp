@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CGIHandler.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jpaul <jpaul@student.42kl.edu.my>          +#+  +:+       +#+        */
+/*   By: rcheong <rcheong@student.42kl.edu.my>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 21:09:50 by rcheong           #+#    #+#             */
-/*   Updated: 2025/05/24 15:54:40 by jpaul            ###   ########.fr       */
+/*   Updated: 2025/06/07 15:21:19 by rcheong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 #include <unistd.h>
 #include <poll.h>
 #include <signal.h>
+#include <cerrno>
 #include "ScopedEnvArray.hpp"
 #include <cstdio>
 
@@ -56,7 +57,7 @@ class CGIHandler {
 	public:
 		static CGIHandler* Create(
 			const std::map<std::string, std::string>& env,
-			const std::string& body,
+			const std::string* body,
 			const std::vector<std::string>& cgiPaths);
 	
 		~CGIHandler();
@@ -65,7 +66,7 @@ class CGIHandler {
 	
 	// private:
 		CGIHandler(const std::map<std::string, std::string>& env,
-				   const std::string& body,
+				   const std::string* body,
 				   const std::vector<std::string>& cgiPaths);
 	
 		// void setEnv(const std::map<std::string, std::string>& env);
@@ -80,7 +81,7 @@ class CGIHandler {
 	private:
 		std::map<std::string, std::string> _envMap;
 		std::vector<std::string> _cgiPaths;
-		std::string _requestBody;
+		const std::string* _requestBody;
 		std::string _cgiPath;
 	
 		ScopedEnvArray _env;

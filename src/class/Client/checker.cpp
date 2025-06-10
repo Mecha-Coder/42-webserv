@@ -8,54 +8,34 @@ bool isFileExist(const Str path);
 /*******************************************************************************/
 
 bool Client::isRequestLine_Malform() const
-{ return (_method.empty() || _uri.empty() || _version != "HTTP/1.1"); }
+{ return (_method.empty() || _uri.empty() ||  _host.empty() || _version != "HTTP/1.1"); }
 
 bool Client::isContentHeader_Invalid() const
 { return (_contentType.empty() || _contentLen == 0 || _data.size() != _contentLen); }
 
 bool Client::isBody_ExceedLimit() const
-{ return (_data.size() > _server._clientBodySize); }
+{ return (_data.size() > _server->_clientBody); }
 
 
 /*******************************************************************************/
 // Route Requirement
 /*******************************************************************************/
 
-bool Client::isPath_noSlash() const
-{ return *_path.rbegin() != '/'; }
-
-bool Client::isPath_noRoute() const
+bool Client::isURI_noRoute() const
 {return _route == NULL;}
 
 bool Client::isRedirect_True() const
 { return _route->_redirect.empty() == false; }
 
-bool Client::isPath_noExist() const
-{ return !isDirExist(_route->_root + _path); }
-
 bool  Client::isMethod_Illegal() const
-{ return !_route->isMethodAllow(_method); }
+{ return !_route->methodAllow(_method); }
 
 /*******************************************************************************/
 // Do GET 
 /*******************************************************************************/
 
-bool Client::isFile_Empty() const
-{ return _file.empty(); }
-
-bool Client::noDefaultFile()
-{
-    if (_route->_defaultFile.empty())
-        return true;
-    _file = _route->_defaultFile;
-    return false;
-}
-
 bool Client::isAutoIndex_On() const
 { return _route->_autoIndex; }
-
-bool Client::isFile_noExist() const
-{ return !isFileExist(_route->_root + _path + _file); }
 
 /*******************************************************************************/
 // Do POST
@@ -63,7 +43,7 @@ bool Client::isFile_noExist() const
 
 bool Client::isReq_Upload() const
 {
-    return (!_route->_uploadDir.empty() && _file.empty() &&
+    return (_route->_uploadDir &&
         (_contentType.find("multipart/form-data; boundary=") != _contentType.npos));
 }
 
@@ -71,5 +51,26 @@ bool Client::isReq_Upload() const
 // Others
 /*******************************************************************************/
 
+bool Client::noDefaultFile()
+{
+    Str path = _fullPath + _route->_defaultFile;
+
+    if (_route->_defaultFile.empty() || !isFileExist(path))
+        return true;
+    
+    _fullPath = path;
+    return false;
+}
+
+int Client::getResourceType() const
+{
+    if (isDirExist(_fullPath)) return TYPE_FOLDER;
+    if (isFileExist(_fullPath)) return TYPE_FILE;
+    return -1;
+}
+
 bool   Client::isCGI() const
-{ return _route->runWithCGI(_file); }
+{ return _route->runCGI(_fullPath); }
+
+bool Client::isURI_noSlash() const
+{ return *_uri.rbegin() != '/'; }

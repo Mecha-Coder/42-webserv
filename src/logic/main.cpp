@@ -36,22 +36,22 @@ void outgoing(struct pollfd &watch, ClientManager &cManager, size_t &index)
 	cManager.removeClient(watch.fd, index);
 }
 
-void incomingRequest(struct pollfd &watch, ClientManager &cManager, size_t &index)
+void incomingRequest(struct pollfd &watch, ServerManager &sManager, ClientManager &cManager, size_t &index)
 {
 	Client &client = cManager.whichClient(watch.fd);
 
 	Str		where;
 	ssize_t	byteRead;
-	char 	request[BUFFER_SIZE];
+	char 	request[BUFFER];
 	
-	byteRead = recv(watch.fd , request, BUFFER_SIZE, 0);
+	byteRead = recv(watch.fd , request, BUFFER, 0);
 	where    = "Incoming Request | byteRead = " + toStr(byteRead);
 
 	if (byteRead > 0)
 	{
 		logNote(where, "Read request on FD= " + toStr(watch.fd));
-
-		if (client.appendReq(request, static_cast<size_t>(byteRead)))
+		
+		if (client.appendReq(request, static_cast<size_t>(byteRead), sManager))
 		{
 			processReq(client);
 			logAction("Incoming Request", "Request for clientFd= " + toStr(watch.fd) + " has been processed");
@@ -68,7 +68,7 @@ void incomingRequest(struct pollfd &watch, ClientManager &cManager, size_t &inde
 	}
 }
 
-void incomingConnect(int listenFd, Server &server, ClientManager &cManager)
+void incomingConnect(int listenFd, ClientManager &cManager)
 {
 	int newFd;
 	Str where;
@@ -86,7 +86,7 @@ void incomingConnect(int listenFd, Server &server, ClientManager &cManager)
 				close(newFd);
 				continue;
 			}
-			cManager.addClient(newFd, server);
+			cManager.addClient(newFd);
 		}
 		else
 		{
@@ -123,9 +123,9 @@ void checkEvents(Watchlist &watcher, ServerManager &sManager, ClientManager &cMa
 			logNote(where, "FD= " + toStr(watcher[i].fd));
 			
 			if (sManager.isListenFd(watcher[i].fd))
-				incomingConnect(watcher[i].fd, sManager.whichServer(watcher[i].fd), cManager);
+				incomingConnect(watcher[i].fd, cManager);
 			else
-				incomingRequest(watcher[i], cManager, i);
+				incomingRequest(watcher[i], sManager, cManager, i);
 		}
 
 		else if (watcher[i].revents & POLLOUT)
@@ -178,16 +178,17 @@ void runServer(Watchlist &watcher, ServerManager &sManager)
 
 int main()
 {
-	/*
 	Servers serverList;
 	serverList.push_back(server_1());
 	serverList.push_back(server_2());
 	serverList.push_back(server_3());
-	*/
+	serverList.push_back(server_4());
+	serverList.push_back(server_5());
+
 
 	Watchlist 		watcher;
-	//ServerManager	sManager(serverList);
-	ServerManager	sManager;
+	ServerManager	sManager(serverList);
+	//ServerManager	sManager; // <---- No config pass
 	
 	if (!sManager.initListenFd(watcher))
 		return EXIT_FAILURE;
