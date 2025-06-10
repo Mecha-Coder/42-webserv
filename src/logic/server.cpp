@@ -108,6 +108,18 @@ Server server_1()
         false
     );
 
+    List onlyPy;
+    onlyPy.push_back(".py");
+    Route route8 (
+        allMETHOD,
+        onlyPy,
+        "/error",
+        "",
+        "",
+        false,
+        false
+    );
+
 
     Routes routes;
     routes.push_back(route1);
@@ -117,6 +129,7 @@ Server server_1()
     routes.push_back(route5);
     routes.push_back(route6);
     routes.push_back(route7);
+    routes.push_back(route8);
     std::sort(routes.begin(), routes.end(), comparePathLen);
 
     Server s(

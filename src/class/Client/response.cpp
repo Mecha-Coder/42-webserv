@@ -158,6 +158,18 @@ bool Client::resDeleteDir()
 
 /////////////////////////////////////////////////////////////////////////////////////
 
+bool validCGIRespond(const Str &s)
+{
+    return (
+        s.find("HTTP/1.1") != s.npos 
+        && s.find("Content-Type") != s.npos 
+        && s.find("Content-Length") != s.npos 
+        && s.find("\r\n\r\n") != s.npos
+    );
+}
+
+/////////////////////////////////////////////////////////////////////////////////////
+
 bool Client::resCGI(const Str &msg)
 {
     Str where = _host + " | resCGI";
@@ -174,8 +186,14 @@ bool Client::resCGI(const Str &msg)
 
     try
     { 
-        _reply = handler.Execute();
-        return (logAction(where, msg + ": Executed CGI for " + _uri), true); 
+        Str result = handler.Execute();
+        
+        if (validCGIRespond(result))
+        {
+            _reply = result;
+            return (logAction(where, msg + ": Executed CGI for " + _uri), true); 
+        }
+        throw std::runtime_error("Invalid CGI respond");
     }
     catch(std::exception &e) 
     { 
