@@ -26,7 +26,7 @@ TokenList::iterator Until(TokenList::iterator& cur, Token::e_token until) {
 
 std::string Accumulate(std::string& acc, Token& t) {
 	return acc + t.value;
-};
+}
 
 Parser::Parser(TokenList tks) {
 	TokenList::iterator cur = tks.begin();

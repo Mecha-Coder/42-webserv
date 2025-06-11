@@ -199,6 +199,8 @@ Config::e_error Config::PostValidate() {
 }
 
 Config::Config(toml::Table& config) {
+	std::cout << "server type: " << config["server"].getTypeName() << std::endl;
+	std::cout << "server size: " << config["server"].Size() << std::endl;
 	if ((error = PreValidate(config) )!= Config::ERROR_NONE)
 	{
 		Print();

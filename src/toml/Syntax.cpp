@@ -1,3 +1,4 @@
+#include "TomlTypedef.hpp"
 #include "Parser.hpp"
 
 bool isKey(TokenList::iterator& it, TokenList::iterator end) {

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "TomlTypedef.hpp"
 #include "ParseError.hpp"
 #include "Result.hpp"
 #include "Token.hpp"
@@ -9,7 +10,6 @@
 #include <string>
 
 typedef Result<Token*, ParseError> ParseResult;
-// typedef Result<std::list<Token>, ParseError> TokenListResult;
 
 class Lexer {
 

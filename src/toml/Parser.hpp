@@ -1,5 +1,6 @@
 #pragma once
 
+#include "TomlTypedef.hpp"
 #include "Table.hpp"
 #include "ParseError.hpp"
 #include "Result.hpp"
@@ -9,7 +10,6 @@
 #include <string>
 #include <vector>
 
-typedef std::list<Token> TokenList;
 struct TokenPair;
 typedef std::vector<TokenPair> TokenMap;
 

@@ -1,8 +1,9 @@
+#pragma once
+
 #include "Result.hpp"
-#include "Parser.hpp"
+#include "TomlTypedef.hpp"
 #include "ParseError.hpp"
 #include <istream>
-#include <list>
 #include <string>
 
 class Token {
@@ -35,8 +36,6 @@ public:
 inline Token::e_token operator|(Token::e_token t1, Token::e_token t2) {
 	return (Token::e_token)((int)t1 | (int)t2);
 }
-
-typedef Result<TokenList, ParseError> TokenListResult;
 
 class TokenParser {
 public:

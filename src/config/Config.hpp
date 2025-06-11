@@ -108,8 +108,7 @@ public:
 		ERROR_INVALID_REDIRECT,
 		ERROR_INVALID_CGI_PATH,
 		ERROR_INVALID_AUTOINDEX,
-		ERROR_INVALID_UPLOAD_PATH,
-
+		ERROR_INVALID_UPLOAD_PATH
 	};
 	e_error error;
     const vector<ServerConfig>& getServers() const;
@@ -121,7 +120,7 @@ private:
     enum e_state {
 		OK,
 		INVALID_KEY,
-		INVALID_VALUE,
+		INVALID_VALUE
 	};
 	vector<ServerConfig> _servers;
 	e_error PreValidate(toml::Table &config);

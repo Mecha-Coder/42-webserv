@@ -1,4 +1,5 @@
 #include "Toml.hpp"
+#include "TomlTypedef.hpp"
 #include "Table.hpp"
 #include "ParseError.hpp"
 #include "Parser.hpp"
@@ -77,7 +78,7 @@ Table* toml::ParseStream(std::ifstream& in) {
 	Lexer lexer = Lexer(in);
 	TokenListResult resToken = lexer.Parse();
 	if (!resToken.isOk()) {
-		cerr << resToken.Err().asStr() << endl;
+		std::cerr << resToken.Err().asStr() << endl;
 		return NULL;
 	}
 
