@@ -99,8 +99,13 @@ bool do_DELETE(Client &x)
         return x.resError(_410, "Do Delete: Resource \"" + x._uri + "\" not found");
 
     if (type == TYPE_FOLDER)
+    {
+        if (x.isURI_noSlash()) 
+            return x.resError(_403, "Do DELETE: uri must send with \"/\" ->" + x._uri);
+        
         return x.resDeleteDir();
-    
+    }
+
     return x.resDeleteFile();
 }
 

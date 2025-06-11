@@ -318,7 +318,7 @@
         </ul>
       </div>
       <div class="card‐buttons">
-        <button onclick="navigateToPage(5)">Click</button>
+        <button onclick="window.location.href='/script/delete.py';">Click</button>
       </div>
     </div>
 
@@ -373,6 +373,8 @@
         </form>
         <button onclick="location.href='/invalidPath/'">Invalid path</button>
         <button onclick="location.href='/error/cgiCrash.py'">CGI Crash</button>
+        <button onclick="location.href='/error/cgiHang.py'">CGI Hang</button>
+        <button onclick="location.href='/error'">No default / autoindex</button>
       </div>
     </div>
 
@@ -386,23 +388,10 @@
         </ul>
       </div>
       <div class="card‐buttons">
-        <form action="/noCgi.php" method="POST">
+        <form action="/error/test.php" method="POST">
           <button class="error" type="submit">Invalid Header</button>
         </form>
         <button onclick="location.href='/dummy/'">Invalid Method</button>
-      </div>
-    </div>
-
-    <div class="box">
-      <div>
-        <div class="card‐title">Testing With Telnet</div>
-        <ul class="card‐content">
-          <li>Test robustness of HTTP parsing & validation</li>
-          <li>Simulate Connection: closed</li>
-        </ul>
-      </div>
-      <div class="card‐buttons">
-        <button onclick="window.location.href='/telnet.html';">Click</button>
       </div>
     </div>
 

@@ -157,13 +157,13 @@ Str Client::tmplDirList(const Str &path, const DirItems &items)
         "      </tr>\n"
         "    </thead>\n"
         "    <tbody>\n"
-        "      <tr><td><a href=\"../\">../</a></td></tr>\n";
+        "      <tr><td><a href=\"../\">..<strong>/</strong></a></td></tr>\n";
 
     DirItems::const_iterator i = items.begin();
     for (; i != items.end(); ++i)
     {
         if (i->second) 
-            body += "      <tr><td><a href=\"" + i->first + "/\">" + i->first + "/</a></td></tr>\n";
+            body += "      <tr><td><a href=\"" + i->first + "/\">" + i->first + "<strong>/</strong></a></td></tr>\n";
         else           
             body += "      <tr><td><a href=\"" + i->first + "\">" + i->first + "</a></td></tr>\n";
     }

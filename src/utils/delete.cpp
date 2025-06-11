@@ -54,3 +54,4 @@ int main()
     //std::cout << "Invalid folder " + toStr(deleteDir("../website/archive/test_folder/cpp_02.jpg")) << std::endl;
 }
 */
+

@@ -1,6 +1,7 @@
 #include "../../include/Client.hpp"
 
 size_t strToSizeT(const Str &s);
+void uriDecode(Str &s);
 
 bool not_space(int ch) {
     return !std::isspace(ch);
@@ -12,6 +13,8 @@ void Client::parseLine(Str line)
 {
     std::istringstream iss(line);
     iss >> _method >> _uri >> _version;
+
+    uriDecode(_uri);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////

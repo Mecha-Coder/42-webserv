@@ -25,7 +25,7 @@ OBJS := $(patsubst %,$(OBJ_DIR)/%.o,$(basename $(SRCS)))
 # BUILD COMMAND
 #==============================================================
 
-all: $(NAME)
+all: $(NAME) prep-eval
 
 $(NAME): $(OBJS)
 	$(CC) $(FLAG) -o $@ $^
@@ -46,4 +46,10 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all leak clean fclean re
+prep-eval:
+	@echo "$(GREEN)CGI script: Windows-style (CRLF) -> Unix-style (LF)$(RESET)"
+	find . -type f \( -name '*.py' -o -name '*.php' -o -name '*.js' \) -exec sed -i 's/\r$$//' {} +
+	@echo "$(GREEN)Change file permission$(RESET)"
+	chmod 000 ./website/1/archive/no_permission.pdf
+
+.PHONY: all leak clean fclean re fix-crlf

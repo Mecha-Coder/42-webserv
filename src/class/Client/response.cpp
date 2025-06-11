@@ -180,6 +180,7 @@ bool Client::resCGI(const Str &msg)
     Header env;
     env["REQUEST_METHOD"] = _method;
     env["PATH_INFO"]      = _fullPath;
+    env["ROOT"]           = _server->_root;
     env.insert(_header.begin(), _header.end());
 
     CGIHandler handler(env, &_data, path);
