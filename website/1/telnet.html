@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Telnet Usage Guide</title>
+  <style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 2rem auto;
+    max-width: 800px;
+    line-height: 1.6;
+    color: #333;
+    background: #f9f9f9;
+    padding-top: 100px; /* Add space for logo */
+  }
+  h1, h2 {
+    color: #005a9c;
+    border-bottom: 2px solid #005a9c;
+    padding-bottom: 0.2em;
+  }
+  pre {
+    background: #272822;
+    color: #f8f8f2;
+    padding: 1em;
+    overflow-x: auto;
+    border-radius: 4px;
+  }
+  .top-header {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 10;
+  }
+  .top-header img.logo-42 {
+    height: 60px;
+    width: auto;
+  }
+  code {
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 0.95em;
+  }
+  .note {
+    background: #fffbe6;
+    border-left: 4px solid #ffec3d;
+    padding: 0.5em 1em;
+    margin: 1em 0;
+  }
+  .tip {
+    background: #e6f7ff;
+    border-left: 4px solid #91d5ff;
+    padding: 0.5em 1em;
+    margin: 1em 0;
+  }
+  </style>
+</head>
+<body>
+
+  <!-- 42 Logo in Top-Left -->
+  <div class="top-header">
+    <a href="/">
+    <img class="logo-42" src="./photos/42_logo.png" alt="42 Logo" />
+    </a>
+  </div>
+
+  <h1>Telnet Usage Guide</h1>
+
+  <h2>1. Connecting to the Server</h2>
+  <pre><code>telnet 127.0.0.1 4000</code></pre>
+
+  <h2>2. Sending an HTTP Request</h2>
+  <p>Once connected, type your request exactly, then press <strong>Enter</strong> twice to send:</p>
+  <pre><code>GET / HTTP/1.1
+Host: example.com
+Connection: close
+
+</code></pre>
+  <div class="note">
+    <strong>Note:</strong> The blank line (<code>\n\n</code>) after headers signals end of request.
+  </div>
+
+  <h2>3. Testing HTTP Parsing & Validation</h2>
+  
+  <h3>Test 1: Valid GET</h3>
+  <pre><code>GET / HTTP/1.1
+Host: example.com
+Connection: keep-alive
+
+</code></pre>
+
+  <h3>Test 2: Unknown Method</h3>
+  <pre><code>UNKNOWN / HTTP/1.1
+Host: example.com
+Connection: keep-alive
+
+</code></pre>
+
+  <h3>Test 3: Invalid HTTP Version</h3>
+  <pre><code>GET / HTTP/2.1
+Host: example.com
+Connection: keep-alive
+
+</code></pre>
+  <div class="note">
+    <strong>Note:</strong> Telnet can only send plain-text HTTP/1.x requests. HTTP/2+ uses binary framing and typically TLS.
+  </div>
+
+  <h2>4. Keeping the Connection Alive</h2>
+  <p>To send multiple requests over the same TCP connection (HTTP/1.1 defaults to keep-alive):</p>
+  <pre><code>GET / HTTP/1.1
+Host: example.com
+Connection: keep-alive
+
+[wait for response]
+
+GET /about HTTP/1.1
+Host: example.com
+
+</code></pre>
+  <div class="tip">
+    <strong>Tip:</strong> Avoid <code>Connection: close</code> if you want to reuse the connection. Servers may time out after ~30 – 60 seconds of inactivity.
+  </div>
+
+  <h2>5. Exiting Telnet</h2>
+  <p>If your terminal hangs or you need to quit:</p>
+  <ul>
+    <li>Press <code>Ctrl + ]</code> to get the <code>telnet&gt;</code> prompt, then type <code>quit</code>.</li>
+    <li>Or in another shell, find the PID (<code>ps aux | grep telnet</code>) and <code>kill &lt;PID&gt;</code>.</li>
+    <li>Sometimes <code>Ctrl + C</code> or <code>Ctrl + D</code> will also work.</li>
+  </ul>
+
+</body>
+</html>

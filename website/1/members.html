@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Team Members</title>
+    <style>
+        /* Reset some defaults */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        .top-header {
+        display: inline;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 16px;
+        width: 95vw;
+        margin-left: 10px;
+        }
+        .top-header img.logo-42 {
+        height: 60px;
+        width: auto;
+        }
+        .top-header .subtitle {
+        font-size: 14px;
+        color: #333;
+        line-height: 1.2;
+        }
+
+        /* ─────────────────────────────────────────────────────────────────────
+           Center everything in the viewport
+           ───────────────────────────────────────────────────────────────────── */
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;                   /* Still keep some outer padding */
+            color: #333;
+        }
+
+        .centering {
+            display: flex;
+            align-items: center;             /* Vertical centering */
+            justify-content: center;         /* Horizontal centering */
+            min-height: 80vh;               /* Make body span full viewport height */
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;                   /* Still keep some outer padding */
+            color: #333;
+        }
+
+        /* Container now uses a responsive grid */
+        .profiles-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        /* ─────────────────────────────────────────────────────────────────────
+           Each profile is a “card” with vertical stacking
+           ───────────────────────────────────────────────────────────────────── */
+        .profile {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+
+            /* Change flex direction to column for vertical layout */
+            display: flex;
+            flex-direction: column;
+            align-items: center;      /* Center children horizontally */
+            gap: 15px;                /* Vertical gap between image and text */
+
+            padding: 15px;
+            transition: transform 0.15s ease-in-out;
+        }
+
+        .profile:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Profile image remains circular, now sits at the top */
+        .profile-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            overflow: hidden;
+            background-color: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Profile-info sits below the image, text is centered */
+        .profile-info {
+            text-align: center;
+        }
+
+        .name {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 4px;
+            color: #222;
+        }
+
+        .title {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .description {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #444;
+
+            /* Remove the left padding so text is centered under the name/title */
+            padding-left: 0;
+        }
+
+        /* Small tweak: make entire card focusable (for accessibility) */
+        .profile:focus-within {
+            outline: 2px solid #007acc;
+        }
+
+        .profile-info ul {
+        text-align: left;
+        padding-left: 1em; /* ensure there’s room for the bullets */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ───────────────────────────────────────────────────────────────── -->
+    <!-- TOP HEADER: 42 LOGO + SUBTITLE -->
+    <div class="top-header">
+        <a href="/">
+            <img class="logo-42" src="./photos/42_logo.png" alt="42 Logo">
+        </a>
+    </div>
+
+     <!-- ───────────────────────────────────────────────────────────────── -->
+    <div class="centering">
+     <div class="profiles-container">
+        <div class="profile" tabindex="0">
+            <div class="profile-image">
+                <img src="https://cdn.intra.42.fr/users/c016f28a2009b0d1413df45986e0fcf1/rcheong.jpg" alt="rcheong" />
+            </div>
+            <div class="profile-info">
+                <div class="name">Ryan Cheong</div>
+                <div class="title">rcheong</div>
+                <div class="description">
+                    <ul>
+                        <li>CGI execution</li>
+                        <li>Configuration file parsing</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile" tabindex="0">
+            <div class="profile-image">
+                <img src="https://cdn.intra.42.fr/users/7a6202f6b1057afa6dd38c58ac63f6a9/jpaul.jpg" alt="jpaul" />
+            </div>
+            <div class="profile-info">
+                <div class="name">Jason Selau Kumar</div>
+                <div class="title">jpaul</div>
+                <div class="description">
+                    <ul>
+                        <li>Socket programming</li>
+                        <li>Implement multiplexing with poll</li>
+                        <li>Manage inactive connnections</li>
+                        <li>Parse HTTP request</li>
+                        <li>Implement request route</li>
+                        <li>Chunked Transfer</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile" tabindex="0">
+            <div class="profile-image">
+                <img src="https://cdn.intra.42.fr/users/f0dd5b6824133151f784a9400449f4a3/chtan.jpeg" alt="chtan" />
+            </div>
+            <div class="profile-info">
+                <div class="name">Cheng Soo (Jaxz)</div>
+                <div class="title">chtan</div>
+                <div class="description">
+                    <ul>
+                        <li>Generate HTTP responses</li>
+                        <li>Header Management & Status Code</li>
+                        <li>Build demo website</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+     </div>
+    </div>
+</body>
+</html>

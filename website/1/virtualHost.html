@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>How to Test Virtual Hosting</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      line-height: 1.6;
+      margin: 2rem;
+    }
+
+    h1 {
+      color: #2c3e50;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .top-header {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+    }
+    .top-header img.logo-42 {
+      height: 60px;
+      width: auto;
+    }
+    
+    h2 {
+      color: #34495e;
+      border-bottom: 2px solid #ddd;
+      padding-bottom: 0.3em;
+    }
+
+    pre {
+      background-color: #efefef;
+      padding: 1em;
+      border-left: 4px solid #2980b9;
+      overflow-x: auto;
+    }
+
+    .note {
+      background-color: #fcf8e3;
+      border: 1px solid #faebcc;
+      padding: 1em;
+      margin-top: 2em;
+      border-left: 4px solid #f0ad4e;
+    }
+
+    code {
+      font-family: Consolas, Monaco, monospace;
+    }
+  </style>
+</head>
+<body>
+  <!-- 42 Logo in Top-Left -->
+  <div class="top-header">
+    <a href="/">
+    <img class="logo-42" src="./photos/42_logo.png" alt="42 Logo" />
+    </a>
+  </div>
+
+  <h1>How to Test Virtual Hosting</h1>
+
+  <h2>Option 1: Edit <code>/etc/hosts</code></h2>
+  <p><strong>For Linux:</strong> <code>sudo nano /etc/hosts</code></p>
+  <p><strong>For Windows:</strong> <code>C:\Windows\System32\drivers\etc\hosts</code></p>
+
+  <p>Add this line and save the file:</p>
+  <pre>127.0.0.1 example.com</pre>
+
+  <h2>Option 2: Use <code>curl --resolve</code> (CLI only, no browser)</h2>
+  <pre>curl --resolve example.com:8080:127.0.0.1 http://example.com/</pre>
+
+  <div class="note">
+    <strong>We test using Option 2. Here are the test cases:</strong>
+    
+    <p>Server1:</p>
+    <pre>
+curl --resolve demo.eval.com:4000:127.0.0.1 http:/demo.eval.com:4000/
+curl --resolve example.com:4000:127.0.0.1 http://example.com:4000/
+curl --resolve test.com:4000:127.0.0.1 http://test.com:4000/
+curl --resolve unknown.com:4000:127.0.0.1 http://unknown.com:4000/
+  </pre>
+
+    <p>Server2:</p>
+    <pre>curl --resolve server_2.com:6900:127.0.0.1 http:/server_2.com:6900/</pre>
+
+    <p>Server3:</p>
+    <pre>curl --resolve server_3.com:9000:127.0.0.1 http:/server_3.com:9000/</pre>
+
+  </div>
+
+</body>
+</html>

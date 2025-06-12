@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Webserve Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bungee+Shade&display=swap" rel="stylesheet">
+  <style>
+    /* ───────────────────────────────────────────────────────────────── */
+    /* BASIC RESET */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fcfcfc;
+      color: #333;
+      position: relative;
+      min-height: 100vh;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ───────────────────────────────────────────────────────────────── */
+    /* TOP HEADER: "42" logo + "KUALA LUMPUR Sunway Education Group" */
+    .top-header {
+      display: inline;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 16px;
+      width: 95vw;
+    }
+    .top-header img.logo-42 {
+      height: 60px;
+      width: auto;
+    }
+    .top-header .subtitle {
+      font-size: 14px;
+      color: #333;
+      line-height: 1.2;
+    }
+
+    /* ───────────────────────────────────────────────────────────────── */
+    /* MAIN TITLE + ICONS GROUP ("WEBSERVE" + GitHub + Members) */
+    .main‐title‐block {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 48px;
+      width: 100%;
+      max-width: 1000px;
+      margin-bottom: 40px;
+    }
+    .main‐title‐block .big‐text {
+      font-family: 'Bungee Shade', cursive;
+      font-size: 72px;
+      color: #000;
+      line-height: 1;
+    }
+    .logo‐group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 12px;
+      gap: 2px;
+    }
+    .logo‐group img.icon {
+      height: 32px;
+      width: auto;
+    }
+    .logo‐group .caption {
+      font-size: 13px;
+      color: #555;
+    }
+
+    /* ───────────────────────────────────────────────────────────────── */
+    /* GRID CONTAINER (3×3) */
+    .grid-title {
+      font-size: 14px;
+      font-weight: bold;
+      text-align: center;
+      color: #ffffff;
+      background-color: #1f1f1f;
+      border-radius: 10px 10px 0px 0px;
+      box-shadow: 0 4px 16px rgba(12, 12, 12, 0.158);
+      padding: 5px;
+      width: 90%;
+      max-width: 1000px;
+    }
+    .grid‐container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: auto auto auto;
+      gap: 10px;
+      width: 90%;
+      max-width: 1000px;
+      background: #ffffff;
+      border-radius: 0px 0px 10px 10px;
+      padding: 40px;
+      margin-bottom: 80px; /* leave space for "Bonus" bracket below */
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.158);
+    }
+    .grid‐container .box {
+      background-color: #f5f5f5;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 20px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: center;
+    }
+
+    /* ───────────────────────────────────────────────────────────────── */
+    /* INDIVIDUAL CARD CONTENT STYLES */
+    .card‐title {
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+    .card‐content {
+      font-size: 13px;
+      line-height: 1.4;
+      text-align: left;
+      margin-bottom: 16px;
+      color: #747474;
+      font-weight: normal;
+    }
+    .card‐content li {
+      margin: 6px 0;
+      list-style: none;
+      position: relative;
+      padding-left: 22px;
+    }
+    .card‐content li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: #6c46f2;
+      font-weight: bold;
+    }
+    .card‐buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-top: auto;
+    }
+    .card‐buttons button {
+      background-color: #6c46f2;
+      color: #fff;
+      border: 1px solid #6c46f2;
+      border-radius: 4px;
+      padding: 8px 14px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .card‐buttons button:active {
+      transform: scale(0.90);;
+    }
+    .card‐buttons button:hover{
+        background-color: transparent;
+        color: #6c46f2;
+    }
+    
+
+    /* ───────────────────────────────────────────────────────────────── */
+    /* MOBILE & TABLET RESPONSIVENESS */
+    @media (max-width: 992px) {
+      .main‐title‐block {
+        flex-direction: column;
+        gap: 20px;
+      }
+      .grid‐container {
+        gap: 20px;
+        padding: 30px;
+      }
+    }
+    @media (max-width: 768px) {
+      .grid‐container {
+        display: block;
+      }
+      .grid‐container .box {
+        width: 100%;
+        margin-bottom: 20px;
+      }
+    }
+    @media (max-width: 480px) {
+      .top-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .main‐title‐block .big‐text {
+        font-size: 56px;
+        text-align: center;
+      }
+      .main‐title‐block {
+        gap: 16px;
+      }
+      .grid‐container {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ───────────────────────────────────────────────────────────────── -->
+  <!-- TOP HEADER: 42 LOGO + SUBTITLE -->
+  <div class="top-header">
+    <a href="/">
+      <img class="logo-42" src="./photos/42_logo.png" alt="42 Logo">
+    </a>
+  </div>
+
+  <!-- ───────────────────────────────────────────────────────────────── -->
+  <!-- MAIN TITLE + GITHUB & MEMBERS ICONS -->
+
+  <div class="main‐title‐block">
+    <div class="big‐text">WEBSERVE</div>
+
+    <div class="logo‐group">
+      <!-- Replace src="…" with your GitHub icon path -->
+      <img class="icon" src="./photos/github.png" alt="GitHub">
+      <a href="https://github.com/Mecha-Coder/webserv_42" class="caption">Github</a>
+    </div>
+
+    <div class="logo‐group">
+      <!-- Replace src="…" with your Members icon path -->
+      <img class="icon" src="./photos/member.png" alt="Members">
+      <a href="members.html" class="caption">Members</a>
+    </div>
+  </div>
+
+  <!-- ───────────────────────────────────────────────────────────────── -->
+  <!-- 3×3 GRID: 9 BOXES -->
+  
+  <div class="grid-title"><h2>MANDATORY</h2></div>
+
+  <div class="grid‐container">
+  
+  <!-- ───────────────────────────────────────────────────────────────── -->
+    <!-- ─── Archive ─── -->
+    <div class="box">
+      <div>
+        <div class="card‐title">Archive Folder</div>
+        <ul class="card‐content">
+          <li>Method: GET</li>
+          <li>List all files and folders in directory</li>
+          <li>Also act as our Upload / Download location ⬆️</li>
+        </ul>
+      </div>
+      <div class="card‐buttons">
+        <button onclick="window.location.href='/archive/';">Click</button>
+      </div>
+    </div>
+
+    <!-- ───────────────────────────────────────────────────────────────── -->
+    <!-- ─── Fill Form ─── -->
+    <div class="box">
+      <div>
+        <div class="card‐title">Create Form</div>
+        <ul class="card‐content">
+          <li>Method: POST</li>
+          <li>Save form using Python 🐍 CGI and show form summary upon success</li>
+        </ul>
+      </div>
+      <div class="card‐buttons">
+        <button onclick="window.location.href='/form.html';">Click</button>
+      </div>
+    </div>
+
+        <!-- ───────────────────────────────────────────────────────────────── -->
+    <!-- ─── Upload File ─── -->
+
+    <div class="box">
+      <div>
+        <div class="card‐title">Upload Files</div>
+        <ul class="card‐content">
+          <li>Method: POST (Server)</li>
+          <li>Upload single or multiple files</li>
+          <li>Limit client body to &lt; 20 MB</li>
+        </ul>
+      </div>
+      <div class="card‐buttons">
+        <button onclick="window.location.href='/upload.html';">Click</button>
+      </div>
+    </div>
+
+    <!-- ───────────────────────────────────────────────────────────────── -->
+    <!-- ─── Destroy Resource ─── -->
+
+    <div class="box">
+      <div>
+        <div class="card‐title">Destroy Resource</div>
+        <ul class="card‐content">
+          <li>Method: DELETE</li>
+          <li>Delete files and folders in ⬆️ Archive</li>
+          <li>Python 🐍 CGI will remove deleted item from delete list (dynamic content)</li>
+        </ul>
+      </div>
+      <div class="card‐buttons">
+        <button onclick="window.location.href='/script/delete.py';">Click</button>
+      </div>
+    </div>
+
+    
+    <!-- ───────────────────────────────────────────────────────────────── -->
+    <!-- ─── Testing With Telnet ─── -->
+
+    <div class="box">
+      <div>
+        <div class="card‐title">Testing With Telnet</div>
+        <ul class="card‐content">
+          <li>Manually send request via terminal</li>
+          <li>Test HTTP parsing & validation</li>
+          <li>Simulate "Connection: closed"</li>
+        </ul>
+      </div>
+      <div class="card‐buttons">
+        <button onclick="window.location.href='/telnet.html';">Click</button>
+      </div>
+    </div>
+
+    <!-- ───────────────────────────────────────────────────────────────── -->
+    <!-- ─── Redirect ─── -->
+
+    <div class="box">
+      <div>
+        <div class="card‐title">Redirect</div>
+        <ul class="card‐content">
+          <li>External &amp; internal redirect</li>
+        </ul>
+      </div>
+      <div class="card‐buttons">
+        <button onclick="window.location.href='/google/';">
+          <img src="./photos/google.png" alt="Google" style="height:16px; vertical-align:middle;">
+        </button>
+        <button onclick="window.location.href='/youtube/';">
+          <img src="./photos/youtube.png" alt="YouTube" style="height:16px; vertical-align:middle;">
+        </button>
+        <button onclick="window.location.href='/internal/';">INTERNAL</button>
+      </div>
+    </div>
+
+    <!-- ───────────────────────────────────────────────────────────────── -->
+    <!-- ─── Custom Error Page ─── -->
+
+    <div class="box">
+      <div>
+        <div class="card‐title">Custom Error Page</div>
+        <ul class="card‐content">
+          <li>Error: 403, 404, 500</li>
+        </ul>
+      </div>
+      <div class="card‐buttons">
+        <form action="/error/test.php" method="POST">
+          <input type="hidden" name="a" value="b">
+          <input type="hidden" name="c" value="d">
+          <button class="error" type="submit">Not CGI</button>
+        </form>
+        <button onclick="location.href='/invalidPath/'">Invalid path</button>
+        <button onclick="location.href='/error/cgiCrash.py'">CGI Crash</button>
+        <button onclick="location.href='/error/cgiHang.py'">CGI Hang</button>
+        <button onclick="location.href='/error'">No default / autoindex</button>
+      </div>
+    </div>
+
+    <!-- ───────────────────────────────────────────────────────────────── -->
+    <!-- ─── Default Error Page ─── -->
+
+    <div class="box">
+      <div>
+        <div class="card‐title">Default Error Page</div>
+        <ul class="card‐content">
+          <li>Error: 400, 405</li>
+          <li>More default error > See Server 2</li>
+        </ul>
+      </div>
+      <div class="card‐buttons">
+        <form action="/error/test.php" method="POST">
+          <button class="error" type="submit">Invalid Header</button>
+        </form>
+        <button onclick="location.href='/dummy/'">Invalid Method</button>
+      </div>
+    </div>
+    
+    <!-- ───────────────────────────────────────────────────────────────── -->
+    <!-- ─── Different port ─── -->
+
+    <div class="box">
+      <div>
+        <div class="card‐title">Different ports</div>
+      </div>
+      <div class="card‐buttons">
+        <button onclick="window.location.href='http://127.0.0.1:4000/';">Port 4000</button>
+        <button onclick="window.location.href='http://127.0.0.1:21000/';">Port 21000</button>
+        <button onclick="window.location.href='http://127.0.0.1:8050/';">Port 8050</button>
+      </div>
+    </div>
+
+
+    <!-- ───────────────────────────────────────────────────────────────── -->
+    <!-- ─── Virutal Hosting ─── -->
+
+    <div class="box">
+      <div>
+        <div class="card‐title">Virtual Hosting</div>
+        <ul class="card‐content">
+          <li>Multiple domains/servers on the same IP:port</li>
+        </ul>
+      </div>
+      <div class="card‐buttons">
+        <button onclick="window.location.href='/virtualHost.html';">Click</button>
+      </div>
+    </div>
+
+    <!-- ───────────────────────────────────────────────────────────────── -->
+    <!-- ─── Other Servers ─── -->
+
+    <div class="box">
+      <div>
+        <div class="card‐title">Other Servers</div>
+      </div>
+      <div class="card‐buttons">
+        <button onclick="window.location.href='http://127.0.0.1:6900/';">Server 2</button>
+        <button onclick="window.location.href='http://127.0.0.1:9000/';">Server 3</button>
+      </div>
+    </div>
+
+
+    <!-- ───────────────────────────────────────────────────────────────── -->
+    <!-- ─── Testing Reference ─── -->
+
+    <div class="box">
+      <div>
+        <div class="card‐title">Testing Reference</div>
+      </div>
+      <div class="card‐buttons">
+        <button onclick="window.location.href='/statuscode.html';">Status Code</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ───────────────────────────────────────────────────────────────── -->
+  <!-- BONUS Grid -->
+
+  <div class="grid-title"><h2>BONUS</h2></div>
+      <div class="grid‐container">
+
+    <!-- ───────────────────────────────────────────────────────────────── -->
+    <!-- ───  Remember me ─── -->
+
+    <div class="box">
+      <div>
+        <div class="card‐title">Remember me</div>
+        <ul class="card‐content">
+          <li>Use cookie and maintain session</li>
+        </ul>
+      </div>
+      <div class="card‐buttons">
+        <button  onclick="window.location.href='/script/remember.py';">Click</button>
+      </div>
+    </div>
+
+
+  <!-- ───────────────────────────────────────────────────────────────── -->
+    <!-- ───  Other CGI ─── -->
+
+    <div class="box">
+      <div>
+        <div class="card‐title">Other CGI</div>
+        <ul class="card‐content">
+          <li>CGI script besides Python</li>
+        </ul>
+      </div>
+      <div class="card‐buttons">
+        <button  onclick="window.location.href='/script/hello.php';">PHP</button>
+        <button  onclick="window.location.href='/script/hello.js';">Javascript</button>
+      </div>
+
+  <!-- ───────────────────────────────────────────────────────────────── -->
+    </div>
+  </div>
+</body>
+</html>

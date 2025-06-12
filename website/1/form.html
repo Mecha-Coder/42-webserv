@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User Information Form</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <style>
+   body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    min-height: 100vh;
+    position: relative;
+    }
+
+    .top-header {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    }
+
+    .top-header img.logo-42 {
+    height: 60px;
+    width: auto;
+    }
+
+    .centering {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    }
+
+    .form-container {
+    background-color: #fff;
+    padding: 30px 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    }
+
+    h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+    }
+
+    label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 6px;
+    color: #555;
+    }
+
+    input[type="text"],
+    select,
+    textarea {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    box-sizing: border-box;
+    }
+
+    textarea {
+    resize: vertical;
+    }
+
+    button {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    background-color: #0066cc;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+    background-color: #0052a3;
+    }
+  </style>
+</head>
+<body>
+    <!-- Top-left logo -->
+    <div class="top-header">
+      <a href="/">
+      <img class="logo-42" src="./photos/42_logo.png" alt="42 Logo">
+      </a>
+    </div>
+  
+    <!-- Centered form container -->
+    <div class="centering">
+      <div class="form-container">
+        <h1>User Information Form</h1>
+        <form action="/script/form.py" method="POST">
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="name" required>
+  
+          <label for="occupation">Occupation:</label>
+          <input type="text" id="occupation" name="occupation" required>
+  
+          <label for="nationality">Nationality:</label>
+          <select id="nationality" name="nationality" required>
+            <option value="">Select your nationality</option>
+            <option value="American">American</option>
+            <option value="British">British</option>
+            <option value="Canadian">Canadian</option>
+            <option value="French">French</option>
+            <option value="Japanese">Japanese</option>
+            <option value="Other">Other</option>
+          </select>
+  
+          <label for="about">About you:</label>
+          <textarea id="about" name="about" rows="4" required></textarea>
+  
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+    </div>
+  </body>
+  
+</html>
