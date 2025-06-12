@@ -1,5 +1,13 @@
 #include "../include/webserv.hpp"
 
+volatile sig_atomic_t running = 1;
+
+void handleSigInt(int signum)
+{
+	(void)signum;
+	running = 0;
+}
+
 void outgoing(struct pollfd &watch, ClientManager &cManager, size_t &index)
 {
 	Str		where;
@@ -153,7 +161,7 @@ void runServer(Watchlist &watcher, ServerManager &sManager)
 	int 			pollRet;
 	ClientManager	cManager(watcher);
 
-	while (true)
+	while (running)
 	{
 		pollRet = poll(&watcher[0], watcher.size(), -1);
 		where   = "Polling status= " + toStr(pollRet);	
@@ -178,6 +186,8 @@ void runServer(Watchlist &watcher, ServerManager &sManager)
 
 int main()
 {
+	signal(SIGINT, handleSigInt);
+
 	Servers serverList;
 	serverList.push_back(server_1());
 	serverList.push_back(server_2());
@@ -197,4 +207,6 @@ int main()
 		      << "\n---------------------------------------------"
 			<< "--------------------------------------------\n" << std::endl;
 	runServer(watcher, sManager);
+
+	std::cout << RED "Shutting down server 👋" RESET << std::endl;
 }

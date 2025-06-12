@@ -154,6 +154,9 @@ Server server_2()
 
     List noCgi;
 
+    List pyCgi;
+        pyCgi.push_back(".py");
+
     List onlyGET; 
         onlyGET.push_back("GET");
 
@@ -161,7 +164,7 @@ Server server_2()
 
     Route route1 (
         onlyGET,
-        noCgi,
+        pyCgi,
         "/",
         "",
         "main.html",

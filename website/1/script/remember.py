@@ -5,6 +5,9 @@ import cgi
 import html
 import sys
 import os
+from http.cookies import SimpleCookie
+from datetime import datetime, timedelta, timezone
+from email.utils import format_datetime
 
 KEY = "!P5t;2<h?A3K+%S:ePE#H_G^+qkmy|UEOcc9lMy\"iB[4C!uH<BjnAD+?h}8K@9"
 ROUNDS = 7
@@ -44,7 +47,10 @@ def parse_form() -> dict:
 #============================================================================
 def parse_cookie(cookie: str) -> dict:
 
-    secret = decrypt(cookie.split('=', 1)[1])
+    data = SimpleCookie()
+    data.load(cookie)
+
+    secret = decrypt(data['secret'].value)
     parts = secret.split(DELIMITER)
 
     if len(parts) == 2:
@@ -56,7 +62,7 @@ def parse_cookie(cookie: str) -> dict:
 
 #============================================================================
 
-def make_header(content_length: int, set_cookie: dict) -> str:
+def make_header(content_length: int, data: dict) -> str:
 
     header  = [
         "HTTP/1.1 200 OK\r\n",
@@ -64,16 +70,19 @@ def make_header(content_length: int, set_cookie: dict) -> str:
         f"Content-Length: {content_length}\r\n",
     ]
 
-    if not set_cookie:
+    if not data:
         header.append("\r\n")
     else:
-        secret = set_cookie['username'] + DELIMITER + set_cookie['loginTime']
+        secret = data['username'] + DELIMITER + data['loginTime']
         secret = encrypt(secret)
 
-        header.extend([
-            f"Set-Cookie: secret={secret}",
-            "\r\n\r\n"
-        ])
+        cookie = SimpleCookie()
+        expires_time = datetime.now(timezone.utc) + timedelta(minutes=10)
+        cookie['secret'] = secret
+        cookie['secret']['Expires'] = format_datetime(expires_time, usegmt=True)
+        cookie['secret']['Path'] = '/script'
+
+        header.append(f"{cookie.output()}\r\n\r\n")
 
     return ''.join(header)
 
@@ -156,7 +165,7 @@ def make_body(data: dict, method: str) -> str:
         body.extend([
             "    <h3>Welcome back 👋</h3>\n",
             f"   <h3>{data['username']}</h3>\n",
-            f"    <p>Yes, I remembered befriended you on {data['loginTime']}</p>\n",
+            f"    <p>Yes, I remember befriending you on {data['loginTime']}</p>\n",
             "       <button onclick=\"deleteUsernameCookie()\">Forget Me</button>\n",
     "\n",
         ])

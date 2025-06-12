@@ -11,6 +11,7 @@
 #include <ctime>
 #include <cctype>
 #include <algorithm>
+#include <csignal>
 
 #include <arpa/inet.h>
 #include <netinet/in.h>

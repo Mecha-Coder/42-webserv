@@ -2,6 +2,7 @@
 
 size_t strToSizeT(const Str &s);
 void uriDecode(Str &s);
+Str trim(const Str s);
 
 bool not_space(int ch) {
     return !std::isspace(ch);
@@ -22,17 +23,12 @@ void Client::parseLine(Str line)
 void Client::parseHead(Str info)
 {
     Str temp, key, value;
-    size_t pos = info.find(": ");
+    size_t pos = info.find(":");
 
     if (pos != info.npos)
     {
-        temp = info.substr(0, pos);
-        value = info.substr(pos + 2);
-
-		value.erase(value.begin(), std::find_if(value.begin(), value.end(), not_space));
-
-		std::istringstream iss(temp);
-    	iss >> key;
+        key = trim(info.substr(0, pos));
+        value = trim(info.substr(pos + 1));
 
         _header[key] = value;
 
