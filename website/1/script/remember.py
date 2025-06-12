@@ -102,6 +102,15 @@ def make_body(data: dict, method: str) -> str:
         "    h1 {\n",
         "      color: #333;\n",
         "    }\n",
+        "   .top-header {\n",
+        "    position: absolute;\n",
+        "    top: 20px;\n",
+        "    left: 20px;\n",
+        "   }\n\n",
+        "   .top-header img.logo-42 {\n",
+        "    height: 60px;\n",
+        "    width: auto;\n",
+        "   }\n\n",
         "    .container {\n",
         "      background: white;\n",
         "      padding: 2em;\n",
@@ -128,20 +137,26 @@ def make_body(data: dict, method: str) -> str:
         "  </style>\n",
         "</head>\n",
         "<body>\n",
+        "  <div class=\"top-header\">\n",
+        "    <a href=\"/\">",
+        "    <img class=\"logo-42\" src=\"../photos/42_logo.png\" alt=\"42 Logo\">\n",
+        "    </a>"
+        "  </div>\n",
         "  <div class=\"container\">\n",
         "    <h1>Remember User</h1>\n",
     ]
 
     if method=="POST" and data:
         body.extend([
-            f"    <h3>Thanks {data['username']}</h3>\n",
+            f"    <h3>{data['username']}</h3>\n",
             "     <p>I will remember you next time you visit</p>\n"
         ])
 
     elif method=="GET" and data:
         body.extend([
-            f"    <h3>Welcome back {data['username']}</h3>\n",
-            f"     <p>Yes, I remembered. We became good friends on {data['loginTime']}</p>\n",
+            "    <h3>Welcome back 👋</h3>\n",
+            f"   <h3>{data['username']}</h3>\n",
+            f"    <p>Yes, I remembered befriended you on {data['loginTime']}</p>\n",
             "       <button onclick=\"deleteUsernameCookie()\">Forget Me</button>\n",
     "\n",
         ])

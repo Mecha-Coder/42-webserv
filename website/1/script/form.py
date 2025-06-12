@@ -122,7 +122,9 @@ def form_summary(data: dict) -> str:
         "</head>\n",
         "<body>\n",
         "  <div class=\"top-header\">\n",
+        "    <a href=\"/\">",
         "    <img class=\"logo-42\" src=\"../photos/42_logo.png\" alt=\"42 Logo\">\n",
+        "    </a>"
         "  </div>\n",
         "  <div class=\"centering\">\n",
         "    <div class=\"form-container\">\n"
@@ -183,10 +185,12 @@ def save_form(data: dict, root: str) -> bool:
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = f"{timestamp}.txt"
 
-    filepath = os.path.join(root, "archive", "forms", filename)
+    folderpath = os.path.join(root, "archive", "forms")
+    filepath = os.path.join(folderpath, filename)
 
 
     try:
+        os.makedirs(folderpath , exist_ok=True)
         with open(filepath, "w", encoding="utf-8") as f:
             for key, value in data.items():
                 f.write(f"{key}: {value}\n")

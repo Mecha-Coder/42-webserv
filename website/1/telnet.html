@@ -57,7 +57,9 @@
 
   <!-- 42 Logo in Top-Left -->
   <div class="top-header">
+    <a href="/">
     <img class="logo-42" src="./photos/42_logo.png" alt="42 Logo" />
+    </a>
   </div>
 
   <h1>Telnet Usage Guide</h1>
@@ -124,13 +126,6 @@ Host: example.com
     <li>Press <code>Ctrl + ]</code> to get the <code>telnet&gt;</code> prompt, then type <code>quit</code>.</li>
     <li>Or in another shell, find the PID (<code>ps aux | grep telnet</code>) and <code>kill &lt;PID&gt;</code>.</li>
     <li>Sometimes <code>Ctrl + C</code> or <code>Ctrl + D</code> will also work.</li>
-  </ul>
-
-  <h2>6. Additional Tips</h2>
-  <ul>
-    <li>Use HTTP/1.0 by sending <code>GET / HTTP/1.0</code> if you prefer simpler headers (older servers default to closing connection).</li>
-    <li>For <strong>HTTPS</strong>, use <code>openssl s_client -connect example.com:443</code> instead of telnet.</li>
-    <li>Always verify server responses (status line, headers, body) to ensure your parser handles edge cases.</li>
   </ul>
 
 </body>

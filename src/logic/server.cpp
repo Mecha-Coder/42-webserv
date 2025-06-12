@@ -26,6 +26,7 @@ Server server_1()
     List allCgi;
         allCgi.push_back(".py");
         allCgi.push_back(".php");
+        allCgi.push_back(".js");
 
     List onlyGET; 
         onlyGET.push_back("GET");

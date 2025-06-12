@@ -52,11 +52,9 @@ bool Server::matchHost(const Str &host) const
     List::const_iterator i;
     for (i = _listen.begin(); i != _listen.end(); i++)
     {
-        std::cout << "Compare " << (_serverName + ":" + *i) << " against " << host << std::endl;
         if ((_serverName + ":" + *i) == host)
             return true;
 
-        std::cout << "Compare " << (Str(IP) + ":" + *i) << " against " << host << std::endl;
         if ((Str(IP) + ":" + *i) == host)
             return true;
     }
@@ -70,7 +68,6 @@ bool Server::matchPort(const Str &port) const
     List::const_iterator i;
     for (i = _listen.begin(); i != _listen.end(); i++)
     {
-        std::cout << "Compare " << *i << " against " << port << std::endl;
         if (*i == port)
             return true;
     }

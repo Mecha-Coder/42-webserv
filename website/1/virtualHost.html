@@ -57,7 +57,9 @@
 <body>
   <!-- 42 Logo in Top-Left -->
   <div class="top-header">
+    <a href="/">
     <img class="logo-42" src="./photos/42_logo.png" alt="42 Logo" />
+    </a>
   </div>
 
   <h1>How to Test Virtual Hosting</h1>
@@ -74,11 +76,21 @@
 
   <div class="note">
     <strong>We test using Option 2. Here are the test cases:</strong>
+    
+    <p>Server1:</p>
     <pre>
+curl --resolve demo.eval.com:4000:127.0.0.1 http:/demo.eval.com:4000/
 curl --resolve example.com:4000:127.0.0.1 http://example.com:4000/
 curl --resolve test.com:4000:127.0.0.1 http://test.com:4000/
 curl --resolve unknown.com:4000:127.0.0.1 http://unknown.com:4000/
-    </pre>
+  </pre>
+
+    <p>Server2:</p>
+    <pre>curl --resolve server_2.com:6900:127.0.0.1 http:/server_2.com:6900/</pre>
+
+    <p>Server3:</p>
+    <pre>curl --resolve server_3.com:9000:127.0.0.1 http:/server_3.com:9000/</pre>
+
   </div>
 
 </body>
