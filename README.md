@@ -1,4 +1,22 @@
-# webserv_42
+# 🌐 Webserv 42
+
+### How to test server
+---
+
+## 🚀 1) Execute Program
+
+```bash
+git clone https://github.com/Mecha-Coder/webserv_42.git Webserv
+cd Webserv
+make
+./webserv
+```
+## 🌍 2) Access the Web Server
+Open your favorite browser and go to:
+
+```bash
+http://127.0.0.1:4000/
+```
 
 ### CGI
 
