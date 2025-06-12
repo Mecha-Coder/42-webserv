@@ -42,6 +42,15 @@ Parser::Parser(TokenList tks) {
 										  Token::NEWLINE | Token::COMMENT,
 										  Token::COMMA | Token::CPAREN | Token::OPAREN);
 			lastmp->push_back(TokenPair(res, values, is_array));
+
+			//TODO: debug print
+			if (!res.empty()) {
+				std::cout << "[Parser] Inserted key = ";
+				FOR_EACH(TokenList, res, tok)
+					std::cout << tok->value << ".";
+				std::cout << (is_array ? " (array)" : " (scalar)") << std::endl;
+			}
+
 			break;
 		}
 		case Token::OPAREN: {
@@ -56,6 +65,14 @@ Parser::Parser(TokenList tks) {
 			TokenList res = UntilIgnore(cur, Token::CPAREN | Token::COMMENT, Token::DOT);
 			tm->push_back(TomlBlock(res, TokenMap(), type));
 			lastmp = &tm->back().mp;
+
+			// TODO: debug print
+			std::cout << "[PARSER] type=" << (type == TomlBlock::ARRAY ? "ARRAY" : "TABLE") << " → ";
+			FOR_EACH(TokenList, res, tok) {
+				std::cout << tok->value << ".";
+			}
+			std::cout << std::endl;
+
 			break;
 		}
 		default:

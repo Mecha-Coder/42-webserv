@@ -165,6 +165,9 @@ Config::e_error ValidServer(toml::Table& server) {
  * @brief Validation before parse
  */
 Config::e_error Config::PreValidate(toml::Table& config) {
+	// TODO: debug print
+	std::cout << "server type: " << config["server"].getTypeName() << std::endl;
+	std::cout << "server size: " << config["server"].Size() << std::endl;
 	
 	toml::Table& t = config["server"];
 	if (t.isType(toml::Table::NONE) || !t.isType(toml::Table::ARRAY))
@@ -199,8 +202,6 @@ Config::e_error Config::PostValidate() {
 }
 
 Config::Config(toml::Table& config) {
-	std::cout << "server type: " << config["server"].getTypeName() << std::endl;
-	std::cout << "server size: " << config["server"].Size() << std::endl;
 	if ((error = PreValidate(config) )!= Config::ERROR_NONE)
 	{
 		Print();

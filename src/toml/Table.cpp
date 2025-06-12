@@ -6,7 +6,7 @@
 /*   By: rcheong <rcheong@student.42kl.edu.my>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 21:10:24 by rcheong           #+#    #+#             */
-/*   Updated: 2025/05/08 21:10:25 by rcheong          ###   ########.fr       */
+/*   Updated: 2025/06/11 21:56:43 by rcheong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,6 @@
 
 using namespace toml;
 
-/**
- * @brief constructor for the table class.
- * @param type The type of the table (TABLE, ARRAY, STRING, NONE).
- * @details Init table with the specified type.
- */
 Table::Table(EToml t) : type(t), str("") {}
 
 Table::Table(TomlMap& m) : type(TABLE), map(m) {}
@@ -39,10 +34,6 @@ Table::Table(const Table& other) {
 	}
 }
 
-/**
- * @brief Destructor for the table class.
- * @details Cleans up the map by deleting all dynamically allocated tables.
- */
 Table::~Table() {
 	FOR_EACH(TomlMap, map, it) {
 		if (it->second != NULL) {
@@ -52,9 +43,6 @@ Table::~Table() {
 	}
 }
 
-/**
- * @brief Adds new table to vector, grouped in array.
- */
 void Table::Push(const Table& t) {
 	vec.push_back(t);
 }
