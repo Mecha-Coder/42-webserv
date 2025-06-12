@@ -2,6 +2,8 @@
 
 import os
 import sys
+import cgi
+import html
 
 #============================================================================
 
@@ -14,9 +16,10 @@ def makeBody(method: str) -> str:
         "<html><head><title>HTTP Request Detail</title></head>\n",
         "<body>\n",
         "   <h1>From Python CGI</h1>\n"
+        "os.path.join(root, \"archive\", \"form\") ==> ",
+            os.path.join(root, "archive", "form"),
         "   <h2>HTTP Request Header</h2>\n",
         "   <p>\n",
-            os.path.join(root, "archive", "form"),
         "   </p>\n",
         "   <ul>\n"
     ]
@@ -25,13 +28,22 @@ def makeBody(method: str) -> str:
     body.append("   </ul>\n")
 
     if method == "POST":
-        body.extend([
-            "   <h2>Here is the body</h2>\n",
+        body.append("   <h2>Here is the body</h2>\n",)
+
+        if os.environ.get("Content-Type", "") == "application/x-www-form-urlencoded":
+            form = cgi.FieldStorage()
+            body.append("<ul>\n")
+            for key in form.keys():
+                value = html.escape(form.getfirst(key, ""))
+                body.append(f"  <li><strong>{html.escape(key)}:</strong> {value}</li>\n")
+            body.append("</ul>\n")
+        else:
+            body.extend([
             "   <p>\n",
             sys.stdin.read(),
             "   </p>\n",
-        ])
-
+            ])
+ 
     body.append("</body>\n</html>\n")
     return ''.join(body)
 

@@ -9,6 +9,7 @@
 #include <cstdlib>
 #include <cerrno>
 #include <ctime>
+#include <cctype>
 #include <algorithm>
 
 #include <arpa/inet.h>
