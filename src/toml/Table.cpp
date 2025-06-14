@@ -35,12 +35,20 @@ Table::Table(const Table& other) {
 }
 
 Table::~Table() {
-	FOR_EACH(TomlMap, map, it) {
-		if (it->second != NULL) {
-			delete it->second;
-			it->second = NULL;
+	clearCurrentData();
+}
+
+void Table::clearCurrentData() {
+	if (type == TABLE) {
+		FOR_EACH(TomlMap, map, it) {
+			if (it->second != NULL) {
+				delete it->second;
+				it->second = NULL;
+			}
 		}
+		map.clear();
 	}
+	// Don't clear vec or str here as they might be needed
 }
 
 void Table::Push(const Table& t) {
@@ -48,7 +56,7 @@ void Table::Push(const Table& t) {
 }
 
 void Table::Insert(const std::string& s, Table* t) {
-	if (t->isType(ARRAY)) {
+	if (type == ARRAY) {
 		if (vec.empty())
 			vec.push_back(Table(TABLE));
 		vec.back().Insert(s, t);
@@ -59,12 +67,12 @@ void Table::Insert(const std::string& s, Table* t) {
 
 void Table::Create(const std::string& s) {
 	Table* target = this;
-	if (isType(ARRAY)) {
+	if (type == ARRAY) {
 		if (vec.empty())
 			vec.push_back(Table(TABLE));
 		target = &vec.back();
 	}
-	if (!target->Get(s).isType(TABLE)) {
+	if (!target->Get(s).isType(TABLE) && !target->Get(s).isType(ARRAY)) {
 		target->Insert(s, new Table(TABLE));
 	}
 }
@@ -74,6 +82,21 @@ bool Table::isType(EToml t) const {
 }
 
 void Table::setType(EToml t) {
+	if (type == t) {
+		return; // No change needed
+	}
+	
+	// Only clear map data when converting away from TABLE
+	if (type == TABLE && t != TABLE) {
+		FOR_EACH(TomlMap, map, it) {
+			if (it->second != NULL) {
+				delete it->second;
+				it->second = NULL;
+			}
+		}
+		map.clear();
+	}
+	
 	type = t;
 }
 
@@ -138,14 +161,7 @@ Table& Table::operator=(const Table& other) {
 	if (this == &other)
 		return *this;
 
-	TomlMap::iterator it = map.begin();
-	while (it != map.end()) {
-		delete it->second;
-		++it;
-	}
-	map.clear();
-	vec.clear();
-	str.clear();
+	clearCurrentData();
 
 	this->type = other.type;
 	this->str = other.str;

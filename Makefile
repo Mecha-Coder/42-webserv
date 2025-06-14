@@ -1,96 +1,58 @@
-# Standard
-NAME		=	webserv
+# Makefile for the web server project
+CXX = g++
+CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -g
+SRCDIR = src
+OBJDIR = obj
 
-# Directories
-INC			=	inc/
-SRC_DIR		=	src
-OBJ_DIR		=	obj
-# SRCB_DIR	=	srcb
-# OBJB_DIR	=	objb
+# Source files
+TOML_SRCS = $(SRCDIR)/toml/Lexer.cpp $(SRCDIR)/toml/ParseError.cpp $(SRCDIR)/toml/Parser.cpp \
+            $(SRCDIR)/toml/Syntax.cpp $(SRCDIR)/toml/Table.cpp $(SRCDIR)/toml/Token.cpp $(SRCDIR)/toml/Toml.cpp
+CONFIG_SRCS = $(SRCDIR)/config/Config.cpp
+CGI_SRCS = $(SRCDIR)/cgi/CGIHandler.cpp $(SRCDIR)/cgi/ScopedEnvArray.cpp
+UTILS_SRCS = $(SRCDIR)/utils/Utils.cpp
 
-# Compiler & flags
-CC			=	c++
-WFLAGS		=	-Wall -Wextra -Werror -std=c++98 -pedantic
-IFLAGS		=	-I$(INC)
-DSYM		=	-g3
-FSAN		=	-fsanitize=address $(DSYM)
-CFLAGS		=	$(WFLAGS) $(IFLAGS)
-RM			=	rm -f
+# Object files
+TOML_OBJS = $(TOML_SRCS:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
+CONFIG_OBJS = $(CONFIG_SRCS:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
+CGI_OBJS = $(CGI_SRCS:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
+UTILS_OBJS = $(UTILS_SRCS:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 
-# Sources & objects
-SRC			=	$(shell find $(SRC_DIR) -type f -name "*.cpp")
-OBJ			=	$(patsubst $(SRC_DIR)%.cpp, $(OBJ_DIR)%.o, $(SRC))
-# SRCB		=	$(shell find $(SRCB_DIR) -type f -name "*.cpp")
-# OBJB		=	$(patsubst $(SRCB_DIR)%.cpp, $(OBJB_DIR)%.o, $(SRCB))
+ALL_OBJS = $(TOML_OBJS) $(CONFIG_OBJS) $(CGI_OBJS) $(UTILS_OBJS)
 
-# Colors
-RED		=	\033[1;31m
-GREEN	=	\033[1;32m
-YELLOW	=	\033[1;33m
-BLUE	=	\033[1;34m
-RESET	=	\033[0m
+# Executables
+CONFIG_TARGET = config_test
+CGI_TARGET = cgi_test
 
-# Build rules
-all:		$(NAME)
-	@echo "$(GREEN)Successfully compiled!$(RESET)"
+.PHONY: all clean config cgi
 
-$(NAME):	$(OBJ)
-	@echo "\n$(BLUE)Building$(RESET)\t$(NAME)"
-	@make -sC $(MLX_DIR)
-	@$(CC) $(CFLAGS) -o $(NAME) $(OBJ)
+all: $(CONFIG_TARGET) $(CGI_TARGET)
 
-$(OBJ_DIR):
-	@mkdir -p $(OBJ_DIR)
+# Create object directories
+$(OBJDIR):
+	mkdir -p $(OBJDIR)/toml $(OBJDIR)/config $(OBJDIR)/cgi $(OBJDIR)/utils
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
-	@mkdir -p $(dir $@)
-	@printf "$(YELLOW)Compiling\t$(RESET)%-33.33s\r" $@
-	@$(CC) $(CFLAGS) -c $< -o $@
+# Object file compilation
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp | $(OBJDIR)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# bonus:		clean $(OBJ) $(OBJB)
-# 	@echo "$(BLUE)Linking bonus objects...$(RESET)"
-# 	@$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(OBJB)
-# 	@echo "$(GREEN)Successfully compiled bonus!$(RESET)"
+# Config test executable
+$(CONFIG_TARGET): $(TOML_OBJS) $(CONFIG_OBJS) $(UTILS_OBJS) $(OBJDIR)/config/main.o
+	$(CXX) $(CXXFLAGS) $^ -o $@
 
-# $(OBJB_DIR):
-# 	@mkdir -p $(OBJB_DIR)
+# CGI test executable  
+$(CGI_TARGET): $(CGI_OBJS) $(UTILS_OBJS) $(OBJDIR)/cgi/main_cgi.o
+	$(CXX) $(CXXFLAGS) $^ -o $@
 
-# $(OBJB_DIR)/%.o: $(SRCB_DIR)/%.cpp | $(OBJB_DIR)
-# 	@mkdir -p $(dir $@)
-# 	@printf "$(YELLOW)Compiling\t$(RESET)%-33.33s\r" $@
-# 	@$(CC) $(CFLAGS) -c $< -o $@
+# Individual targets
+config: $(CONFIG_TARGET)
+cgi: $(CGI_TARGET)
 
-# Scruba dub dub
 clean:
-	@if [ -d "$(OBJ_DIR)" ]; then \
-	$(RM) -rf $(OBJ_DIR); \
-	echo "$(RED)Deleting$(RESET)\t"$(OBJ_DIR); else \
-	echo "$(BLUE)No $(NAME) objects to remove.$(RESET)"; \
-	fi;
-# @if [ -d $(OBJB_DIR) ]; then \
-# $(RM) -rf $(OBJB_DIR); \
-# echo "$(RED)Deleting$(RESET)\t$(OBJB_DIR)"; \
-# fi;
+	rm -rf $(OBJDIR) $(CONFIG_TARGET) $(CGI_TARGET)
 
-fclean:	clean
-	@if [ -f "$(NAME)" ]; then \
-	$(RM) -f $(NAME); \
-	echo "$(RED)Deleting$(RESET)\t"$(NAME); else \
-	echo "$(BLUE)No executable $(NAME) to remove.$(RESET)"; \
-	fi;
+# Test targets
+test-config: $(CONFIG_TARGET)
+	./$(CONFIG_TARGET) config.toml
 
-re:		fclean all
-
-# Debugging
-asan:		CFLAGS	+=	$(FSAN)
-asan:	
-	@echo "$(YELLOW)Running with AddressSanitizer...$(RESET)"
-
-valgrind:	$(NAME)
-	@echo "$(YELLOW)Running with Valgrind...$(RESET)"
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME)
-
-test:		re
-	@echo "$(YELLOW)Running tests...$(RESET)"
-
-.PHONY:	all bonus clean fclean re asan valgrind test
+test-cgi: $(CGI_TARGET)
+	./$(CGI_TARGET)

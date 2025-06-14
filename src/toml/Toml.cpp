@@ -33,7 +33,10 @@ Table& List2Map(TokenList list, Table& t) {
 			// TODO: debug print
 			std::cout << "[List2Map] Accessing key: " << it->value << " in type: " << last_t->getTypeName() << std::endl;
 			
-			last_t = &last_t->Get(last_t->vec.size() - 1);
+			// For arrays, we want to access the last element if it exists
+			if (!last_t->vec.empty()) {
+				last_t = &last_t->Get(last_t->vec.size() - 1);
+			}
 		}
 	}
 	return *last_t;
@@ -65,29 +68,6 @@ void FillMap(TokenMap& mp, Table& t) {
 	}
 }
 
-struct MapPath {
-	Table* parent;
-	std::string key;
-};
-
-/**
- * @brief Resolves a list of keys to the parent Table and final key.
- * @details This allows Build() to modify the final entry (e.g., "server") from TABLE to ARRAY.
- */
-MapPath ResolvePath(TokenList list, Table& root) {
-	Table* cur = &root;
-	TokenList::iterator it = list.begin();
-	while (NextIter(it) != list.end()) {
-		cur->Create(it->value);
-		cur = &cur->Get(it->value);
-		++it;
-	}
-	MapPath result;
-	result.parent = cur;
-	result.key = it->value;
-	return result;
-}
-
 Table* Build(Parser& p) {
 	Table* t = new Table(Table::TABLE);
 
@@ -106,33 +86,59 @@ Table* Build(Parser& p) {
 
 		if (it->type == TomlBlock::TABLE) {
 			Table& last = List2Map(it->prefix, *t);
-			if (last.type == Table::ARRAY) {
+			if (last.type == Table::ARRAY && !last.vec.empty()) {
 				last = last.Get(last.vec.size() - 1);
 			}
 			FillMap(it->mp, last);
 			continue;
 		}
+		
+		// Handle ARRAY type blocks
 		Table tmp = Table(Table::TABLE);
-		Table& last = List2Map(it->prefix, *t);
-
-		// TODO: debug print
-		if (!last.isType(Table::ARRAY)) {
-			if (last.isType(Table::TABLE)) {
-				std::cout << "[Build] Upgrading TABLE to ARRAY for ";
-				for (TokenList::iterator tk = it->prefix.begin(); tk != it->prefix.end(); ++tk)
-					std::cout << tk->value << ".";
-				std::cout << std::endl;
-
-			Table old = last;
-			last.setType(Table::ARRAY);
-			last.vec.clear();
-			last.vec.push_back(old);
+		FillMap(it->mp, tmp);
+		
+		// Navigate to the target location
+		Table* target = t;
+		TokenList::iterator prefix_it = it->prefix.begin();
+		
+		// Navigate to parent containers
+		while (NextIter(prefix_it) != it->prefix.end()) {
+			target->Create(prefix_it->value);
+			target = &target->Get(prefix_it->value);
+			if (target->type == Table::ARRAY && !target->vec.empty()) {
+				target = &target->Get(target->vec.size() - 1);
+			}
+			++prefix_it;
+		}
+		
+		// Handle the final key (e.g., "server")
+		std::string final_key = prefix_it->value;
+		
+		// Check if this key already exists
+		Table& final_target = target->Get(final_key);
+		if (final_target.isType(Table::NONE)) {
+			// First time seeing this key - create as ARRAY immediately
+			target->Insert(final_key, new Table(Table::ARRAY));
+			std::cout << "[Build] Creating new ARRAY for " << final_key << std::endl;
+		} else if (!final_target.isType(Table::ARRAY)) {
+			// Convert existing to ARRAY - but preserve any existing data
+			std::cout << "[Build] Converting to ARRAY for ";
+			FOR_EACH(TokenList, it->prefix, tok)
+				std::cout << tok->value << ".";
+			std::cout << std::endl;
+			
+			// Save existing data if it's a TABLE
+			if (final_target.isType(Table::TABLE)) {
+				Table old_table = final_target; // Copy constructor
+				final_target.setType(Table::ARRAY);
+				final_target.vec.push_back(old_table);
 			} else {
-			last.setType(Table::ARRAY);
+				final_target.setType(Table::ARRAY);
 			}
 		}
-		FillMap(it->mp, tmp);
-		last.Push(tmp);
+		
+		// Add the new entry to the array
+		target->Get(final_key).Push(tmp);
 	}
 
 	return t;

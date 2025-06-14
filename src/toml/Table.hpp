@@ -78,6 +78,9 @@ public:
 	TomlMap map;
 	std::vector<Table> vec;
 	std::string str;
+
+private:
+	void clearCurrentData();
 };
 
 }

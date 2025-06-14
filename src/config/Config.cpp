@@ -6,7 +6,7 @@
 #include "../toml/Table.hpp"
 #include "Config.hpp"
 
-void FillArr(toml::Table& t, string key, vector<string>& v, ServerConfig& s) {
+void FillArr(toml::Table& t, const string& key, vector<string>& v, const ServerConfig& s) {
     if (t[key].isType(toml::Table::NONE))
     {
         v = s.allowed_methods;
@@ -17,8 +17,8 @@ void FillArr(toml::Table& t, string key, vector<string>& v, ServerConfig& s) {
     }
 }
 
-LocationConfig FillLocation(toml::Table& location, ServerConfig& s) {
-	(void)location;
+LocationConfig FillLocation(toml::Table& location, const ServerConfig& s) {
+	// (void)location;
 	LocationConfig l;
 
 	l.prefix = location["prefix"].asStr("/");
@@ -201,7 +201,7 @@ Config::e_error Config::PostValidate() {
 	return Config::ERROR_NONE;
 }
 
-Config::Config(toml::Table& config) {
+Config::Config(toml::Table& config) : error(ERROR_NONE) {
 	if ((error = PreValidate(config) )!= Config::ERROR_NONE)
 	{
 		Print();
