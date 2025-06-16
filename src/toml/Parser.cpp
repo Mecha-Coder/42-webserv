@@ -44,12 +44,12 @@ Parser::Parser(TokenList tks) {
 			lastmp->push_back(TokenPair(res, values, is_array));
 
 			//TODO: debug print
-			if (!res.empty()) {
-				std::cout << "[Parser] Inserted key = ";
-				FOR_EACH(TokenList, res, tok)
-					std::cout << tok->value << ".";
-				std::cout << (is_array ? " (array)" : " (scalar)") << std::endl;
-			}
+			// if (!res.empty()) {
+			// 	std::cout << "[Parser] Inserted key = ";
+			// 	FOR_EACH(TokenList, res, tok)
+			// 		std::cout << tok->value << ".";
+			// 	std::cout << (is_array ? " (array)" : " (scalar)") << std::endl;
+			// }
 
 			break;
 		}
@@ -67,11 +67,11 @@ Parser::Parser(TokenList tks) {
 			lastmp = &tm->back().mp;
 
 			// TODO: debug print
-			std::cout << "[PARSER] type=" << (type == TomlBlock::ARRAY ? "ARRAY" : "TABLE") << " → ";
-			FOR_EACH(TokenList, res, tok) {
-				std::cout << tok->value << ".";
-			}
-			std::cout << std::endl;
+			// std::cout << "[PARSER] type=" << (type == TomlBlock::ARRAY ? "ARRAY" : "TABLE") << " → ";
+			// FOR_EACH(TokenList, res, tok) {
+			// 	std::cout << tok->value << ".";
+			// }
+			// std::cout << std::endl;
 
 			break;
 		}

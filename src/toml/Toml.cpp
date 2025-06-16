@@ -31,9 +31,9 @@ Table& List2Map(TokenList list, Table& t) {
 		if (NextIter(it) != list.end() && last_t->type == Table::ARRAY) {
 
 			// TODO: debug print
-			std::cout << "[List2Map] Accessing key: " << it->value << " in type: " << last_t->getTypeName() << std::endl;
+			// std::cout << "[List2Map] Accessing key: " << it->value << " in type: " << last_t->getTypeName() << std::endl;
 			
-			// For arrays, we want to access the last element if it exists
+			// for arrays, access the last element if it exists
 			if (!last_t->vec.empty()) {
 				last_t = &last_t->Get(last_t->vec.size() - 1);
 			}
@@ -54,14 +54,13 @@ void FillMap(TokenMap& mp, Table& t) {
 		}
 
 		//TODO: debug print
-		std::cout << "[FillMap] Inserting flat key = ";
-		FOR_EACH(TokenList, it->key, tok)
-			std::cout << tok->value << ".";
-		std::cout << " is_array=" << it->is_array;
-
-		if (last.isValid())
-			std::cout << " (existing type: " << last.getTypeName() << ")";
-		std::cout << std::endl;
+		// std::cout << "[FillMap] Inserting flat key = ";
+		// FOR_EACH(TokenList, it->key, tok)
+		// 	std::cout << tok->value << ".";
+		// std::cout << " is_array=" << it->is_array;
+		// if (last.isValid())
+		// 	std::cout << " (existing type: " << last.getTypeName() << ")";
+		// std::cout << std::endl;
 
 		last.setType(Table::STRING);
 		last.setString(it->value.front().value);
@@ -74,15 +73,15 @@ Table* Build(Parser& p) {
 	FillMap(p.mp, *t);
 
 	//TODO: debug print
-	std::cout << "[Build] Starting Build()" << std::endl;
+	// std::cout << "[Build] Starting Build()" << std::endl;
 
 	FOR_EACH(std::vector<TomlBlock>, p.tables, it) {
 
 		//TODO: debug print
-		std::cout << "[Build] Block prefix = ";
-		FOR_EACH(TokenList, it->prefix, tok)
-			std::cout << tok->value << ".";
-		std::cout << " type = " << (it->type == TomlBlock::ARRAY ? "ARRAY" : "TABLE") << std::endl;
+		// std::cout << "[Build] Block prefix = ";
+		// FOR_EACH(TokenList, it->prefix, tok)
+		// 	std::cout << tok->value << ".";
+		// std::cout << " type = " << (it->type == TomlBlock::ARRAY ? "ARRAY" : "TABLE") << std::endl;
 
 		if (it->type == TomlBlock::TABLE) {
 			Table& last = List2Map(it->prefix, *t);
@@ -119,13 +118,18 @@ Table* Build(Parser& p) {
 		if (final_target.isType(Table::NONE)) {
 			// First time seeing this key - create as ARRAY immediately
 			target->Insert(final_key, new Table(Table::ARRAY));
-			std::cout << "[Build] Creating new ARRAY for " << final_key << std::endl;
+
+			// TODO: debug print
+			// std::cout << "[Build] Creating new ARRAY for " << final_key << std::endl;
+
 		} else if (!final_target.isType(Table::ARRAY)) {
 			// Convert existing to ARRAY - but preserve any existing data
-			std::cout << "[Build] Converting to ARRAY for ";
-			FOR_EACH(TokenList, it->prefix, tok)
-				std::cout << tok->value << ".";
-			std::cout << std::endl;
+
+			// TODO: debug print
+			// std::cout << "[Build] Converting to ARRAY for ";
+			// FOR_EACH(TokenList, it->prefix, tok)
+			// 	std::cout << tok->value << ".";
+			// std::cout << std::endl;
 			
 			// Save existing data if it's a TABLE
 			if (final_target.isType(Table::TABLE)) {

@@ -1,9 +1,8 @@
 [[server]]
 port = "1337"
 host = "10.0.0.1"
-root = "www"
-server_name = ["example.com", "example2.com", "example3.com"]
-upload_path = "www/upload"
+root = "./website/1"
+server_name = ["hello"]
 index = ["index.html", "index.htm"]
 error_page = ["404", "/404.html"]
 _clientMaxBodySize = "10m"
