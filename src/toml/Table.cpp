@@ -6,7 +6,7 @@
 /*   By: rcheong <rcheong@student.42kl.edu.my>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 21:10:24 by rcheong           #+#    #+#             */
-/*   Updated: 2025/06/11 21:56:43 by rcheong          ###   ########.fr       */
+/*   Updated: 2025/06/20 15:48:52 by rcheong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,11 @@
 
 using namespace toml;
 
-Table::Table(EToml t) : type(t), str("") {}
+Table::Table(EToml t) : type(t), str(""), line(-1) {}
 
 Table::Table(TomlMap& m) : type(TABLE), map(m) {}
 
-Table::Table(const std::string& s) : type(STRING), str(s) {}
+Table::Table(const std::string& s) : type(STRING), str(s), line(-1) {}
 
 Table::Table(bool b) : type(STRING), str(b ? "true" : "false") {}
 
@@ -32,6 +32,7 @@ Table::Table(const Table& other) {
 	for (TomlMap::const_iterator it = other.map.begin(); it != other.map.end(); ++it) {
 		map[it->first] = new Table(*it->second);
 	}
+	line = other.line;
 }
 
 Table::~Table() {
@@ -171,6 +172,7 @@ Table& Table::operator=(const Table& other) {
 	}
 
 	this->vec = other.vec;
+	this->line = other.line;
 
 	return *this;
 }

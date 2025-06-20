@@ -1,0 +1,42 @@
+Server[0]
+============
+host           : [10.0.0.1  ]
+port           : [1337]
+server_name    : [ hello]
+root           : [./website/1  ]
+client_body    : [10m]
+upload_path    : []
+redirect       : []
+error_page     : [404 , /404.html]
+allowed_methods: []
+index          : [index.html , index.htm]
+
+	Route[0]
+	..............
+	prefix         : [/]
+	root           : [www]
+	autoindex      : [on]
+	upload         : [www/upload  ]
+	client_body    : [100m]
+	cgi            : []
+	error_page     : [404, www/error_pages/404.html]
+	redirect       : [old_about.html, about.html]
+	index          : []
+	allowed_methods: [GET, POST, DELETE]
+
+	Route[1]
+	..............
+	prefix         : [/html]
+	root           : [www]
+	autoindex      : [on]
+	upload         : []
+	client_body    : [10m]
+	cgi            : []
+	error_page     : [404, /404.html]
+	redirect       : [/html/success.html, /html/success_delete.html]
+	index          : [index.html, index.htm]
+	allowed_methods: [GET, HEAD, DELETE]
+
+
+------------------------------------------------------
+

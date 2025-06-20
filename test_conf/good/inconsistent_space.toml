@@ -1,0 +1,34 @@
+                    
+					
+					[[server]]
+
+	port        = "1337"
+	host        = "10.0.0.1  "
+	root        = "./website/1  "  
+	server_name = [" hello"]
+	index       = ["index.html ", "index.htm"]
+	error_page  = ["404 ", "/404.html"]
+	client_body = "10m"
+
+[[server.location]]
+										prefix 	         = "/"  
+										root             = "www"
+										allowed_methods  = ["GET" ,"POST", "DELETE"]
+										error_page       = ["404", "www/error_pages/404.html"]
+										autoindex        = "on"     
+										client_body      = "100m"   
+		upload           = "www/upload  "
+		redirect         = ["old_about.html", "about.html"]
+
+[[server.location]]
+		prefix           = "/html"
+		root             = "www"
+		index            = ["index.html", "index.htm"]   
+		allowed_methods  = ["GET", "HEAD", "DELETE"]
+		error_page       = ["404", "/404.html"]     
+
+
+
+		autoindex        = "on"
+		redirect         = ["/html/success.html", "/html/success_delete.html"]
+		client_body      = "10m"

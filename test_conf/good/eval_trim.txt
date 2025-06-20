@@ -1,0 +1,301 @@
+Server[0]
+============
+host           : [127.0.0.1] ✅
+port           : [4000, 8050, 21000] ✅
+server_name    : [demo.eval.com]  ✅
+root           : [./website/1] ✅
+client_body    : [20000000] ✅
+upload_path    : []
+redirect       : []
+error_page     : [403=/error/403.html  , 404=/error/404.html  , 500=/error/500.html] ✅
+allowed_methods: []
+index          : []
+
+	Route[0]
+	..............
+	prefix         : [/] ✅
+	root           : []
+	autoindex      : []
+	upload         : []
+	client_body    : []
+	cgi            : []
+	error_page     : []
+	redirect       : []
+	index          : [dashboard.html] ✅
+	allowed_methods: []
+
+	Route[1]
+	..............
+	prefix         : [/archive] ✅
+	root           : []
+	autoindex      : [True] ✅
+	upload         : [True] ✅
+	client_body    : []
+	cgi            : []
+	error_page     : []
+	redirect       : []
+	index          : []
+	allowed_methods: [GET,  POST, DELETE  ] ✅
+
+	Route[2]
+	..............
+	prefix         : [/youtube] ✅
+	root           : []
+	autoindex      : []
+	upload         : []
+	client_body    : []
+	cgi            : []
+	error_page     : []
+	redirect       : [https://www.youtube.com/@42berlin] ✅
+	index          : []
+	allowed_methods: []
+
+	Route[3]
+	..............
+	prefix         : [/google] ✅
+	root           : []
+	autoindex      : []
+	upload         : []
+	client_body    : []
+	cgi            : []
+	error_page     : []
+	redirect       : [https://maps.app.goo.gl/sqEeteD86CXqLisr6] ✅
+	index          : []
+	allowed_methods: []
+
+	Route[4]
+	..............
+	prefix         : [/internal] ✅
+	root           : []
+	autoindex      : []
+	upload         : []
+	client_body    : []
+	cgi            : []
+	error_page     : []
+	redirect       : [/hello.html] ✅
+	index          : []
+	allowed_methods: []
+
+	Route[5]
+	..............
+	prefix         : [/script] ✅
+	root           : []
+	autoindex      : []
+	upload         : []
+	client_body    : []
+	cgi            : [.py, .php, .js] ✅
+	error_page     : []
+	redirect       : []
+	index          : []
+	allowed_methods: [GET, POST] ✅
+
+	Route[6]
+	..............
+	prefix         : [/dummy] ✅
+	root           : []
+	autoindex      : []
+	upload         : []
+	client_body    : []
+	cgi            : []
+	error_page     : []
+	redirect       : []
+	index          : []
+	allowed_methods: [DELETE] ✅
+
+	Route[7]
+	..............
+	prefix         : [/error] ✅
+	root           : []
+	autoindex      : []
+	upload         : []
+	client_body    : []
+	cgi            : [.py] ✅
+	error_page     : []
+	redirect       : []
+	index          : []
+	allowed_methods: [GET, POST] ✅
+
+
+------------------------------------------------------
+
+Server[1]
+============
+host           : [127.0.0.1] ✅
+port           : [6900] ✅
+server_name    : [server_2.com] ✅
+root           : [./website/2] ✅
+client_body    : [10] ✅
+upload_path    : []
+redirect       : []
+error_page     : []
+allowed_methods: []
+index          : []
+
+	Route[0]
+	..............
+	prefix         : [/] ✅
+	root           : []
+	autoindex      : []
+	upload         : []
+	client_body    : []
+	cgi            : [.py] ✅
+	error_page     : []
+	redirect       : []
+	index          : [main.html] ✅
+	allowed_methods: []
+
+	Route[1]
+	..............
+	prefix         : [/fruit] ✅
+	root           : []
+	autoindex      : []
+	upload         : []
+	client_body    : []
+	cgi            : []
+	error_page     : []
+	redirect       : []
+	index          : [fruit.html] ✅
+	allowed_methods: []
+
+	Route[2]
+	..............
+	prefix         : [/vegetable] ✅
+	root           : []
+	autoindex      : []
+	upload         : []
+	client_body    : []
+	cgi            : []
+	error_page     : []
+	redirect       : []
+	index          : [veggies.html] ✅
+	allowed_methods: []
+
+	Route[3]
+	..............
+	prefix         : [/zombie] ✅
+	root           : []
+	autoindex      : []
+	upload         : []
+	client_body    : []
+	cgi            : []
+	error_page     : []
+	redirect       : []
+	index          : [types.html] ✅
+	allowed_methods: []
+
+	Route[4]
+	..............
+	prefix         : [/style] ✅
+	root           : []
+	autoindex      : [True] ✅
+	upload         : []
+	client_body    : []
+	cgi            : []
+	error_page     : []
+	redirect       : []
+	index          : []
+	allowed_methods: []
+
+
+------------------------------------------------------
+
+Server[2]
+============
+host           : [127.0.0.1] ✅
+port           : [9000] ✅
+server_name    : [server_3.com] ✅
+root           : [./website/3] ✅
+client_body    : [100000] ✅
+upload_path    : []
+redirect       : []
+error_page     : [404=/404.html] ✅
+allowed_methods: []
+index          : []
+
+	Route[0]
+	..............
+	prefix         : [/] ✅
+	root           : []
+	autoindex      : []
+	upload         : []
+	client_body    : []
+	cgi            : []
+	error_page     : []
+	redirect       : []
+	index          : [main.html] ✅
+	allowed_methods: []
+
+	Route[1]
+	..............
+	prefix         : [/archive] ✅
+	root           : []
+	autoindex      : [True] ✅
+	upload         : [True] ✅
+	client_body    : []
+	cgi            : []
+	error_page     : []
+	redirect       : []
+	index          : []
+	allowed_methods: [GET, POST, DELETE] ✅
+
+
+------------------------------------------------------
+
+Server[3]
+============
+host           : [127.0.0.1] ✅
+port           : [4000] ✅
+server_name    : [example.com]
+root           : [./website/virtualHost/1] ✅
+client_body    : [10] ✅
+upload_path    : []
+redirect       : []
+error_page     : []
+allowed_methods: []
+index          : []
+
+	Route[0]
+	..............
+	prefix         : [/] ✅
+	root           : []
+	autoindex      : []
+	upload         : []
+	client_body    : []
+	cgi            : []
+	error_page     : []
+	redirect       : []
+	index          : [virtual_1.html] ✅
+	allowed_methods: []
+
+
+------------------------------------------------------
+
+Server[4]
+============
+host           : [127.0.0.1]
+port           : [4000]
+server_name    : [test.com]
+root           : [./website/virtualHost/2]
+client_body    : [10]
+upload_path    : []
+redirect       : []
+error_page     : []
+allowed_methods: []
+index          : []
+
+	Route[0]
+	..............
+	prefix         : [/]
+	root           : []
+	autoindex      : []
+	upload         : []
+	client_body    : []
+	cgi            : []
+	error_page     : []
+	redirect       : []
+	index          : [virtual_2.html]
+	allowed_methods: []
+
+
+------------------------------------------------------
+

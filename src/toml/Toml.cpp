@@ -44,10 +44,13 @@ Table& List2Map(TokenList list, Table& t) {
 void FillMap(TokenMap& mp, Table& t) {
 	FOR_EACH(TokenMap, mp, it) {
 		Table& last = List2Map(it->key, t);
+
 		if (it->is_array) {
 			last.setType(Table::ARRAY);
 			FOR_EACH(TokenList, it->value, it2) {
-				last.vec.push_back(Table(it2->value));
+				Table entry(it2->value);
+				entry.line = it2->line;
+				last.vec.push_back(entry);
 			}
 			continue;
 		}
@@ -63,6 +66,7 @@ void FillMap(TokenMap& mp, Table& t) {
 
 		last.setType(Table::STRING);
 		last.setString(it->value.front().value);
+		last.line = it->value.front().line;
 	}
 }
 
@@ -93,6 +97,7 @@ Table* Build(Parser& p) {
 		
 		// Handle ARRAY type blocks
 		Table tmp = Table(Table::TABLE);
+		tmp.line = it->prefix.front().line;
 		FillMap(it->mp, tmp);
 		
 		// Navigate to the target location
@@ -117,6 +122,7 @@ Table* Build(Parser& p) {
 		if (final_target.isType(Table::NONE)) {
 			// First time seeing this key - create as ARRAY immediately
 			target->Insert(final_key, new Table(Table::ARRAY));
+			target->Get(final_key).line = prefix_it->line;
 
 			// TODO: debug print
 			// std::cout << "[Build] Creating new ARRAY for " << final_key << std::endl;
