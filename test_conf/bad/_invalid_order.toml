@@ -11,7 +11,7 @@
 	error_page = ["404", "/404.html"]   
 	autoindex = "on"
 	redirect = ["/html/success.html", "/html/success_delete.html"]
-	_clientMaxBodySize = "10m"
+	client_body = "10m"
 	
 [[server]]
 port = "1337"
@@ -20,7 +20,7 @@ root = "./website/1  "
 server_name = [" hello"]
 index = ["index.html ", "index.htm"]
 error_page = ["404 ", "/404.html"]
-_clientMaxBodySize = "10m"
+client_body = "10m"
 
 	[[server.location]]
 	prefix = "/"  
@@ -28,6 +28,6 @@ _clientMaxBodySize = "10m"
 	allowed_methods = ["GET" ,"POST", "DELETE"]
 	error_page = ["404", "www/error_pages/404.html"]
 	autoindex = "on"     
-	_clientMaxBodySize = "100m"   
-	upload_path = "www/upload  "
+	client_body = "100m"   
+	upload = "www/upload  "
 	redirect = ["old_about.html", "about.html"]

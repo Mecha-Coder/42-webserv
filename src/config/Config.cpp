@@ -197,6 +197,11 @@ Config::Config(toml::Table& config) : error(ERROR_NONE) {
 	}
 
 	error = PostValidate();
+	if (error != ERROR_NONE) {
+		_servers.clear();
+		std::cerr << "Post-validation failed with error code: " << error << std::endl;
+		return;
+	}
 }
 
 Config::~Config() {}

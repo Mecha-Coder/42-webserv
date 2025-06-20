@@ -47,6 +47,7 @@ void FillMap(TokenMap& mp, Table& t) {
 
 		if (it->is_array) {
 			last.setType(Table::ARRAY);
+			last.line = it->value.empty() ? -1 : it->value.front().line;
 			FOR_EACH(TokenList, it->value, it2) {
 				Table entry(it2->value);
 				entry.line = it2->line;
