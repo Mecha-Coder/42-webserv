@@ -1,16 +1,12 @@
-# Duplicate directive
+# User_name is not part of listed directive
 
-# Jason: 
-#	Array  -> append 
-#	Single -> take the latest
-# Importance: 
+# Jason: Invalid directive should fail
+# Importance: 🚩
 
 [[server]]
 server_name = ["test.com"]
-port        = ["4000", "66", "10000"]
-port        = ["9000", "5000"]
+port        = ["4000"]
 root        = "./website/virtualHost/2"
-root        = "abc123"
 client_body = 10
 
 	[[server.location]]
@@ -19,5 +15,5 @@ client_body = 10
 	allowed_methods = ["GET"]
 	index           = ["virtual_2.html"]
 	autoindex       =  false
-	upload	        =  false
-	cgi             = [""]
+	upload_path     =  false
+	cgi_path        = [""]
