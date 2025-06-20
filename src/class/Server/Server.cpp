@@ -3,6 +3,10 @@
 Str trim(const Str s);
 size_t strToSizeT(const Str s);
 int validErrCode(Str key);
+template <typename T> Str toStr(T value);
+
+Str printmyList(const List &list);
+Str printmyMap(const ErrorPage &map);
 
 //////////////////////////////////////////////////////////////////////////////////////
 
@@ -46,6 +50,8 @@ Server::Server(ServerConfig &data)
 
     if (!data.client_body.empty())
         _clientBody = strToSizeT(trim(data.client_body));
+    else
+        _clientBody = 0;
 
     if (!data.server_name.empty())
         _serverName = trim(data.server_name[0]);
@@ -126,4 +132,22 @@ const Str Server::myErrorPg(const int &code) const
     return "";
 }
 
+
 /////////////////////////////////////////////////////////////////////////
+
+void Server::showData()
+{
+    std::cout << "IP         : [" << _ip                   << "]\n"
+              << "ServerName : [" << _serverName           << "]\n" 
+              << "Ports      : [" << printmyList(_port)      << "]\n"
+              << "Root       : [" << _root                 << "]\n"
+              << "ClientBody : [" << _clientBody           << "]\n"
+              << "ErrorPage  : \n" << printmyMap(_errorPage)
+              << std::endl;
+    
+    for (size_t i = 0; i < _routes.size(); i++)
+    {
+        std::cout << "\tRoute[" << i << "]\n\t.............." << std::endl;
+        _routes[i].showData();
+    }
+}

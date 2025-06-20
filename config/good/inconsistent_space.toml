@@ -2,33 +2,28 @@
 					
 					[[server]]
 
-	port        = "1337"
-	host        = "10.0.0.1  "
-	root        = "./website/1  "  
-	server_name = [" hello"]
-	index       = ["index.html ", "index.htm"]
-	error_page  = ["404 ", "/404.html"]
-	client_body = "10m"
+	port        = ["1337", "5555"]
+	host        = "   10.0.0.1  "
+	root        = " ./website/1  "  
+	server_name = [" hello   "]
+	error_page  = ["404 =   /404.html  ", "500   =  /50x.html  "]
+	client_body = "  10000   "
 
 [[server.location]]
 										prefix 	         = "/"  
-										root             = "www"
-										allowed_methods  = ["GET" ,"POST", "DELETE"]
-										error_page       = ["404", "www/error_pages/404.html"]
-										autoindex        = "on"     
-										client_body      = "100m"   
-		upload           = "www/upload  "
-		redirect         = ["old_about.html", "about.html"]
+										index       = ["index.html "  ,   "    index.php"]
+										allowed_methods  = ["GET" ,   "POST  ", "   DELETE"]
+										autoindex        = "on"
+										cgi         = [" .mtm"]
+
+		upload           = "OFF  "
+		redirect         = "  www.youtube.com  "
 
 [[server.location]]
 		prefix           = "/html"
-		root             = "www"
-		index            = ["index.html", "index.htm"]   
-		allowed_methods  = ["GET", "HEAD", "DELETE"]
-		error_page       = ["404", "/404.html"]     
+		allowed_methods  = ["GET", "HEAD", "DELETE"]  
 
+		index = ["nice.py"]
 
-
-		autoindex        = "on"
-		redirect         = ["/html/success.html", "/html/success_delete.html"]
-		client_body      = "10m"
+		autoindex        = "TRue"
+		redirect         = "/html/success.html"

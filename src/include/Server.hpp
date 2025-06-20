@@ -7,6 +7,7 @@
 #include <map>
 #include <set>
 #include <utility>
+#include <algorithm>
 #include "Route.hpp"
 
 typedef std::string Str;
@@ -38,6 +39,8 @@ class Server
         bool    matchPort(const Str &port) const;
 
         const Str  myErrorPg(const int &code) const;
+
+        void showData();
 };
 
 #endif

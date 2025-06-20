@@ -28,6 +28,7 @@ class ServerManager
         bool isListenFd(int fd);
 
         Server *whichServer(const Str &host);
+        void showData();
 };
 
 #endif

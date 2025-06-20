@@ -31,6 +31,7 @@ std::string Accumulate(std::string& acc, Token& t) {
 Parser::Parser(TokenList tks) {
 	TokenList::iterator cur = tks.begin();
 	TokenMap* lastmp = &mp;
+	bool seenServerBlock = false;
 
 	while (cur != tks.end()) {
 		switch (cur->type) {
@@ -63,6 +64,27 @@ Parser::Parser(TokenList tks) {
 				cur++;
 			}
 			TokenList res = UntilIgnore(cur, Token::CPAREN | Token::COMMENT, Token::DOT);
+
+			if (res.size() >= 2) {
+				std::string first, second;
+				int i = 0;
+				FOR_EACH(TokenList, res, it) {
+					if (i == 0) first = it->value;
+					else if (i == 1) {
+						second = it->value;
+						break;
+					}
+					++i;
+				}
+				if (first == "server" && second == "location" && !seenServerBlock) {
+					std::cerr << "ERROR: '[[server.location]]' block found before any '[[server]]' block at line "
+							  << res.front().line << std::endl;
+					std::exit(EXIT_FAILURE);
+				}
+			}
+			if (res.size() == 1 && res.front().value == "server")
+				seenServerBlock = true;
+
 			tm->push_back(TomlBlock(res, TokenMap(), type));
 			lastmp = &tm->back().mp;
 

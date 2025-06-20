@@ -94,3 +94,14 @@ Server *ServerManager::whichServer(const Str &host)
 
 	return NULL;
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void ServerManager::showData()
+{
+	for (size_t i = 0; i < _serverList.size(); i++)
+	{
+		std::cout << "Server[" << i << "]\n===============" << std::endl;
+        _serverList[i].showData();
+	}
+}

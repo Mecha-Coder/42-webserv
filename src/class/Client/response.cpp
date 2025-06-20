@@ -183,16 +183,19 @@ bool Client::resCGI(const Str &msg)
     env["ROOT"]           = _server->_root;
     env.insert(_header.begin(), _header.end());
 
-    CGIHandler handler(env, &_data, path);
-
     try
-    { 
-        Str result = handler.Execute();
-        
-        if (validCGIRespond(result))
+    {
+        CGIHandler* handler = CGIHandler::Create(env, &_data, path);
+        if (handler)
         {
-            _reply = result;
-            return (logAction(where, msg + ": Executed CGI for " + _uri), true); 
+            Str result = handler->Execute();
+            if (validCGIRespond(result))
+            {
+                _reply = result;
+                delete handler;
+                return (logAction(where, msg + ": Executed CGI for " + _uri), true); 
+            }
+            delete handler;
         }
         throw std::runtime_error("Invalid CGI respond");
     }

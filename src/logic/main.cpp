@@ -28,13 +28,20 @@ int main(int ac, char **av)
 		Config config(*table);
 		std::vector<ServerConfig>& servers = config.getServers();
 		delete table;
+		if (servers.empty())
+		{
+			return (logError("Parse config", "Failed to parse the TOML file"), 1);
+			return 1;
+		}
+			
 
 		try { sManager = new ServerManager(servers); }
 		catch(const std::exception& e)
 		{ return (logError("Parse config", e.what()), 1); }
+		logAction("Parse config", "Successful 💪");
 	}
 
-	logAction("Parse config", "Successful 💪");
+	sManager->showData();
 
 	signal(SIGINT, handleSignal);
 	if (!sManager->initListenFd(watcher))

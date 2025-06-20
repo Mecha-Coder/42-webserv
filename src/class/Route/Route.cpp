@@ -4,6 +4,7 @@ Str trim(const Str s);
 bool strBool(Str s);
 Str validMethod(Str s);
 Str validCGI(Str s);
+Str printmyList(const List &list);
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -17,9 +18,7 @@ Route::Route(LocationConfig &data)
     _path      = trim(data.prefix);
     _uploadDir = strBool(trim(data.upload));
     _autoIndex = strBool(trim(data.autoindex));
-
-    if (!data.redirect.empty())
-        _redirect  = trim(data.redirect[0]);
+    _redirect  = trim(data.redirect);
 
     if (data.allowed_methods.empty())
         _methods.push_back("GET");
@@ -73,3 +72,16 @@ bool Route::runCGI(const Str &uri) const
 }
 
 /////////////////////////////////////////////////////////////////////////
+
+
+void Route::showData()
+{
+    std::cout << "\tPath     : [" << _path                         << "]\n"
+              << "\tRedirect : [" << _redirect                     << "]\n" 
+              << "\tUpload   : [" << (_uploadDir? "True": "False") << "]\n"
+              << "\tAutoIndex: [" << (_autoIndex? "True": "False") << "]\n"
+              << "\tIndex    : [" << printmyList(_index)           << "]\n"
+              << "\tMethods  : [" << printmyList(_methods)         << "]\n"
+              << "\tCGI      : [" << printmyList(_cgi)             << "]\n"
+              << std::endl;
+}

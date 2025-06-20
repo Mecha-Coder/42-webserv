@@ -3,29 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   CGIHandler.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcheong <rcheong@student.42kl.edu.my>      +#+  +:+       +#+        */
+/*   By: jpaul <jpaul@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 21:09:50 by rcheong           #+#    #+#             */
-/*   Updated: 2025/06/07 15:21:19 by rcheong          ###   ########.fr       */
+/*   Updated: 2025/06/20 21:21:12 by jpaul            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include <sys/wait.h>
 #include <iostream>
 #include <unistd.h>
 #include <map>
 #include <vector>
 #include <string>
 #include <cstring>
+#include <cerrno>
 #include <sstream>
+#include <sys/types.h>
+#include <sys/wait.h>
 #include <unistd.h>
 #include <poll.h>
-#include <signal.h>
-#include <cerrno>
-#include "ScopedEnvArray.hpp"
 #include <cstdio>
+#include <signal.h>
+#include "ScopedEnvArray.hpp"
 
 // class CGIHandler {
 // 	public:

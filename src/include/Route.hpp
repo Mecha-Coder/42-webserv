@@ -28,6 +28,7 @@ class Route
         
         bool    methodAllow(const Str &method) const;
         bool    runCGI(const Str &uri) const;
+        void    showData();
 };
 
 #endif

@@ -26,9 +26,9 @@ OBJS := $(patsubst %,$(OBJ_DIR)/%.o,$(basename $(SRCS)))
 # BUILD COMMAND
 #==============================================================
 
-all: $(NAME) prep-eval
+all: $(NAME) pre-eval
 	@echo "$(GREEN)Successfully compiled $(RESET)"
-	@echo "$(GREEN)Run program ->$(RESET) ./$(NAME) [config file]"
+	@echo "$(GREEN)Run program =>$(RESET) ./$(NAME) [config file]"
 
 $(NAME): $(OBJS)
 	$(CC) $(FLAG) -o $@ $^
@@ -45,11 +45,13 @@ fclean: clean
 
 re: fclean all
 
-prep-eval:
-	@echo "$(GREEN)Convert CGI script: Windows(CRLF) ==> Unix(LF)$(RESET)"
+pre-eval:
+	@echo "$(GREEN)Prepare files for eval$(RESET)"
+	
+	@echo "$(GREEN) => Convert CGI script from Windows(CRLF) to Unix(LF)$(RESET)"
 	@find . -type f \( -name '*.py' -o -name '*.php' -o -name '*.js' \) -exec sed -i 's/\r$$//' {} +
-	@echo "$(GREEN)Change file permission$(RESET)"
-	@find . -type f \( -name '*.py' -o -name '*.php' -o -name '*.js' \) -exec chmod +x {} +
+
+	@echo "$(GREEN) => Change file permission for no_permission.pdf && /cannot_delete$(RESET)"
 	@chmod 000 ./website/1/archive/no_permission.pdf
 	@chmod 555 ./website/1/archive/cannot_delete
 
@@ -57,4 +59,4 @@ post-eval:
 	@chmod 777 ./website/1/archive/no_permission.pdf
 	@chmod 777 ./website/1/archive/cannot_delete
 
-.PHONY: all clean fclean re prep-eval post-eval
+.PHONY: all clean fclean re pre-eval post-eval

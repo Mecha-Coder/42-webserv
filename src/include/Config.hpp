@@ -1,56 +1,39 @@
 #pragma once
 
+#include "../toml/Toml.hpp"
 #include "Utils.hpp"
 #include <string>
 #include <vector>
 #include <iostream>
-#include <map>
-#include <algorithm>
-#include <cstdlib>
-#include "../toml/Table.hpp"
-#include "../toml/Toml.hpp"
 
 using namespace std;
 
 typedef vector<string> StrVec;
 
-typedef struct s_LocationConfig {
+struct LocationConfig {
 	string prefix;
-	string root;
 	string autoindex;
 	string upload;
-	string client_body;
-	vector<string> cgi;
-	vector<string> error_page;
-	vector<string> redirect;
+	string redirect;
+	// vector<string> redirect;
 	vector<string> index;
 	vector<string> allowed_methods;
+	vector<string> cgi;
 
 	void Print(int indent = 0) {
 		string s(indent, ' ');
 		if (!prefix.empty()) cout << s << "\tprefix: " << prefix << endl;
-		if (!root.empty()) cout << s << "\troot: " << root << endl;
+		if (!autoindex.empty()) cout << s << "\tautoindex: " << autoindex << endl;
+		if (!upload.empty()) cout << s << "\tupload: " << upload << endl;
+		if (!redirect.empty()) cout << s << "\tredirect: " << redirect << endl;
+		// if (!redirect.empty()) {
+		// 	cout << s << "\tredirect: ";
+		// 	FOR_EACH(vector<string>, redirect, it) cout << *it << " | ";
+		// 	cout << endl;
+		// }
 		if (!index.empty()) {
 			cout << s << "\tindex: ";
 			FOR_EACH(vector<string>, index, it) cout << *it << ", ";
-			cout << endl;
-		}
-		if (!cgi.empty()) {
-			cout << s << "\tcgi: ";
-			FOR_EACH(vector<string>, cgi, it) cout << *it << ", ";
-			cout << endl;
-		}
-		if (!autoindex.empty()) cout << s << "\tautoindex: " << autoindex << endl;
-		if (!upload.empty()) cout << s << "\tupload: " << upload << endl;
-		if (!client_body.empty()) cout << s << "\tclient_body: " << client_body << endl;
-		if (!error_page.empty()) {
-			cout << s << "\terror_page: ";
-			FOR_EACH(vector<string>, error_page, it) cout << *it << " | ";
-			cout << endl;
-		}
-		if (!redirect.empty()) {
-			cout << s << "\tredirect: ";
-			FOR_EACH(vector<string>, redirect, it) cout << *it << " | ";
 			cout << endl;
 		}
 		if (!allowed_methods.empty()) {
@@ -58,56 +41,42 @@ typedef struct s_LocationConfig {
 			FOR_EACH(vector<string>, allowed_methods, it) cout << *it << " ";
 			cout << endl;
 		}
+		if (!cgi.empty()) {
+			cout << s << "\tcgi: ";
+			FOR_EACH(vector<string>, cgi, it) cout << *it << ", ";
+			cout << endl;
+		}
 	}
-} LocationConfig;
+};
 
-typedef struct s_ServerConfig {
-	vector<string> port;
+struct ServerConfig {
 	string host;
+	vector<string> server_name;
+	vector<string> port;
 	string root;
 	string client_body;
-	string upload_path;
-	vector<string> redirect;
-	vector<string> server_name;
 	vector<string> error_page;
-	vector<string> allowed_methods;
-	vector<string> index;
+
 	vector<LocationConfig> locations;
 
 	void Print() {
 		cout << "==== ServerConfig ====\n";
-		if (!port.empty()) {
-			cout << "port: ";
-			FOR_EACH(StrVec, port, it) cout << *it << " ";
-			cout << endl;
-		}
 		if (!host.empty()) cout << "host: " << host << endl;
-		if (!upload_path.empty()) cout << "upload_path: " << upload_path << endl;
 		if (!server_name.empty()) {
 			cout << "server_name: ";
 			FOR_EACH(StrVec, server_name, it) cout << *it << " ";
 			cout << endl;
 		}
+		if (!port.empty()) {
+			cout << "port: ";
+			FOR_EACH(StrVec, port, it) cout << *it << " ";
+			cout << endl;
+		}
 		if (!root.empty()) cout << "root: " << root << endl;
+		if (!client_body.empty()) cout << "client_body: " << client_body << endl;
 		if (!error_page.empty()) {
 			cout << "error_page: ";
 			FOR_EACH(StrVec, error_page, it) cout << *it << " | ";
-			cout << endl;
-		}
-		if (!client_body.empty()) cout << "client_body: " << client_body << endl;
-		if (!redirect.empty()) {
-			cout << "redirect: ";
-			FOR_EACH(StrVec, redirect, it) cout << *it << " | ";
-			cout << endl;
-		}
-		if (!allowed_methods.empty()) {
-			cout << "allowed_methods: ";
-			FOR_EACH(StrVec, allowed_methods, it) cout << *it << " ";
-			cout << endl;
-		}
-		if (!index.empty()) {
-			cout << "index: ";
-			FOR_EACH(StrVec, index, it) cout << *it << " ";
 			cout << endl;
 		}
 		FOR_EACH(vector<LocationConfig>, locations, it) {
@@ -117,7 +86,7 @@ typedef struct s_ServerConfig {
 		}
 		cout << "==== END ServerConfig ====\n";
 	}
-} ServerConfig;
+};
 
 class Config {
 public:
@@ -143,7 +112,7 @@ public:
 		ERROR_INVALID_UPLOAD
 	};
 	e_error error;
-	vector<ServerConfig>& getServers() ;
+	vector<ServerConfig>& getServers();
 	void Print();
 
 private:

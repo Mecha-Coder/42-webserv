@@ -6,7 +6,7 @@
 /*   By: rcheong <rcheong@student.42kl.edu.my>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 21:10:22 by rcheong           #+#    #+#             */
-/*   Updated: 2025/06/11 21:56:14 by rcheong          ###   ########.fr       */
+/*   Updated: 2025/06/20 15:08:36 by rcheong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,11 +73,12 @@ public:
 	void Remove(const std::string& key);
 	static Table& Empty();
 
-// private:
 	enum EToml type;
 	TomlMap map;
 	std::vector<Table> vec;
 	std::string str;
+	int line;
+	int getLineNumber() const { return line; }
 
 private:
 	void clearCurrentData();
