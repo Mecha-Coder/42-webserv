@@ -14,7 +14,8 @@ struct LocationConfig {
 	string prefix;
 	string autoindex;
 	string upload;
-	vector<string> redirect;
+	string redirect;
+	// vector<string> redirect;
 	vector<string> index;
 	vector<string> allowed_methods;
 	vector<string> cgi;
@@ -24,11 +25,12 @@ struct LocationConfig {
 		if (!prefix.empty()) cout << s << "\tprefix: " << prefix << endl;
 		if (!autoindex.empty()) cout << s << "\tautoindex: " << autoindex << endl;
 		if (!upload.empty()) cout << s << "\tupload: " << upload << endl;
-		if (!redirect.empty()) {
-			cout << s << "\tredirect: ";
-			FOR_EACH(vector<string>, redirect, it) cout << *it << " | ";
-			cout << endl;
-		}
+		if (!redirect.empty()) cout << s << "\tredirect: " << redirect << endl;
+		// if (!redirect.empty()) {
+		// 	cout << s << "\tredirect: ";
+		// 	FOR_EACH(vector<string>, redirect, it) cout << *it << " | ";
+		// 	cout << endl;
+		// }
 		if (!index.empty()) {
 			cout << s << "\tindex: ";
 			FOR_EACH(vector<string>, index, it) cout << *it << ", ";

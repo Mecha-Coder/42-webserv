@@ -45,13 +45,17 @@ static Config::e_error ValidateLocation(toml::Table &location) {
 		std::cerr << "Invalid type for 'upload' at line " << location["upload"].line << std::endl;
 		return Config::ERROR_INVALID_UPLOAD;
 	}
-	if (!isStrArray(location, "redirect")) {
-		int line = -1;
-		if (location["redirect"].type == toml::Table::ARRAY && !location["redirect"].vec.empty())
-			line = location["redirect"].vec[0].line;
-		std::cerr << "Invalid type for 'redirect' at line " << line << std::endl;
+	if (!isType(location, "redirect", toml::Table::STRING)) {
+		std::cerr << "Invalid type for 'redirect' at line " << location["redirect"].line << std::endl;
 		return Config::ERROR_INVALID_REDIRECT;
 	}
+	// if (!isStrArray(location, "redirect")) {
+	// 	int line = -1;
+	// 	if (location["redirect"].type == toml::Table::ARRAY && !location["redirect"].vec.empty())
+	// 		line = location["redirect"].vec[0].line;
+	// 	std::cerr << "Invalid type for 'redirect' at line " << line << std::endl;
+	// 	return Config::ERROR_INVALID_REDIRECT;
+	// }
 	if (!isStrArray(location, "index")) {
 		int line = -1;
 		if (location["index"].type == toml::Table::ARRAY && !location["index"].vec.empty())
@@ -150,10 +154,12 @@ static LocationConfig FillLocation(toml::Table& t) {
 		l.autoindex = t["autoindex"].asStr();
 	if (t["upload"].type == toml::Table::STRING)
 		l.upload = t["upload"].asStr();
+	if (t["redirect"].type == toml::Table::STRING) 
+		l.redirect = t["redirect"].asStr();
 
 	FillVector(t, "index", l.index);
 	FillVector(t, "allowed_methods", l.allowed_methods);
-	FillVector(t, "redirect", l.redirect);
+	// FillVector(t, "redirect", l.redirect);
 	FillVector(t, "cgi", l.cgi);
 
 	return l;
@@ -244,6 +250,14 @@ Config::e_error Config::PreValidate(toml::Table& config) {
 
 	if (config.getTypeName() != "TABLE")
 		return ERROR_INVALID_SERVER;
+	if (config.map.empty()) {
+		std::cerr << "Empty config file detected\n";
+		return ERROR_INVALID_SERVER;
+	}
+	if (config["server"].type != toml::Table::ARRAY || config["server"].vec.empty()) {
+		std::cerr << "Missing or empty 'server' block in config\n";
+		return ERROR_INVALID_SERVER;
+	}
 	toml::Table& t = config["server"];
 	for (size_t i = 0; i < t.vec.size(); i++) {
 		if ((error = ValidateServer(t[i])) != Config::ERROR_NONE)
