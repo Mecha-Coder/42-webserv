@@ -1,0 +1,15 @@
+
+server_name = ["test.com"]
+port        = ["4000"]
+root        = "./website/virtualHost/2"
+client_body = "10"
+
+	[[server.location]]
+	prefix          = "/"
+	redirect        = ""
+	allowed_methods = ["GET"]
+	index           = ["virtual_2.html"]
+	autoindex       = "False"
+	upload_path     = "False"
+	cgi_path        = [""]
+	

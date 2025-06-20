@@ -22,7 +22,7 @@ class ServerManager
          
     public:
         ServerManager();
-        ServerManager(Servers &serverList);
+        ServerManager(std::vector<ServerConfig>& data);
 
         bool initListenFd(Watchlist &watcher);
         bool isListenFd(int fd);

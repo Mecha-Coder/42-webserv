@@ -66,10 +66,10 @@ class Client
 		// Request: Append and parse
 		/*************************************************/
 
-		bool	appendReq(const char *request, size_t byteRead, ServerManager &sManager);
+		bool	appendReq(const char *request, size_t byteRead, ServerManager *sManager);
 		void	parseHead(Str info);
 		void	parseLine(Str line);
-		void 	getServerData(ServerManager &sManager);
+		void 	getServerData(ServerManager *sManager);
 
 
 		/*************************************************/

@@ -1,0 +1,16 @@
+# Absent directive, directly input values
+
+[[server]]
+user_name = ["test.com"]
+port        = ["4000"]
+root        = "./website/virtualHost/2"
+client_max = "10"
+
+	[[server.location]]
+	"/"
+	= ""
+	allowed_methods = ["GET"]
+	index           = ["virtual_2.html"]
+	autoindex       = "False"
+	upload_path     = "False"
+	cgi_path        = [""]

@@ -12,6 +12,7 @@
 #include <cctype>
 #include <algorithm>
 #include <csignal>
+#include <stdexcept>
 
 #include <arpa/inet.h>
 #include <netinet/in.h>
@@ -29,19 +30,18 @@
 #include "Server.hpp"
 #include "ServerManager.hpp"
 #include "ClientManager.hpp"
+#include "../toml/Toml.hpp"
+#include "Config.hpp"
 
 template <typename T> Str toStr(T value);
+extern volatile sig_atomic_t _running_;
 
 /************************************************************/
-// TESTING
+// RUNING
 /************************************************************/
 
-Server	server_1();
-Server	server_2();
-Server	server_3();
-Server	server_4();
-Server	server_5();
 void	processReq(Client &client);
+void 	runServer(Watchlist &watcher, ServerManager *sManager);
 
 /************************************************************/
 // UTILS

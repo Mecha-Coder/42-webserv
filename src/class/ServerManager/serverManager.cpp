@@ -1,57 +1,46 @@
 #include "../../include/ServerManager.hpp"
 
-int create_listenFd(const Str &port);
+int create_listenFd(const IP_Host &listen);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ServerManager::ServerManager()
 {
-	Routes routes;
-	ErrorPage errorPg;
-	List listen, noCgi, onlyGet;
-	
-    listen.push_back("8080");
-    onlyGet.push_back("GET");
+	LocationConfig route;
+	route.index.push_back("index.html");
+	route.prefix = "/";
 
-    Route route1 (
-		onlyGet,
-		noCgi,
-        "/",
-        "",
-        "index.html",
-        false,
-        false
-    );
-    routes.push_back(route1);
+	ServerConfig server;
+	server.host = "127.0.0.1";
+	server.port.push_back("8080");
+	server.server_name.push_back("webserv.com");
+	server.root = "./src/default";
+	server.locations.push_back(route);
 
-	_serverList.push_back(
-		Server(
-			"webservDefault.com",
-			listen,
-			errorPg,
-			routes,
-			"./src/default",
-			100000
-    ));
+	_serverList.push_back(Server(server));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-ServerManager::ServerManager(Servers &serverList)
-: _serverList(serverList) {}
+ServerManager::ServerManager(std::vector<ServerConfig>& data)
+{
+	size_t i;
+	for (i = 0; i < data.size(); i++)
+		_serverList.push_back(Server(data[i]));
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 bool ServerManager::initListenFd(Watchlist &watcher)
 {
 	int listenFd;
-	Ports portList;
-	Ports::iterator j;
+	Listen list;
+	Listen::iterator j;
 
 	for (size_t i = 0; i < _serverList.size(); i++)
-		_serverList[i].giveListenPort(portList);	
+		_serverList[i].giveListenInfo(list);
 
-	for (j = portList.begin(); j != portList.end(); j++)
+	for (j = list.begin(); j != list.end(); j++)
 	{
 		listenFd = -1;
 		listenFd = create_listenFd(*j);

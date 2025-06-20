@@ -1,6 +1,6 @@
 #include "../include/webserv.hpp"
 
-int getReadyList(const Str &port, struct addrinfo **list)
+int getReadyList(const IP_Host &pair, struct addrinfo **list)
 {
 	struct addrinfo hint;
 	
@@ -9,7 +9,7 @@ int getReadyList(const Str &port, struct addrinfo **list)
     hint.ai_socktype = SOCK_STREAM;
     hint.ai_flags    = AI_PASSIVE | AI_NUMERICSERV | AI_NUMERICHOST;
 
-	return (getaddrinfo(IP, port.c_str(), &hint, list) == 0);
+	return (getaddrinfo(pair.first.c_str(), pair.second.c_str(), &hint, list) == 0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -29,28 +29,30 @@ int bindToPort(int sockfd, struct addrinfo *addr)
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
-bool checkSockCreation(int sockfd, const Str &port)
+bool checkSockCreation(int sockfd, const IP_Host &pair)
 {
 	struct sockaddr_in check;
 	socklen_t addrlen = sizeof(check);
 
-	getsockname(sockfd, (struct sockaddr *)&check, &addrlen);
+	if (getsockname(sockfd, (struct sockaddr *)&check, &addrlen) == -1)
+		return false;
+		
 	Str _port = toStr(ntohs(check.sin_port));
 	uint32_t _ip = ntohl(check.sin_addr.s_addr);
 
-	return ((_port == port) && (_ip != 0xFFFFFFFFUL) && (_ip != 0x00000000UL));
+	return ((_port == pair.second) && (_ip != 0xFFFFFFFFUL) && (_ip != 0x00000000UL));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
-int create_listenFd(const Str &port)
+int create_listenFd(const IP_Host &pair)
 {
 	int sockfd = -1;
     struct addrinfo *list = NULL, *addr = NULL;
 
-	Str where = Str(IP) + ":" + port;
+	Str where =  pair.first + ":" + pair.second;
 
-	if (getReadyList(port, &list)) 
+	if (getReadyList(pair, &list)) 
 	{
 		for (addr = list; addr != NULL; addr = addr->ai_next)
     	{
@@ -72,7 +74,7 @@ int create_listenFd(const Str &port)
 		
 		if (addr)
 		{
-			if (checkSockCreation(sockfd,port)) 
+			if (checkSockCreation(sockfd, pair)) 
 				return (logAction(where, "Created listen FD=" + toStr(sockfd)), sockfd);
 			close(sockfd);
 		}

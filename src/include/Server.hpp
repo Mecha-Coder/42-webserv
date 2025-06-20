@@ -13,31 +13,26 @@ typedef std::string Str;
 typedef std::vector<Str> List;
 typedef std::vector<Route> Routes;
 typedef std::map<int, Str> ErrorPage;
-typedef std::set<Str> Ports;
+typedef std::pair<Str, Str> IP_Host;
+typedef std::set<IP_Host> Listen;
 
 class Server
 {
     private:
+        Str         _ip;
         Str         _serverName;
-        List        _listen;
+        List        _port;
         ErrorPage   _errorPage;
-        Routes      _routes; 
+        Routes      _routes;
 
     public:
-        const Str       _root;
-        const size_t    _clientBody;
+        Str       _root;
+        size_t    _clientBody;
 
-        Server(
-            const Str       &serverName,
-            const List      &listen,
-            const ErrorPage &errorPage,
-            const Routes    &routes, 
-            const Str       &root,
-            const size_t    &clientBody
-        );
+        Server(ServerConfig &data);
 
         Route   *findRoute(const Str &uri);
-        void    giveListenPort(Ports &portList) const;
+        void    giveListenInfo(Listen &list) const;
 
         bool    matchHost(const Str &host) const;
         bool    matchPort(const Str &port) const;

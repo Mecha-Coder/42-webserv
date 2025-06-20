@@ -4,7 +4,7 @@
 
 NAME = webserv
 CC   = c++
-FLAG = -Wall -Wextra -Werror -Wshadow -std=c++98
+FLAG = -Wall -Wextra -Werror -std=c++98
 
 GREEN = \033[1;32m
 RESET = \033[0m
@@ -17,7 +17,8 @@ OBJ_DIR := obj
 
 SRCS := $(wildcard ./src/class/*/*.cpp) \
 		$(wildcard ./src/logic/*.cpp) \
-		$(wildcard ./src/utils/*.cpp)
+		$(wildcard ./src/utils/*.cpp) \
+		$(wildcard ./src/toml/*.cpp) \
 
 OBJS := $(patsubst %,$(OBJ_DIR)/%.o,$(basename $(SRCS)))
 

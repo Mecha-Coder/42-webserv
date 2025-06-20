@@ -53,13 +53,20 @@ bool Client::isReq_Upload() const
 
 bool Client::noDefaultFile()
 {
-    Str path = _fullPath + _route->_defaultFile;
+    Str path;
+    List &index = _route->_index; 
 
-    if (_route->_defaultFile.empty() || !isFileExist(path))
-        return true;
-    
-    _fullPath = path;
-    return false;
+    for (size_t i=0; i < index.size(); i++)
+    {
+        path = _fullPath + index[i];
+        
+        if (!index[i].empty() && isFileExist(path))
+        {
+            _fullPath = path;
+            return false;
+        }
+    }
+    return true;
 }
 
 int Client::getResourceType() const

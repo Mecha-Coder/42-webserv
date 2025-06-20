@@ -1,7 +1,6 @@
 #ifndef CONSTANT_HPP
 #define CONSTANT_HPP
 
-#define IP    "127.0.0.1"
 #define BUFFER 1048576  // 1 MB
 
 /****************************************/

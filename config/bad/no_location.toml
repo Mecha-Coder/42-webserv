@@ -1,0 +1,21 @@
+# Based on NGINX, without location still can run but will return 404
+# Just checking how our program handle  
+
+[[server]]
+port = "1337"
+host = "10.0.0.1  "
+root = "./website/1  "  
+server_name = [" hello"]
+index = ["index.html ", "index.htm"]
+error_page = ["404 ", "/404.html"]
+_clientMaxBodySize = "10m"
+
+[[server]]
+port = "1336"   
+host = "10.0.0.1"  
+root = "www"  
+server_name = ["example1.com", "example22.com", "example3.com"]  
+index = ["index.html", "index.htm"]
+error_page = ["404", "www/error_pages/404.html"]   
+_clientMaxBodySize = "100m"
+upload_path = "www/upload"

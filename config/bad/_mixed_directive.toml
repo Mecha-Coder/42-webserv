@@ -1,0 +1,20 @@
+# Directive for server is inside location and vice vesa
+
+# Importance: 🚩
+
+[[server]]
+server_name = ["test.com"]
+client_body = "10"
+
+allowed_methods = ["GET"]
+autoindex       = "False"
+	
+	[[server.location]]
+	prefix        = "/"
+	redirect    = ""
+	port        = ["4000"]
+	root        = "./website/virtualHost/2"
+	
+	index           = ["virtual_2.html"]
+	upload_path     = "False"
+	cgi_path        = [""]

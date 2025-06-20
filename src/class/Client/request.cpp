@@ -1,6 +1,6 @@
 #include "../../include/Client.hpp"
 
-size_t strToSizeT(const Str &s);
+size_t strToSizeT(const Str s);
 void uriDecode(Str &s);
 Str trim(const Str s);
 
@@ -32,7 +32,11 @@ void Client::parseHead(Str info)
 
         _header[key] = value;
 
-        if (key == "Content-Length")  _contentLen = strToSizeT(value);
+        if (key == "Content-Length")
+        {
+            try { _contentLen = strToSizeT(value); }
+            catch(...) {_contentLen = 0;}
+        }  
         if (key == "Content-Type")    _contentType = value;
         if (key == "Host")            _host = value;
         if (key == "Connection" && value == "keep-alive") _keepAlive = true;
@@ -41,11 +45,11 @@ void Client::parseHead(Str info)
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-void Client::getServerData(ServerManager &sManager)
+void Client::getServerData(ServerManager *sManager)
 {
     if (_server == NULL)
     {
-        _server = sManager.whichServer(_host);
+        _server = sManager->whichServer(_host);
         if (_server == NULL) 
             logError("Parse HTTP header", "Host not matching any server");
     }
@@ -56,7 +60,7 @@ void Client::getServerData(ServerManager &sManager)
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-bool Client::appendReq(const char *request, size_t byteRead, ServerManager &sManager)
+bool Client::appendReq(const char *request, size_t byteRead, ServerManager *sManager)
 {
     Str     info;
     size_t  pos;
