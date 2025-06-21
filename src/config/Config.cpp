@@ -148,13 +148,13 @@ static void FillVector(toml::Table& t, const std::string& key, std::vector<std::
 
 static LocationConfig FillLocation(toml::Table& t) {
 	LocationConfig l;
-	if (t["prefix"].type == toml::Table::STRING)
+	if (t["prefix"].type == toml::Table::STRING && l.prefix.empty())
 		l.prefix = t["prefix"].asStr();
-	if (t["autoindex"].type == toml::Table::STRING)
+	if (t["autoindex"].type == toml::Table::STRING && l.autoindex.empty())
 		l.autoindex = t["autoindex"].asStr();
-	if (t["upload"].type == toml::Table::STRING)
+	if (t["upload"].type == toml::Table::STRING && l.upload.empty())
 		l.upload = t["upload"].asStr();
-	if (t["redirect"].type == toml::Table::STRING) 
+	if (t["redirect"].type == toml::Table::STRING && l.redirect.empty()) 
 		l.redirect = t["redirect"].asStr();
 
 	FillVector(t, "index", l.index);
@@ -167,11 +167,11 @@ static LocationConfig FillLocation(toml::Table& t) {
 
 static ServerConfig FillServer(toml::Table& t) {
 	ServerConfig s;
-	if (t["host"].type == toml::Table::STRING)
+	if (t["host"].type == toml::Table::STRING && s.host.empty())
 		s.host = t["host"].asStr("127.0.0.1");
-	if (t["root"].type == toml::Table::STRING)
+	if (t["root"].type == toml::Table::STRING && s.root.empty())
 		s.root = t["root"].asStr("./website/1");
-	if (t["client_body"].type == toml::Table::STRING)
+	if (t["client_body"].type == toml::Table::STRING && s.client_body.empty())
 		s.client_body = t["client_body"].asStr();
 
 	FillVector(t, "port", s.port);
@@ -205,7 +205,7 @@ Config::Config(toml::Table& config) : error(ERROR_NONE) {
 	error = PostValidate();
 	if (error != ERROR_NONE) {
 		_servers.clear();
-		std::cerr << "Post-validation failed with error code: " << error << std::endl;
+		std::cerr << "Post-validation failed with error: " << Print() << std::endl;
 		return;
 	}
 }
@@ -216,30 +216,30 @@ const std::vector<ServerConfig>& Config::getServers() const {
 	return _servers;
 }
 
-void Config::Print() {
+std::string Config::Print() {
 	FOR_EACH(std::vector<ServerConfig>, _servers, it) {
 		it->Print();
 	}
 
 	// TODO: debug print
 	switch (error) {
-		case ERROR_NONE: cout << "ERROR_NONE" << endl; break;
-		case ERROR_UNKNOWN_KEY: cout << "ERROR_UNKNOWN_KEY" << endl; break;
-		case ERROR_INVALID_SERVER: cout << "ERROR_INVALID_SERVER" << endl; break;
-		case ERROR_INVALID_PORT: cout << "ERROR_INVALID_PORT" << endl; break;
-		case ERROR_INVALID_HOST: cout << "ERROR_INVALID_HOST" << endl; break;
-		case ERROR_INVALID_SERVER_NAME: cout << "ERROR_INVALID_SERVER_NAME" << endl; break;
-		case ERROR_INVALID_INDEX: cout << "ERROR_INVALID_INDEX" << endl; break;
-		case ERROR_INVALID_ALLOWED_METHODS: cout << "ERROR_INVALID_ALLOWED_METHODS" << endl; break;
-		case ERROR_INVALID_ROOT: cout << "ERROR_INVALID_ROOT" << endl; break;
-		case ERROR_INVALID_ERROR_PAGE: cout << "ERROR_INVALID_ERROR_PAGE" << endl; break;
-		case ERROR_INVALID_CLIENT_BODY: cout << "ERROR_INVALID_CLIENT_BODY" << endl; break;
-		case ERROR_INVALID_LOCATION: cout << "ERROR_INVALID_LOCATION" << endl; break;
-		case ERROR_INVALID_PREFIX: cout << "ERROR_INVALID_PREFIX" << endl; break;
-		case ERROR_INVALID_REDIRECT: cout << "ERROR_INVALID_REDIRECT" << endl; break;
-		case ERROR_INVALID_CGI: cout << "ERROR_INVALID_CGI" << endl; break;
-		case ERROR_INVALID_AUTOINDEX: cout << "ERROR_INVALID_AUTOINDEX" << endl; break;
-		case ERROR_INVALID_UPLOAD: cout << "ERROR_INVALID_UPLOAD" << endl; break;
+		case ERROR_NONE: return "ERROR_NONE"; break;
+		case ERROR_UNKNOWN_KEY: return "ERROR_UNKNOWN_KEY"; break;
+		case ERROR_INVALID_SERVER: return "ERROR_INVALID_SERVER"; break;
+		case ERROR_INVALID_PORT: return "ERROR_INVALID_PORT"; break;
+		case ERROR_INVALID_HOST: return "ERROR_INVALID_HOST"; break;
+		case ERROR_INVALID_SERVER_NAME: return "ERROR_INVALID_SERVER_NAME"; break;
+		case ERROR_INVALID_INDEX: return "ERROR_INVALID_INDEX"; break;
+		case ERROR_INVALID_ALLOWED_METHODS: return "ERROR_INVALID_ALLOWED_METHODS"; break;
+		case ERROR_INVALID_ROOT: return "ERROR_INVALID_ROOT"; break;
+		case ERROR_INVALID_ERROR_PAGE: return "ERROR_INVALID_ERROR_PAGE"; break;
+		case ERROR_INVALID_CLIENT_BODY: return "ERROR_INVALID_CLIENT_BODY"; break;
+		case ERROR_INVALID_LOCATION: return "ERROR_INVALID_LOCATION"; break;
+		case ERROR_INVALID_PREFIX: return "ERROR_INVALID_PREFIX"; break;
+		case ERROR_INVALID_REDIRECT: return "ERROR_INVALID_REDIRECT"; break;
+		case ERROR_INVALID_CGI: return "ERROR_INVALID_CGI"; break;
+		case ERROR_INVALID_AUTOINDEX: return "ERROR_INVALID_AUTOINDEX"; break;
+		case ERROR_INVALID_UPLOAD: return "ERROR_INVALID_UPLOAD"; break;
 	}
 }
 
@@ -289,7 +289,7 @@ Config::e_error Config::PostValidate() {
 			if (*end != '\0' || code < 100 || code > 599)
 				return Config::ERROR_INVALID_ERROR_PAGE;
 		}
-		if (!server.root.empty() && !(server.root[0] == '.' || server.root[0] == '/'))
+		if (server.root.empty())
 			return Config::ERROR_INVALID_ROOT;
 		if (!server.client_body.empty()) {
 			const std::string& body = server.client_body;
@@ -300,7 +300,7 @@ Config::e_error Config::PostValidate() {
 		}
 		for (size_t j = 0; j < server.locations.size(); ++j) {
 			const LocationConfig& loc = server.locations[j];
-			if (loc.prefix.empty() || loc.prefix[0] != '/')
+			if (loc.prefix.empty())
 				return Config::ERROR_INVALID_PREFIX;
 		}
 	}

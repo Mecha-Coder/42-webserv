@@ -2,7 +2,7 @@
 server_name = ["demoEvalSite.com"]
 port = ["4000", "8050", "21000"]
 root = "./website/1"
-error_page = ["403 /error/403.html", "404 /error/404.html", "500 /error/500.html"]
+error_page = ["403=/error/403.html", "404=/error/404.html", "500=/error/500.html"]
 client_body = "20000000"
 
 	[[server.location]]
@@ -11,8 +11,8 @@ client_body = "20000000"
 	allowed_methods = ["GET"]
 	index = ["dashboard.html"]
 	autoindex = "False"
-	upload_path = "False"
-	cgi_path = [""]
+	upload = "False"
+	cgi = [""]
 
 	[[server.location]]
 	prefix = "/archive"
@@ -20,8 +20,8 @@ client_body = "20000000"
 	allowed_methods = ["GET", "POST", "DELETE"]
 	index = [""]
 	autoindex = "True"
-	upload_path = "True"
-	cgi_path = [""]
+	upload = "True"
+	cgi = [""]
 
 	[[server.location]]
 	prefix = "/youtube"
@@ -29,8 +29,8 @@ client_body = "20000000"
 	allowed_methods = ["GET"]
 	index = [""]
 	autoindex = "False"
-	upload_path = "False"
-	cgi_path = [""]
+	upload = "False"
+	cgi = [""]
 
 	[[server.location]]
 	prefix = "/google"
@@ -38,8 +38,8 @@ client_body = "20000000"
 	allowed_methods = ["GET"]
 	index = [""]
 	autoindex = "False"
-	upload_path = "False"
-	cgi_path = [""]
+	upload = "False"
+	cgi = [""]
 
 	[[server.location]]
 	prefix = "/internal"
@@ -47,8 +47,8 @@ client_body = "20000000"
 	allowed_methods = ["GET"]
 	index = [""]
 	autoindex = "False"
-	upload_path = "False"
-	cgi_path = [""]
+	upload = "False"
+	cgi = [""]
 
 	[[server.location]]
 	prefix = "/script"
@@ -56,8 +56,8 @@ client_body = "20000000"
 	allowed_methods = ["GET", "POST"]
 	index = [""]
 	autoindex = "False"
-	upload_path = "False"
-	cgi_path = [".py", ".php", ".js"]
+	upload = "False"
+	cgi = [".py", ".php", ".js"]
 
 	[[server.location]]
 	prefix = "/dummy"
@@ -65,8 +65,8 @@ client_body = "20000000"
 	allowed_methods = ["DELETE"]
 	index = [""]
 	autoindex = "False"
-	upload_path = "False"
-	cgi_path = [""]
+	upload = "False"
+	cgi = [""]
 
 	[[server.location]]
 	prefix = "/error"
@@ -74,8 +74,8 @@ client_body = "20000000"
 	allowed_methods = ["GET", "POST"]
 	index = [""]
 	autoindex = "False"
-	upload_path = "False"
-	cgi_path = [".py"]
+	upload = "False"
+	cgi = [".py"]
 
 # ================================
 
@@ -91,17 +91,17 @@ client_body = "10"
 	allowed_methods = ["GET"]
 	index = ["main.html"]
 	autoindex = "False"
-	upload_path = "False"
-	cgi_path = [".py"]
+	upload = "False"
+	cgi = [".py"]
 
 	[[server.location]]
 	prefix = "/fruit"
 	redirect = ""
 	allowed_methods = ["GET"]
-	ndex = ["fruit.html"]
+	index = ["fruit.html"]
 	autoindex = "False"
-	upload_path = "False"
-	cgi_path = [""]
+	upload = "False"
+	cgi = [""]
 
 	[[server.location]]
 	prefix = "/vegetable"
@@ -109,8 +109,8 @@ client_body = "10"
 	allowed_methods = ["GET"]
 	index = ["veggies.html"]
 	autoindex = "False"
-	upload_path = "False"
-	cgi_path = [""]
+	upload = "False"
+	cgi = [""]
 
 	[[server.location]]
 	prefix = "/zombie"
@@ -118,8 +118,8 @@ client_body = "10"
 	allowed_methods = ["GET"]
 	index = ["types.html"]
 	autoindex = "False"
-	upload_path = "False"
-	cgi_path = [""]
+	upload = "False"
+	cgi = [""]
 
 	[[server.location]]
 	prefix = "/style"
@@ -127,8 +127,8 @@ client_body = "10"
 	allowed_methods = ["GET"]
 	index = [""]
 	autoindex = "True"
-	upload_path = "False"
-	cgi_path = [""]
+	upload = "False"
+	cgi = [""]
 
 # ================================
 
@@ -136,7 +136,7 @@ client_body = "10"
 server_name = ["server_3.com"]
 port = ["9000"]
 root = "./website/3"
-error_page = ["404 /404.html"]
+error_page = ["404=/404.html"]
 client_body = "100000"
 
 	[[server.location]]
@@ -145,8 +145,8 @@ client_body = "100000"
 	allowed_methods = ["GET"]
 	index = ["main.html"]
 	autoindex = "False"
-	upload_path = "False"
-	cgi_path = [""]
+	upload = "False"
+	cgi = [""]
 
 	[[server.location]]
 	prefix = "/archive"
@@ -154,8 +154,8 @@ client_body = "100000"
 	allowed_methods = ["GET", "POST", "DELETE"]
 	index = [""]
 	autoindex = "True"
-	upload_path = "True"
-	cgi_path = [""]
+	upload = "True"
+	cgi = [""]
 
 # ================================
 
@@ -171,8 +171,8 @@ client_body = "10"
 	allowed_methods = ["GET"]
 	index = ["virtual_1.html"]
 	autoindex = "False"
-	upload_path = "False"
-	cgi_path = [""]
+	upload = "False"
+	cgi = [""]
 
 # ================================
 
@@ -188,5 +188,5 @@ client_body = "10"
 	allowed_methods = ["GET"]
 	index = ["virtual_2.html"]
 	autoindex = "False"
-	upload_path = "False"
-	cgi_path = [""]
+	upload = "False"
+	cgi = [""]

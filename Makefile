@@ -9,7 +9,6 @@ TOML_SRCS = $(SRCDIR)/toml/Lexer.cpp $(SRCDIR)/toml/ParseError.cpp $(SRCDIR)/tom
             $(SRCDIR)/toml/Syntax.cpp $(SRCDIR)/toml/Table.cpp $(SRCDIR)/toml/Token.cpp $(SRCDIR)/toml/Toml.cpp
 CONFIG_SRCS = $(SRCDIR)/config/Config.cpp
 CGI_SRCS = $(SRCDIR)/cgi/CGIHandler.cpp $(SRCDIR)/cgi/ScopedEnvArray.cpp
-UTILS_SRCS = $(SRCDIR)/utils/Utils.cpp
 
 # Object files
 TOML_OBJS = $(TOML_SRCS:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
