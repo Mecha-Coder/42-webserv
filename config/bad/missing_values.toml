@@ -14,4 +14,3 @@ client_body =
 	index           = 
 	autoindex       = "False"
 	upload     = "False"
-	cgi        = [""]

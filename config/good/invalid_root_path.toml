@@ -13,4 +13,3 @@ client_body = "20000000"
 	index           = ["dashboard.html"]
 	autoindex       = "False"
 	upload          = "False"
-	cgi             = [""]

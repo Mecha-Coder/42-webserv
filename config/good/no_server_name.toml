@@ -13,7 +13,6 @@ client_body = "20000000"
 	index           = ["dashboard.html"]
 	autoindex       = "False"
 	upload          = "False"
-	cgi             = [""]
 
 # ====================================================================
 
@@ -31,7 +30,6 @@ client_body = "10"
 	index           = ["virtual_1.html"]
 	autoindex       = "False"
 	upload          = "False"
-	cgi             = [""]
 
 # =====================================================================
 
@@ -49,4 +47,3 @@ client_body = "10"
 	index           = ["virtual_2.html"]
 	autoindex       = "False"
 	upload          = "False"
-	cgi             = [""]

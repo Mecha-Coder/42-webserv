@@ -23,7 +23,7 @@ Str printmyMap(const ErrorPage &map)
 
     ErrorPage::const_iterator i = map.begin();
     for (; i != map.end(); i++)
-        s += Str("\t\t[") + toStr(i->first) + Str("] => [") + i->second + "]\n";
+        s += Str("\t[") + toStr(i->first) + Str("] => [") + i->second + "]\n";
 
     return s;
 }

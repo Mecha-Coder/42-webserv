@@ -59,7 +59,7 @@ bool Client::noDefaultFile()
     for (size_t i=0; i < index.size(); i++)
     {
         path = _fullPath + index[i];
-        
+
         if (!index[i].empty() && isFileExist(path))
         {
             _fullPath = path;

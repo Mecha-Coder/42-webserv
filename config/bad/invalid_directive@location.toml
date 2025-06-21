@@ -15,4 +15,3 @@ client_body = "10"
 
 	test_me         =  false
 	
-	cgi        = [""]

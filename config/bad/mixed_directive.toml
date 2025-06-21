@@ -18,4 +18,3 @@ autoindex       = "False"
 	
 	index           = ["virtual_2.html"]
 	upload     = "False"
-	cgi        = [""]

@@ -12,4 +12,4 @@ client_body = ""
 	index           = ["dashboard.html"]
 	autoindex       = ""
 	upload          = ""
-	cgi             = [""]
+	cgi             = [".txt"]

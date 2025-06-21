@@ -49,8 +49,8 @@ pre-eval:
 	@echo "$(GREEN)Prepare files for eval$(RESET)"
 	@chmod 777 test.sh
 
-	@echo "$(GREEN) => Convert CGI script from Windows(CRLF) to Unix(LF)$(RESET)"
-	@find . -type f \( -name '*.py' -o -name '*.php' -o -name '*.js' -name '*.sh'\) -exec sed -i 's/\r$$//' {} +
+	@echo "$(GREEN) => Convert all script from Windows(CRLF) to Unix(LF)$(RESET)"
+	@find . -type f \( -name '*.py' -o -name '*.php' -o -name '*.js' -name '*.sh' \) -exec sed -i 's/\r$$//' {} +
 
 	@echo "$(GREEN) => Change file permission for:$(RESET)"
 

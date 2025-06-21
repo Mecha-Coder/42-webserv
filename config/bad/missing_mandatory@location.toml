@@ -10,4 +10,3 @@ root        = "./website/virtualHost/2"
 	index           = ["virtual_2.html"]
 	autoindex       =  false
 	upload	        =  false
-	cgi             = [""]

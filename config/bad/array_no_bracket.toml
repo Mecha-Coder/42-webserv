@@ -14,4 +14,3 @@ client_body = "10"
 	index           = ["virtual_2.html"]
 	autoindex       = "False"
 	upload     = "False"
-	cgi        = [""]

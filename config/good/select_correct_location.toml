@@ -13,7 +13,6 @@ client_body = "20000000"
 	index           = ["dashboard.html"]
 	autoindex       = "False"
 	upload          = "False"
-	cgi             = [""]
 
 	[[server.location]]
 	prefix          = "/archive/subfolder/deepNest"
@@ -24,4 +23,4 @@ client_body = "20000000"
 	[[server.location]]
 	prefix          = "/archive/subfolder"
 	allowed_methods = ["GET"]
-	index           = ["Makefile"]
+	index           = ["netPractice.json"]

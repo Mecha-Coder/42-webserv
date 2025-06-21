@@ -9,43 +9,52 @@ void handleSignal(int signum)
 	_running_ = 0;
 }
 
+
 int main(int ac, char **av)
 {
 	Watchlist 		watcher;
 	toml::Table* 	table;
 	ServerManager   *sManager =  NULL;
+	Str				where = "Parse config";
 
 	if (ac > 2)
-		return (logError("Input argument", "Expected  : " + Str(av[0]) + " <config.toml>"), 1);
+		return (logError("Invalid argument", "Expected: " + Str(av[0]) + " <config.toml>"), 1);
 	else if (ac == 1)
+	{
 		sManager = new ServerManager();
+		logAction("", "Use default config 😎");
+	}
 	else
 	{
 		Str configFile = av[1];
+
+		if (configFile.find(".toml") == configFile.npos)
+			return (logError(where, "Invalid TOML file"), 1);
 		if ((table = toml::ParseFile(configFile)) == NULL)
-			return (logError("Parse config", "Failed to parse the TOML file"), 1);
+			return (logError(where, "Failed"), 1);
 		
+
 		Config config(*table);
 		std::vector<ServerConfig>& servers = config.getServers();
 		delete table;
 		if (servers.empty())
 		{
-			return (logError("Parse config", "Failed to parse the TOML file"), 1);
+			return (logError(where, "Server data is empty"), 1);
 			return 1;
 		}
 			
 
 		try { sManager = new ServerManager(servers); }
 		catch(const std::exception& e)
-		{ return (logError("Parse config", e.what()), 1); }
+		{ return (logError(where, e.what()), 1); }
 		logAction("Parse config", "Successful 💪");
 	}
 
-	sManager->showData();
+	sManager->showData(); // Remove after troubleshooting
 
 	signal(SIGINT, handleSignal);
 	if (!sManager->initListenFd(watcher))
-		return 1;
+		return (delete sManager, 1);
 
 	std::cout << CYAN "Server is ready to accept request 👍" RESET
 		      << "\n---------------------------------------------"

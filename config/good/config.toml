@@ -1,5 +1,5 @@
 [[server]]
-	port        = "1337"
+	port        = ["1337"]
 	host        = "10.0.0.1  "
 	root        = "./website/1  "  
 	server_name = [" hello"]
@@ -12,7 +12,7 @@
 		allowed_methods  = ["GET" ,"POST", "DELETE"]
 		autoindex        = "on"     
 		upload           = "off"
-		redirect         = ["old_about.html"]
+		redirect         = "old_about.html"
 
 	[[server.location]]
 		prefix           = "/html"
@@ -29,9 +29,9 @@
 # =============================================================================================
 
 [[server]]
-	port        = "1336"   
+	port        = ["1336"]   
 	host        = "10.0.0.1"  
-	root        = "www"  
+	root        = "./website/1  "   
 	server_name = ["example1.com", "example22.com", "example3.com"] 
 	error_page  = ["404=www/error_pages/404.html"]   
 	client_body = "100"

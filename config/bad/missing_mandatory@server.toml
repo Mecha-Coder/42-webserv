@@ -10,7 +10,7 @@ root        = "./website/virtualHost/2"
 	index           = ["virtual_2.html"]
 	autoindex       =  false
 	upload	        =  false
-	cgi             = [""]
+
 
 
 [[server]]
@@ -24,4 +24,3 @@ port        = ["4000", "6000"]
 	index           = ["virtual_2.html"]
 	autoindex       =  false
 	upload	        =  false
-	cgi             = [""]

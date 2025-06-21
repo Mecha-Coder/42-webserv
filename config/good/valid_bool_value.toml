@@ -21,7 +21,7 @@ client_body = "10"
 	redirect        = ""
 	allowed_methods = ["GET", "PATCH"]
 	index           = ["virtual_2.html"]
-	autoindex       = "No"
+	autoindex       = "false"
 	upload     = "TRUE"
 	cgi        = [".py"]
 

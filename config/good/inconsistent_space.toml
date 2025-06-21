@@ -2,8 +2,8 @@
 					
 					[[server]]
 
-	port        = ["1337", "5555"]
-	host        = "   10.0.0.1  "
+	port        = ["4000", "5555"]
+	host        = "   127.0.0.1  "
 	root        = " ./website/1  "  
 	server_name = [" hello   "]
 	error_page  = ["404 =   /404.html  ", "500   =  /50x.html  "]

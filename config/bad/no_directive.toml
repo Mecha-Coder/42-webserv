@@ -14,4 +14,3 @@ root        = "./website/virtualHost/2"
 	index           = ["virtual_2.html"]
 	autoindex       = "False"
 	upload_path     = "False"
-	cgi_path        = [""]
