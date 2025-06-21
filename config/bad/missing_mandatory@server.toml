@@ -1,0 +1,27 @@
+
+[[server]]
+port        = ["4000", "7000", "10000"]
+root        = "./website/virtualHost/2"
+
+	[[server.location]]
+	prefix          = "/"
+	redirect        = ""
+	allowed_methods = ["GET"]
+	index           = ["virtual_2.html"]
+	autoindex       =  false
+	upload	        =  false
+	cgi             = [""]
+
+
+[[server]]
+host        = "127.0.0.1"
+port        = ["4000", "6000"]
+
+	[[server.location]]
+	prefix          = "/"
+	redirect        = ""
+	allowed_methods = ["GET"]
+	index           = ["virtual_2.html"]
+	autoindex       =  false
+	upload	        =  false
+	cgi             = [""]

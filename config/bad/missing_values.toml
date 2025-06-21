@@ -1,6 +1,7 @@
 # User_name is not part of the directive
 
 [[server]]
+host        = "127.0.0.1"
 server_name = ["test.com"]
 port        = ["4000"]
 root        = "./website/virtualHost/2"
@@ -10,7 +11,7 @@ client_body =
 	prefix          = "/"
 	redirect        = ""
 	allowed_methods = ["GET"]
-	index           = ["virtual_2.html"]
+	index           = 
 	autoindex       = "False"
-	upload_path     = "False"
-	cgi_path        = [""]
+	upload     = "False"
+	cgi        = [""]

@@ -47,16 +47,28 @@ re: fclean all
 
 pre-eval:
 	@echo "$(GREEN)Prepare files for eval$(RESET)"
-	
-	@echo "$(GREEN) => Convert CGI script from Windows(CRLF) to Unix(LF)$(RESET)"
-	@find . -type f \( -name '*.py' -o -name '*.php' -o -name '*.js' \) -exec sed -i 's/\r$$//' {} +
+	@chmod 777 test.sh
 
-	@echo "$(GREEN) => Change file permission for no_permission.pdf && /cannot_delete$(RESET)"
+	@echo "$(GREEN) => Convert CGI script from Windows(CRLF) to Unix(LF)$(RESET)"
+	@find . -type f \( -name '*.py' -o -name '*.php' -o -name '*.js' -name '*.sh'\) -exec sed -i 's/\r$$//' {} +
+
+	@echo "$(GREEN) => Change file permission for:$(RESET)"
+
+	@echo "    *./website/1/archive/no_permission.pdf"
 	@chmod 000 ./website/1/archive/no_permission.pdf
+
+	@echo "    *./website/1/archive/cannot_delete"
 	@chmod 555 ./website/1/archive/cannot_delete
+
+	@echo "    *./config/bad/no_permission.toml"
+	@chmod 000 ./config/bad/no_permission.toml
 
 post-eval:
 	@chmod 777 ./website/1/archive/no_permission.pdf
 	@chmod 777 ./website/1/archive/cannot_delete
+	@chmod 777 ./config/bad/no_permission.toml
 
-.PHONY: all clean fclean re pre-eval post-eval
+test:
+	@./test.sh
+
+.PHONY: all test clean fclean re pre-eval post-eval

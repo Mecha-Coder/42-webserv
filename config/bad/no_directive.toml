@@ -1,10 +1,11 @@
 # Absent directive, directly input values
 
 [[server]]
-user_name = ["test.com"]
+host        = "127.0.0.1"
+server_name = ["test.com"]
 port        = ["4000"]
 root        = "./website/virtualHost/2"
-client_max = "10"
+ = "10"
 
 	[[server.location]]
 	"/"

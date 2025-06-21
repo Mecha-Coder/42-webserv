@@ -1,0 +1,17 @@
+# items inside array without comma separating them 
+
+[[server]]
+host        = "127.0.0.1"
+server_name = ["test.com"]
+port        = ["4000", "500"]
+root        = "./website/virtualHost/2"
+client_body = "10"
+
+	[[server.location]]
+	prefix          = "/"
+	redirect        = "www.google.com"
+	allowed_methods = ["PATCH", "cb43t7c394"]
+	index           = ["virtual_2.html"]
+	autoindex       = "False"
+	upload     = "False"
+	cgi        = [""]

@@ -1,9 +1,6 @@
-# User_name is not part of listed directive
-
-# Jason: Invalid directive should fail
-# Importance: 🚩
 
 [[server]]
+host        = "127.0.0.1"
 hdsnkfdlsnkfdlandfsklsna = ["test.com"]
 port        = ["4000"]
 root        = "./website/virtualHost/2"
@@ -15,5 +12,5 @@ client_body = 10
 	allowed_methods = ["GET"]
 	index           = ["virtual_2.html"]
 	autoindex       =  false
-	upload_path     =  false
-	cgi_path        = [""]
+	upload     =  false
+	cgi       = [""]

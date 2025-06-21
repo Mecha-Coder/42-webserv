@@ -1,0 +1,7 @@
+[[server]]
+host        = "127.0.0.1"
+server_name = ["demo.eval.com"]
+port        = ["4000", "8050", "21000"]
+root        = "./website/1"
+error_page  = ["403=/error/403.html  ", "100 = /error/404.html  ", "900  = /error/500.html  "]
+client_body = "1234"

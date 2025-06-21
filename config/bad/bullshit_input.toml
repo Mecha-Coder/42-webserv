@@ -1,0 +1,15 @@
+[[server]]
+host        = "127.0.0.1"
+server_name = ["Secret_to_life"]
+port        = ["4000", "5000"]
+root        = "eewqweqe"
+client_body = "10000000"
+
+	[[server.location]]
+	prefix          = "190909"
+	redirect        = "50"
+	allowed_methods = ["GET"]
+	index           = ["Makefile"]
+	autoindex       = "Testing..."
+	upload          = "False"
+	cgi             = ["qweqw.txt"]

@@ -91,6 +91,7 @@ bool Lexer::Tokenize(std::string& line, Token& tk) {
 	case '\n':
 		MakeToken(&tk, "\n", Token::NEWLINE);
 		pos++;
+		break;
 	case '"':
 	case '\'': {
 		size_t size = line.find(line[pos], pos + 1);
@@ -149,6 +150,7 @@ Token::e_token Lexer::Expect() {
 	case Token::NEWLINE:
 		abort();
 	}
+	return Token::NEWLINE;
 }
 
 bool Lexer::GetNextLine(std::string& line) {

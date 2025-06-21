@@ -1,0 +1,34 @@
+
+
+[[server]]
+host        = "127.0.0.1"
+server_name = ["test.com"]
+port        = ["4000", "5000"]
+root        = "./website/virtualHost/2"
+client_body = "10"
+
+	[[server.location]]
+	prefix          = "/"
+	redirect        = ""
+	allowed_methods = ["GET"]
+	index           = ["virtual_2.html"]
+	autoindex       = "OFF"
+	upload     = ""
+	cgi        = [".py"]
+
+		[[server.location]]
+	prefix          = "/test"
+	redirect        = ""
+	allowed_methods = ["GET", "PATCH"]
+	index           = ["virtual_2.html"]
+	autoindex       = "No"
+	upload     = "TRUE"
+	cgi        = [".py"]
+
+			[[server.location]]
+	prefix          = "/try again"
+	redirect        = ""
+	index           = ["virtual_2.html"]
+	autoindex       = "Off"
+	upload     = "False"
+	cgi        = [".py"]

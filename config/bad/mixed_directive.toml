@@ -3,6 +3,7 @@
 # Importance: 🚩
 
 [[server]]
+host        = "127.0.0.1"
 server_name = ["test.com"]
 client_body = "10"
 
@@ -16,5 +17,5 @@ autoindex       = "False"
 	root        = "./website/virtualHost/2"
 	
 	index           = ["virtual_2.html"]
-	upload_path     = "False"
-	cgi_path        = [""]
+	upload     = "False"
+	cgi        = [""]

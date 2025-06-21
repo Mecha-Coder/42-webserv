@@ -1,0 +1,13 @@
+[[server.location]]
+prefix = "/html"
+index = ["index.html", "index.htm"]   
+allowed_methods = ["GET", "HEAD", "DELETE"]
+autoindex = "on"
+redirect = "/html/success.html"
+
+
+[[server.location]]
+prefix = "/"  
+allowed_methods = ["GET" ,"POST", "DELETE"]
+autoindex = "on"     
+redirect = "old_about.html"

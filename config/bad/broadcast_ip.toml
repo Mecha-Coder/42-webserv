@@ -1,0 +1,4 @@
+[[server]]
+	host        = "255.255.255.255"
+	port        = ["4000"]
+	root        = "./website/1"

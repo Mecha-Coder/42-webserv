@@ -1,0 +1,20 @@
+# swap array input (port) to single input
+
+# Jason: Array to single input is still acceptable
+# Importance:
+
+[[server]]
+host        = "127.0.0.1"
+server_name = ["test.com"]
+port        = "4000"
+root        = "./website/virtualHost/2"
+client_max = "10"
+
+	[[server.location]]
+	prefix          = "/"
+	redirect        = ""
+	allowed_methods = "GET"
+	index           = ["virtual_2.html"]
+	autoindex       = "False"
+	upload          = "False"
+	cgi        = [""]

@@ -1,0 +1,11 @@
+[[server]]
+	server_name = ["demo.eval.com"]
+	host        = "127.0.0.1"
+	port        = ["4000", "8050", "21000"]
+	root        = "./website/1"
+	error_page  = ["403=/error/403.html  ", "404=/error/404.html  ", "500=/error/500.html"]
+	client_body = "20000000"
+
+	[[server.location]]
+		prefix          = "/"
+		index           = ["unknown1.txt", "unknown2.txt" , "archive/Makefile"]
