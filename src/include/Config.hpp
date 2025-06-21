@@ -113,7 +113,7 @@ public:
 	};
 	e_error error;
 	vector<ServerConfig>& getServers();
-	void Print();
+	std::string Print();
 
 private:
 	enum e_state {

@@ -6,7 +6,7 @@ root        = "eewqweqe"
 client_body = "10000000"
 
 	[[server.location]]
-	prefix          = "190909"
+	prefix          = " /190909"
 	redirect        = "50"
 	allowed_methods = ["GET"]
 	index           = ["Makefile"]

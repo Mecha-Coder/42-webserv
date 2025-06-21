@@ -36,8 +36,6 @@ run_command() {
 	run_command "./config/bad/clientBody_negative_num.toml"
 	run_command "./config/bad/clientBody_not_num.toml"
 	run_command "./config/bad/clientBody_superLarge.toml"
-	run_command "./config/bad/duplicate_directive@location.toml"
-	run_command "./config/bad/duplicate_directive@server.toml"
 	run_command "./config/bad/empty.toml"
 	run_command "./config/bad/input_all_array.toml"
 	run_command "./config/bad/input_all_single.toml"
@@ -64,7 +62,7 @@ run_command() {
 	run_command "./config/bad/no_directive.toml"
 	run_command "./config/bad/only_location.toml"
 	run_command "./config/bad/weird_method.toml"
-	#run_command "./config/bad/no_permission.toml"
+	run_command "./config/bad/no_permission.toml"
 	run_command "   "
 	run_command "no_toml_ext.txt"
     
@@ -85,6 +83,8 @@ run_command() {
 	#run_command "./config/good/select_correct_location.toml"
 	#run_command "./config/good/valid_bool_value.toml"	
 	#run_command "./config/good/valid_errPg_format.toml"
+	# 	run_command "./config/bad/duplicate_directive@location.toml"
+	# run_command "./config/bad/duplicate_directive@server.toml"
 
 
 	

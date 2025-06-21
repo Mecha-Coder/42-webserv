@@ -47,7 +47,7 @@ re: fclean all
 
 pre-eval:
 	@echo "$(GREEN)Prepare files for eval$(RESET)"
-	@chmod 777 test.sh
+	@chmod 777 ./test.sh
 
 	@echo "$(GREEN) => Convert all script from Windows(CRLF) to Unix(LF)$(RESET)"
 	@find . -type f \( -name '*.py' -o -name '*.php' -o -name '*.js' -name '*.sh' \) -exec sed -i 's/\r$$//' {} +
@@ -68,7 +68,7 @@ post-eval:
 	@chmod 777 ./website/1/archive/cannot_delete
 	@chmod 777 ./config/bad/no_permission.toml
 
-test:
-	@./test.sh
+test:	re
+	@ ./test.sh
 
 .PHONY: all test clean fclean re pre-eval post-eval

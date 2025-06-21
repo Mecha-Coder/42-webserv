@@ -43,7 +43,7 @@ Parser::Parser(TokenList tks) {
 										  Token::NEWLINE | Token::COMMENT,
 										  Token::COMMA | Token::CPAREN | Token::OPAREN);
 			lastmp->push_back(TokenPair(res, values, is_array));
-
+		
 			//TODO: debug print
 			// if (!res.empty()) {
 			// 	std::cout << "[Parser] Inserted key = ";

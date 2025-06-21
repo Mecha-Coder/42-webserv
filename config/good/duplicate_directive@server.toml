@@ -2,14 +2,14 @@
 [[server]]
 host        = "127.0.0.1"
 server_name = ["test.com"]
-port        = ["4000", "66", "10000"]
+port        = ["4000", "9000", "10000"]
+port        = ["9000", "5000"]
 root        = "./website/virtualHost/2"
+root        = "abc123"
 client_body = "10"
 
 	[[server.location]]
 	prefix          = "/"
-	prefix          = "/test/go"
-	redirect        = "/hello.php"
 	redirect        = ""
 	allowed_methods = ["GET"]
 	index           = ["virtual_2.html"]
