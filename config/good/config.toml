@@ -1,43 +1,41 @@
 [[server]]
-	port        = ["1337"]
-	host        = "10.0.0.1  "
+	port        = ["4000"]
+	host        = "127.0.1.1  "
 	root        = "./website/1  "  
 	server_name = [" hello"]
-	error_page  = ["404=/404.html"]
+	error_page  = ["404=/error/404.html"]
 	client_body = "10"
 
 	[[server.location]]
 		prefix 	         = "/"  
-		index            = ["index.html ", "index.htm"]
+		index            = ["dashboard.html", "index.htm"]
 		allowed_methods  = ["GET" ,"POST", "DELETE"]
 		autoindex        = "on"     
 		upload           = "off"
-		redirect         = "old_about.html"
 
 	[[server.location]]
-		prefix           = "/html"
-		index            = ["index.html", "index.htm"]   
+		prefix           = "/archive"
 		allowed_methods  = ["GET", "HEAD", "DELETE"]
 		autoindex        = "on"
-		redirect         = "/html/success.html"
 
 	[[server.location]]   
 		prefix           = "/cgi-bin"
 		cgi              = [".py", ".py", ".py", ".py"]
-		allowed_methods  = ["GET", "POST"] 
+		allowed_methods  = ["GET", "POST"]
+		redirect         = "https://www.youtube.com"
 
 # =============================================================================================
 
 [[server]]
-	port        = ["1336"]   
-	host        = "10.0.0.1"  
-	root        = "./website/1  "   
+	port        = ["6000"]   
+	host        = "  127.1.9.9  "  
+	root        = "./website/2  "   
 	server_name = ["example1.com", "example22.com", "example3.com"] 
 	error_page  = ["404=www/error_pages/404.html"]   
 	client_body = "100"
 
 	[[server.location]]
-		prefix          = "/html"
+		prefix          = "/"
 		index           = ["index.html",  "index.htm"]
 		allowed_methods = ["GET", "DELETE"]  
 		autoindex       = "on"

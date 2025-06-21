@@ -68,7 +68,10 @@ post-eval:
 	@chmod 777 ./website/1/archive/cannot_delete
 	@chmod 777 ./config/bad/no_permission.toml
 
-test:	re
+test:
 	@ ./test.sh
 
-.PHONY: all test clean fclean re pre-eval post-eval
+run:
+	./webserv config/good/eval.toml
+
+.PHONY: all test clean fclean re pre-eval post-eval run

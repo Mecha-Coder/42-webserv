@@ -1,4 +1,0 @@
-name: dsdsa
-occupation: dsasd
-nationality: Canadian
-about: dsasd

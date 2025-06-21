@@ -50,9 +50,12 @@ int main(int ac, char **av)
 		logAction("Parse config", "Successful 💪");
 	}
 
-	sManager->showData(); // Remove after troubleshooting
+	//sManager->showData(); // Remove after troubleshooting
 
 	signal(SIGINT, handleSignal);
+	signal(SIGTSTP, handleSignal);
+	signal(SIGQUIT, handleSignal);
+
 	if (!sManager->initListenFd(watcher))
 		return (delete sManager, 1);
 
