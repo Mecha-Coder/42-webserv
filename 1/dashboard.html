@@ -216,12 +216,14 @@
   <!-- ───────────────────────────────────────────────────────────────── -->
   <!-- TOP HEADER: 42 LOGO + SUBTITLE -->
   <div class="top-header">
-    <!-- Replace src="…" with your actual file path for the 42‐logo -->
-    <img class="logo-42" src="./photos/42_logo.png" alt="42 Logo">
+    <a href="/">
+      <img class="logo-42" src="./photos/42_logo.png" alt="42 Logo">
+    </a>
   </div>
 
   <!-- ───────────────────────────────────────────────────────────────── -->
   <!-- MAIN TITLE + GITHUB & MEMBERS ICONS -->
+
   <div class="main‐title‐block">
     <div class="big‐text">WEBSERVE</div>
 
@@ -244,35 +246,93 @@
   <div class="grid-title"><h2>MANDATORY</h2></div>
 
   <div class="grid‐container">
-    <!-- ─── BOX #1: Directory List ─── -->
+  
+  <!-- ───────────────────────────────────────────────────────────────── -->
+    <!-- ─── Archive ─── -->
     <div class="box">
       <div>
-        <div class="card‐title">Directory List</div>
+        <div class="card‐title">Archive Folder</div>
         <ul class="card‐content">
-          <li>Get request</li>
-          <li>Autoindex</li>
+          <li>Method: GET</li>
+          <li>List all files and folders in directory</li>
+          <li>Also act as our Upload / Download location ⬆️</li>
         </ul>
       </div>
       <div class="card‐buttons">
-        <button onclick="navigateToPage(1)">Click</button>
+        <button onclick="window.location.href='/archive/';">Click</button>
       </div>
     </div>
 
-    <!-- ─── BOX #2: Fill Form ─── -->
+    <!-- ───────────────────────────────────────────────────────────────── -->
+    <!-- ─── Fill Form ─── -->
     <div class="box">
       <div>
-        <div class="card‐title">Fill Form</div>
+        <div class="card‐title">Create Form</div>
         <ul class="card‐content">
-          <li>Post request</li>
-          <li>CGI to create dynamic content</li>
+          <li>Method: POST</li>
+          <li>Save form using Python 🐍 CGI and show form summary upon success</li>
         </ul>
       </div>
       <div class="card‐buttons">
-        <button onclick="navigateToPage(2)">Click</button>
+        <button onclick="window.location.href='/form.html';">Click</button>
       </div>
     </div>
 
-    <!-- ─── BOX #3: Redirect ─── -->
+        <!-- ───────────────────────────────────────────────────────────────── -->
+    <!-- ─── Upload File ─── -->
+
+    <div class="box">
+      <div>
+        <div class="card‐title">Upload Files</div>
+        <ul class="card‐content">
+          <li>Method: POST (Server)</li>
+          <li>Upload single or multiple files</li>
+          <li>Limit client body to &lt; 20 MB</li>
+        </ul>
+      </div>
+      <div class="card‐buttons">
+        <button onclick="window.location.href='/upload.html';">Click</button>
+      </div>
+    </div>
+
+    <!-- ───────────────────────────────────────────────────────────────── -->
+    <!-- ─── Destroy Resource ─── -->
+
+    <div class="box">
+      <div>
+        <div class="card‐title">Destroy Resource</div>
+        <ul class="card‐content">
+          <li>Method: DELETE</li>
+          <li>Delete files and folders in ⬆️ Archive</li>
+          <li>Python 🐍 CGI will remove deleted item from delete list (dynamic content)</li>
+        </ul>
+      </div>
+      <div class="card‐buttons">
+        <button onclick="window.location.href='/script/delete.py';">Click</button>
+      </div>
+    </div>
+
+    
+    <!-- ───────────────────────────────────────────────────────────────── -->
+    <!-- ─── Testing With Telnet ─── -->
+
+    <div class="box">
+      <div>
+        <div class="card‐title">Testing With Telnet</div>
+        <ul class="card‐content">
+          <li>Manually send request via terminal</li>
+          <li>Test HTTP parsing & validation</li>
+          <li>Simulate "Connection: closed"</li>
+        </ul>
+      </div>
+      <div class="card‐buttons">
+        <button onclick="window.location.href='/telnet.html';">Click</button>
+      </div>
+    </div>
+
+    <!-- ───────────────────────────────────────────────────────────────── -->
+    <!-- ─── Redirect ─── -->
+
     <div class="box">
       <div>
         <div class="card‐title">Redirect</div>
@@ -281,96 +341,125 @@
         </ul>
       </div>
       <div class="card‐buttons">
-        <!-- Replace src="…" with your actual icon paths for Google, YouTube, INTERNAL -->
-        <button onclick="window.open('https://www.google.com', '_blank')">
+        <button onclick="window.location.href='/google/';">
           <img src="./photos/google.png" alt="Google" style="height:16px; vertical-align:middle;">
         </button>
-        <button onclick="window.open('https://www.youtube.com', '_blank')">
+        <button onclick="window.location.href='/youtube/';">
           <img src="./photos/youtube.png" alt="YouTube" style="height:16px; vertical-align:middle;">
         </button>
-        <button onclick="navigateToPage(3)">INTERNAL</button>
+        <button onclick="window.location.href='/internal/';">INTERNAL</button>
       </div>
     </div>
 
-    <!-- ─── BOX #4: Upload Files ─── -->
+    <!-- ───────────────────────────────────────────────────────────────── -->
+    <!-- ─── Custom Error Page ─── -->
+
     <div class="box">
       <div>
-        <div class="card‐title">Upload Files</div>
+        <div class="card‐title">Custom Error Page</div>
         <ul class="card‐content">
-          <li>Error if upload &gt; 20 MB</li>
-          <li>Upload single or multiple files</li>
+          <li>Error: 403, 404, 500</li>
         </ul>
       </div>
       <div class="card‐buttons">
-        <button onclick="navigateToPage(4)">Click</button>
+        <form action="/error/test.php" method="POST">
+          <input type="hidden" name="a" value="b">
+          <input type="hidden" name="c" value="d">
+          <button class="error" type="submit">Not CGI</button>
+        </form>
+        <button onclick="location.href='/invalidPath/'">Invalid path</button>
+        <button onclick="location.href='/error/cgiCrash.py'">CGI Crash</button>
+        <button onclick="location.href='/error/cgiHang.py'">CGI Hang</button>
+        <button onclick="location.href='/error'">No default / autoindex</button>
       </div>
     </div>
 
-    <!-- ─── BOX #5: Destroy ─── -->
+    <!-- ───────────────────────────────────────────────────────────────── -->
+    <!-- ─── Default Error Page ─── -->
+
     <div class="box">
       <div>
-        <div class="card‐title">Destroy</div>
+        <div class="card‐title">Default Error Page</div>
         <ul class="card‐content">
-          <li>Delete request</li>
-          <li>Delete files and folders</li>
+          <li>Error: 400, 405</li>
+          <li>More default error > See Server 2</li>
         </ul>
       </div>
       <div class="card‐buttons">
-        <button onclick="navigateToPage(5)">Click</button>
+        <form action="/error/test.php" method="POST">
+          <button class="error" type="submit">Invalid Header</button>
+        </form>
+        <button onclick="location.href='/dummy/'">Invalid Method</button>
       </div>
     </div>
+    
+    <!-- ───────────────────────────────────────────────────────────────── -->
+    <!-- ─── Different port ─── -->
 
-    <!-- ─── BOX #6: Error Pages ─── -->
     <div class="box">
       <div>
-        <div class="card‐title">Error Pages</div>
+        <div class="card‐title">Different ports</div>
       </div>
       <div class="card‐buttons">
-        <button onclick="navigateToPage(6)">Default</button>
-        <button onclick="navigateToPage(7)">Custom</button>
+        <button onclick="window.location.href='http://127.0.0.1:4000/';">Port 4000</button>
+        <button onclick="window.location.href='http://127.0.0.1:21000/';">Port 21000</button>
+        <button onclick="window.location.href='http://127.0.0.1:8050/';">Port 8050</button>
       </div>
     </div>
 
-    <!-- ─── BOX #7: Different port ─── -->
+
+    <!-- ───────────────────────────────────────────────────────────────── -->
+    <!-- ─── Virutal Hosting ─── -->
+
     <div class="box">
       <div>
-        <div class="card‐title">Different port</div>
+        <div class="card‐title">Virtual Hosting</div>
+        <ul class="card‐content">
+          <li>Multiple domains/servers on the same IP:port</li>
+        </ul>
       </div>
       <div class="card‐buttons">
-        <button onclick="navigateToPage(8)">Port 8080</button>
-        <button onclick="navigateToPage(9)">Port 9000</button>
+        <button onclick="window.location.href='/virtualHost.html';">Click</button>
       </div>
     </div>
 
-    <!-- ─── BOX #8: Other Servers ─── -->
+    <!-- ───────────────────────────────────────────────────────────────── -->
+    <!-- ─── Other Servers ─── -->
+
     <div class="box">
       <div>
         <div class="card‐title">Other Servers</div>
       </div>
       <div class="card‐buttons">
-        <button onclick="navigateToPage(10)">Server 1</button>
+        <button onclick="window.location.href='http://127.0.0.1:6900/';">Server 2</button>
+        <button onclick="window.location.href='http://127.0.0.1:9000/';">Server 3</button>
       </div>
     </div>
 
-    <!-- ─── BOX #9: Invalid Request ─── -->
+
+    <!-- ───────────────────────────────────────────────────────────────── -->
+    <!-- ─── Testing Reference ─── -->
+
     <div class="box">
       <div>
-        <div class="card‐title">Invalid Request</div>
+        <div class="card‐title">Testing Reference</div>
       </div>
       <div class="card‐buttons">
-        <button onclick="navigateToPage(11)">Invalid method</button>
-        <button onclick="navigateToPage(12)">Invalid path</button>
+        <button onclick="window.location.href='/statuscode.html';">Status Code</button>
       </div>
     </div>
 
-  </div> <!-- END .grid‐container -->
+  </div>
 
   <!-- ───────────────────────────────────────────────────────────────── -->
-  <!-- BONUS CARD: "Remember me" -->
+  <!-- BONUS Grid -->
 
   <div class="grid-title"><h2>BONUS</h2></div>
+      <div class="grid‐container">
 
-  <div class="grid‐container">
+    <!-- ───────────────────────────────────────────────────────────────── -->
+    <!-- ───  Remember me ─── -->
+
     <div class="box">
       <div>
         <div class="card‐title">Remember me</div>
@@ -379,32 +468,28 @@
         </ul>
       </div>
       <div class="card‐buttons">
-        <button onclick="navigateToPage(5)">Click</button>
+        <button  onclick="window.location.href='/script/remember.py';">Click</button>
       </div>
     </div>
-  </div>
+
 
   <!-- ───────────────────────────────────────────────────────────────── -->
-  <script>
-    function navigateToPage(boxNumber) {
-      const pages = {
-        1: "directory.html",
-        2: "form.html",
-        3: "hello.html",
-        4: "upload.html",
-        5: "destroy.html",
-        6: "error_default.html",
-        7: "error_custom.html",
-        8: "port_8080.html",
-        9: "port_9000.html",
-        10: "other_servers.html",
-        11: "invalid_method.html",
-        12: "invalid_path.html",
-        13: "remember_me.html"
-      };
-      window.location.href = pages[boxNumber] || "#";
-    }
-  </script>
+    <!-- ───  Other CGI ─── -->
 
+    <div class="box">
+      <div>
+        <div class="card‐title">Other CGI</div>
+        <ul class="card‐content">
+          <li>CGI script besides Python</li>
+        </ul>
+      </div>
+      <div class="card‐buttons">
+        <button  onclick="window.location.href='/script/hello.php';">PHP</button>
+        <button  onclick="window.location.href='/script/hello.js';">Javascript</button>
+      </div>
+
+  <!-- ───────────────────────────────────────────────────────────────── -->
+    </div>
+  </div>
 </body>
 </html>

@@ -9,20 +9,57 @@
             font-family: Arial, sans-serif;
             text-align: center;
             margin-top: 50px;
+            background-color: rgb(224, 243, 237);
         }
         .button-container {
             margin: 30px 0;
         }
-        button {
+       button {
             padding: 10px 20px;
             margin: 0 10px;
             font-size: 16px;
             cursor: pointer;
+            border: none;
+            border-radius: 6px;
+            background: linear-gradient(135deg, #4e9af1, #3b7dd8);
+            color: #fff;
+            font-weight: 500;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease-in-out;
         }
+
+        button:hover {
+            background: linear-gradient(135deg, #3b7dd8, #2f68c5);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
         #datetime {
             margin-top: 30px;
             font-size: 18px;
             color: #555;
+        }
+        .rounded-button {
+            background-color: #4CAF50; /* Green background */
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 30px; /* Rounded edges */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin: 50px;
+        }
+        .rounded-button:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
         }
     </style>
 </head>
@@ -33,16 +70,12 @@
         <button onclick="window.location.href='page1.html'">Page 1</button>
         <button onclick="window.location.href='page2.html'">Page 2</button>
         <button onclick="window.location.href='upload.html'">Upload</button>
+        <button onclick="window.location.href='/archive/'">Archive</button>
         <button onclick="window.location.href='invalid_path'">Custom Error Page</button>
     </div>
     
     <div id="datetime">Current time: <script>document.write(new Date().toLocaleString());</script></div>
     
-    <script>
-        // Function to navigate to different pages
-        function navigateTo(page) {
-            window.location.href = '/' + page;
-        }
-    </script>
+     <button class="rounded-button" onclick="window.location.href='http://127.0.0.1:4000/';">Back to Dashboard</button>
 </body>
 </html>

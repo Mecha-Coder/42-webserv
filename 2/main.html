@@ -11,13 +11,30 @@
     <h1>Welcome to Server 2</h1>
     <p>Server is up and running!</p>
 
-    <button onclick="location.href='/fruits/'">Fruits</button>
-    <button onclick="location.href='/vegetables/'">Vegetables</button>
-    <button onclick="location.href='/zombie/'">Zombie</button>
-    <button onclick="location.href='/style/'">Style List</button>
-    <button onclick="location.href='/noCGI.php'">Default: 403 Forbidden</button>
-    <button onclick="location.href='/noCGI.php'">Default: 404 Not Found</button>
+    <div class="button-grid">
+    <button class="page" onclick="location.href='/fruit/'">Fruits</button>
+    <button class="page" onclick="location.href='/vegetable/'">Vegetables</button>
+    <button class="page" onclick="location.href='/zombie/'">Zombie</button>
+    <button class="page" onclick="location.href='/style/'">Style List</button>
 
+     <form action="/noCgi.php" method="POST">
+          <input type="hidden" name="a" value="b">
+          <input type="hidden" name="c" value="d">
+          <button class="error" type="submit">405 Method Not Allowed</button>
+    </form>
+
+    <button class="error" onclick="location.href='/invalidPath/'">404 Not Found</button>
+
+    <form action="/noCgi.php" method="POST">
+        <input type="hidden" name="errorCode" value="403">
+        <input type="hidden" name="message" value="Forbidden Access">
+        <button class="error" type="submit">413 Content Too Large</button>
+    </form>
+
+    <button class="error" onclick="location.href='cgiCrash.py'">500 Server Error</button>
+</div>
+
+    <button class="rounded-button" onclick="window.location.href='http://127.0.0.1:4000/';">Back to Dashboard</button>
     <footer>
         &copy;2025. Server 2. All rights reserved.
     </footer>

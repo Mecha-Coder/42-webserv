@@ -118,12 +118,21 @@
         font-size: 2rem;
       }
     }
+
+    .button-group {
+      display: flex;
+      gap: 30px; /* Space between buttons */
+      justify-content: center; /* Optional: center the buttons */
+      margin-top: 15px; /* Space above the group */
+    }
   </style>
 </head>
 <body>
   <!-- 42 Logo in Top-Left -->
   <div class="top-header">
+    <a href="/">
     <img class="logo-42" src="./photos/42_logo.png" alt="42 Logo" />
+    </a>
   </div>
 
   <!-- Centered Upload Container -->
@@ -136,7 +145,10 @@
       <input type="file" id="fileInput" multiple />
 
       <!-- Upload button -->
-      <button id="uploadBtn">Upload</button>
+      <div class="button-group">
+        <button id="uploadBtn">Upload</button>
+        <button onclick="window.location.href='/archive/';">Go archive</button>
+    </div>
 
       <!-- Message area -->
       <div id="message"></div>
@@ -158,17 +170,6 @@
           return;
         }
 
-        // Check total size ≤ 20MB
-        const MAX_BYTES = 20 * 1024 * 1024;
-        let totalSize = 0;
-        for (let i = 0; i < files.length; i++) {
-          totalSize += files[i].size;
-        }
-        if (totalSize > MAX_BYTES) {
-          messageDiv.textContent = 'Total file size exceeds 20 MB.';
-          return;
-        }
-
         // Build FormData
         const formData = new FormData();
         for (let i = 0; i < files.length; i++) {
@@ -176,7 +177,7 @@
         }
 
         try {
-          const response = await fetch('/upload', {
+          const response = await fetch('/archive/', {
             method: 'POST',
             body: formData
           });
@@ -200,7 +201,7 @@
             }
           } else {
             messageDiv.style.color = '#e74c3c';
-            messageDiv.textContent = 'Upload failed. Server responded with status: ' + response.status;
+            messageDiv.textContent = 'Upload failed. ' + response.status + ': ' + response.statusText;
           }
         } catch (err) {
           messageDiv.style.color = '#e74c3c';
