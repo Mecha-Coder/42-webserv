@@ -241,6 +241,7 @@ std::string Config::Print() {
 		case ERROR_INVALID_AUTOINDEX: return "ERROR_INVALID_AUTOINDEX"; break;
 		case ERROR_INVALID_UPLOAD:  return "ERROR_INVALID_UPLOAD"; break;
 	}
+	return " ";
 }
 
 Config::e_error Config::PreValidate(toml::Table& config) {
