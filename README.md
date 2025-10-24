@@ -12,6 +12,14 @@ A single-threaded, non-blocking web server written in C++, replicating core feat
 
 ---
 
+### **Key Learnings**
+- Low-level socket programming in C++
+- Deep understanding of HTTP protocol (request/response format)
+- Single-threaded multiplexing using poll()
+- Applying object-oriented design to manage client-server logic
+
+---
+
 ### **About**
 
 👉 [**Project requirement**](https://github.com/Mecha-Coder/42-webserv/blob/main/demo/en.subject.pdf)
@@ -55,6 +63,20 @@ If an error occurs during request handling, the server responds appropriately wi
 
 ---
 
+### **Demo**
+
+**Server performance under load (Siege test)**
+![demo](https://github.com/Mecha-Coder/42-webserv/blob/main/demo/siege_result.png)
+
+**Live request/response logging**
+![demo](https://github.com/Mecha-Coder/42-webserv/blob/main/demo/server-running.gif)
+
+**Browser output**
+![demo](https://github.com/Mecha-Coder/42-webserv/blob/main/demo/browser.gif)
+
+
+---
+
 ### **My contribution**
 - Implemented socket programming
 - Integrated multiplexing using poll()
@@ -65,11 +87,6 @@ If an error occurs during request handling, the server responds appropriately wi
 ### **Teammate**
 - **Jaxz (Cheng Soo)** (https://github.com/JaxzTan)
 - **Ryan Cheong** (https://github.com/veloxity343)
-
----
-
-### **Language / TechStack**
-- C++
 
 ---
 
@@ -94,29 +111,8 @@ http://localhost:4000/
 
 # To stop the server, press Ctrl + C in the terminal
 ```
----
-
-### **🔑 Key Learnings**
-- Low-level socket programming in C++
-- Deep understanding of HTTP protocol (request/response format)
-- Single-threaded multiplexing using poll()
-- Applying object-oriented design to manage client-server logic
 
 ---
 
 ### **Resource**
 - https://hackmd.io/@laian/SJZHcOsmT
-
-
---- 
-
-### **Demo**
-
-**Server performance under load (Siege test)**
-![demo](https://github.com/Mecha-Coder/42-webserv/blob/main/demo/siege_result.png)
-
-**Live request/response logging**
-![demo](https://github.com/Mecha-Coder/42-webserv/blob/main/demo/server-running.gif)
-
-**Browser output**
-![demo](https://github.com/Mecha-Coder/42-webserv/blob/main/demo/browser.gif)
