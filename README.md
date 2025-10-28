@@ -16,7 +16,7 @@ A single-threaded, non-blocking web server written in C++, replicating core feat
 - Low-level socket programming in C++
 - Deep understanding of HTTP protocol (request/response format)
 - Single-threaded multiplexing using poll()
-- Applying object-oriented design to manage client-server logic
+- Apply OOP to manage client-server logic
 
 ---
 
