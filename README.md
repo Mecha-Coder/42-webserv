@@ -82,7 +82,7 @@ If an error occurs during request handling, the server responds appropriately wi
 - Integrated multiplexing using poll()
 - Managed inactive connections
 - Built HTTP request parsing
-- Designed request routing
+- Designed request [routing](https://github.com/Mecha-Coder/42-webserv/blob/main/demo/process-request-flowchart.png)
 
 ### **Teammate**
 - **Jaxz (Cheng Soo)** (https://github.com/JaxzTan)
